@@ -1,1 +1,0 @@
-{"version":3,"file":"install.js","sourceRoot":"","sources":["../../src/commands/install.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,iCAAmE;AAanE,gBAAA,eAAqB,SAAQ,eAAO;IAEhC,OAAO,CACH,OAAgB;QAEhB,OAAO,UAAU,IAAI,gBAAgB,CAAC;IAC1C,CAAC;CACJ,CAAA;AALG;IADC,gBAAQ;;qCAEI,eAAO;;wCAGnB;AANL;IAHC,eAAO,CAAC;QACL,WAAW,EAAE,mDAAmD;KACnE,CAAC;aAQD"}
