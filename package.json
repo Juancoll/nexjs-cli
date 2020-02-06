@@ -38,5 +38,5 @@
     "socket.io-client": "^2.3.0",
     "strongly-typed-events": "^1.6.8",
     "typescript": "^3.7.5"
-  },
+  }
 }
