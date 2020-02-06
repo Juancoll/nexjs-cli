@@ -1,12 +1,12 @@
-import { command, Context, metadata } from 'clime';
+import { command, Context, metadata, Options, option } from 'clime';
 import * as mustache from 'mustache';
 import { resolve, join } from 'path';
 import { existsSync } from 'fs';
 
-import { WSApiDescriptor, IServiceDescriptor } from '@/services/ws';
-import { CommandBase } from '@/base';
-import { FS } from '@/services/fs';
-import { Models } from '@/services/ws/Models';
+import { FS } from '../../services/fs';
+import { WSApiDescriptor, IServiceDescriptor, Models } from '../../services/ws';
+import { CommandBase } from '../../base';
+import { Shell } from '../../services/shell';
 
 interface IConfigModels {
     source: string;
@@ -32,6 +32,27 @@ interface ITemplateData {
     services: IServiceDescriptor[];
 }
 
+export class CommandOptions extends Options {
+    @option({
+        flag: 'i',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'after, execute npm install',
+    })
+    public install: boolean;
+
+    @option({
+        flag: 'b',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'after, execute npm build',
+    })
+    public build: boolean;
+}
+
+// tslint:disable-next-line: max-classes-per-file
 @command({
     description: 'Generate wsapi client for typescript context',
 })
@@ -42,9 +63,10 @@ export default class extends CommandBase {
     }
 
     @metadata
-    execute(
+    async execute(
+        options: CommandOptions,
         context: Context,
-    ) {
+    ): Promise<string> {
         const config = this.getConfig<IConfig>(context);
         const assets = this.getAssets();
 
@@ -122,6 +144,24 @@ export default class extends CommandBase {
         );
         models.apply();
         models.save();
+
+        // [6] post commands
+        console.log('[step 6] post commands');
+        if (options.install) {
+            try {
+                await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (options.build) {
+            try {
+                await Shell.exec(`cd ${target} && npm run build`, { stdout: true, rejectOnError: true });
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
         return `${this.commandName} finished.`;
     }

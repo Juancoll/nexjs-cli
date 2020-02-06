@@ -1,10 +1,13 @@
 {
   "name": "@nexjs/cli",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "",
   "main": "dist/cli.js",
   "bin": {
     "nex": "dist/cli.js"
+  },
+  "repository": {
+    "url": "https://github.com/Juancoll/nexjs-cli"
   },
   "scripts": {
     "prebuild": "rimraf dist",
@@ -12,15 +15,16 @@
     "dev:start": "npm run prebuild && tsc --watch",
     "dev:install": "npm link",
     "dev:uninstall": "npm unlink",
-    "lint": "tslint -p tsconfig.json -c tslint.json"
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "publish:npm": "npm run build && npm publish --access public"
   },
-  "author": "",
+  "author": "juancoll",
   "license": "ISC",
   "dependencies": {
+    "ansicolor": "^1.1.93",
     "clime": "^0.5.10",
     "fs-extra": "^8.1.0",
     "linq": "^3.2.1",
-    "module-alias": "^2.2.2",
     "mustache": "^4.0.0",
     "ts-morph": "^6.0.2",
     "upath": "^1.2.0"
@@ -35,7 +39,4 @@
     "strongly-typed-events": "^1.6.8",
     "typescript": "^3.7.5"
   },
-  "_moduleAliases": {
-    "@": "./dist"
-  }
 }

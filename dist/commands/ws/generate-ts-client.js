@@ -13,15 +13,38 @@ const clime_1 = require("clime");
 const mustache = require("mustache");
 const path_1 = require("path");
 const fs_1 = require("fs");
-const ws_1 = require("@/services/ws");
-const base_1 = require("@/base");
-const fs_2 = require("@/services/fs");
-const Models_1 = require("@/services/ws/Models");
+const fs_2 = require("../../services/fs");
+const ws_1 = require("../../services/ws");
+const base_1 = require("../../base");
+const shell_1 = require("../../services/shell");
+class CommandOptions extends clime_1.Options {
+}
+__decorate([
+    clime_1.option({
+        flag: 'i',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'after, execute npm install',
+    }),
+    __metadata("design:type", Boolean)
+], CommandOptions.prototype, "install", void 0);
+__decorate([
+    clime_1.option({
+        flag: 'b',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'after, execute npm build',
+    }),
+    __metadata("design:type", Boolean)
+], CommandOptions.prototype, "build", void 0);
+exports.CommandOptions = CommandOptions;
 let default_1 = class default_1 extends base_1.CommandBase {
     constructor() {
         super(__filename);
     }
-    execute(context) {
+    async execute(options, context) {
         const config = this.getConfig(context);
         const assets = this.getAssets();
         console.log('[read] read config from nex-cli.json file');
@@ -74,17 +97,35 @@ let default_1 = class default_1 extends base_1.CommandBase {
         console.log('[step 5] clean *.ts files models (remove imports and decorators)');
         console.log(`  |- [imports]    remove '${config.value.models.importsToRemove.join(',')}'`);
         console.log(`  |- [decorators] remove '${config.value.models.decoratorsToRemove.join(',')}'`);
-        const models = new Models_1.Models(target, config.value.models.importsToRemove, config.value.models.decoratorsToRemove);
+        const models = new ws_1.Models(target, config.value.models.importsToRemove, config.value.models.decoratorsToRemove);
         models.apply();
         models.save();
+        console.log('[step 6] post commands');
+        if (options.install) {
+            try {
+                await shell_1.Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
+        if (options.build) {
+            try {
+                await shell_1.Shell.exec(`cd ${target} && npm run build`, { stdout: true, rejectOnError: true });
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
         return `${this.commandName} finished.`;
     }
 };
 __decorate([
     clime_1.metadata,
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [clime_1.Context]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [CommandOptions,
+        clime_1.Context]),
+    __metadata("design:returntype", Promise)
 ], default_1.prototype, "execute", null);
 default_1 = __decorate([
     clime_1.command({

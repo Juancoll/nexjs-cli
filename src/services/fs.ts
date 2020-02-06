@@ -27,6 +27,7 @@ export class FS {
     }
 
     public static copyFile(source: string, target: string, transform?: (sourceFile: string, targetFile: string, content: string) => string) {
+        FS.createFolder(path.dirname(target));
         const contentSource = fs.readFileSync(source, 'utf8');
         try {
             const contentTarget = transform
@@ -35,6 +36,12 @@ export class FS {
             fs.writeFileSync(target, contentTarget);
         } catch (err) {
             console.log(`error copying file ${source}`, err);
+        }
+    }
+
+    public static createFolder(source: string) {
+        if (!fs.existsSync(source)) {
+            fs.mkdirSync(source, { recursive: true });
         }
     }
 }

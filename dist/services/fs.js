@@ -23,6 +23,7 @@ class FS {
         }
     }
     static copyFile(source, target, transform) {
+        FS.createFolder(path.dirname(target));
         const contentSource = fs.readFileSync(source, 'utf8');
         try {
             const contentTarget = transform
@@ -32,6 +33,11 @@ class FS {
         }
         catch (err) {
             console.log(`error copying file ${source}`, err);
+        }
+    }
+    static createFolder(source) {
+        if (!fs.existsSync(source)) {
+            fs.mkdirSync(source, { recursive: true });
         }
     }
 }
