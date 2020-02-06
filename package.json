@@ -1,0 +1,41 @@
+{
+  "name": "@nexjs/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/cli.js",
+  "bin": {
+    "nex": "dist/cli.js"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "dev:start": "npm run prebuild && tsc --watch",
+    "dev:install": "npm link",
+    "dev:uninstall": "npm unlink",
+    "lint": "tslint -p tsconfig.json -c tslint.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clime": "^0.5.10",
+    "fs-extra": "^8.1.0",
+    "linq": "^3.2.1",
+    "module-alias": "^2.2.2",
+    "mustache": "^4.0.0",
+    "ts-morph": "^6.0.2",
+    "upath": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
+    "@types/mustache": "^4.0.0",
+    "@types/node": "^12.12.6",
+    "@types/socket.io-client": "^1.4.32",
+    "rimraf": "^3.0.1",
+    "socket.io-client": "^2.3.0",
+    "strongly-typed-events": "^1.6.8",
+    "typescript": "^3.7.5"
+  },
+  "_moduleAliases": {
+    "@": "./dist"
+  }
+}

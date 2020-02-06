@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "nex ws generate-ts-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ws",
+                "generate-ts-client",
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "nex ws generate-cs-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ws",
+                "generate-cs-client",
+            ]
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "{{&config.packageName}}",
+  "version": "{{&config.packageVersion}}",
+  "description": "wsapi client for {{&config.packageName}}",
+  "author": "cli: nex {{&context.command}}",
+  "keywords": [
+    "socket.io-client",
+    "typescript",
+    "{{&config.packageName}}"
+  ],
+  "license": "Unlicense",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "socket.io-client": "^2.3.0",
+    "strongly-typed-events": "^1.6.8"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/node": "^12.11.5",
+    "rimraf": "^3.0.1",
+    "typescript": "^3.7.5"
+  }
+}

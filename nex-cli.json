@@ -1,0 +1,10 @@
+{
+    "ws": {
+        "generate-ts-client": {
+            "outDir": "../wsapi-client",
+            "packageName": "@taining/wsapi-client",
+            "packageVersion": "1.0.0",
+            "suffix": ".contract.ts"
+        }
+    }
+}
