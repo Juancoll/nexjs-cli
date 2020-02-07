@@ -13,6 +13,7 @@ export default class extends Command {
         context: Context,
     ) {
         console.log(context);
+        console.log("HOLAAAAAA");
         return `Hello, ${name} from print!`;
     }
 }

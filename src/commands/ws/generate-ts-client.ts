@@ -3,10 +3,11 @@ import * as mustache from 'mustache';
 import { resolve, join } from 'path';
 import { existsSync } from 'fs';
 
-import { FS } from '../../services/fs';
-import { WSApiDescriptor, IServiceDescriptor, Models } from '../../services/ws';
 import { CommandBase } from '../../base';
+import { FS } from '../../services/fs';
+import { WSApiDescriptor, IServiceDescriptor, ModelsFolder } from '../../services/ws';
 import { Shell } from '../../services/shell';
+import { BaseType } from '../../services/ws/Models/BaseType';
 
 interface IConfigModels {
     source: string;
@@ -67,6 +68,15 @@ export default class extends CommandBase {
         options: CommandOptions,
         context: Context,
     ): Promise<string> {
+        if (process.env.NODE_ENV == 'debug') {
+            const cwd = resolve('../../../nodall-training/template.api.server');
+            if (!existsSync(cwd)) {
+                throw new Error(`cwd '${cwd}' not found`);
+            }
+            console.log(`[DEBUG] context.env: ${cwd}`);
+            context.cwd = cwd;
+        }
+
         const config = this.getConfig<IConfig>(context);
         const assets = this.getAssets();
 
@@ -102,6 +112,10 @@ export default class extends CommandBase {
             services: reflection.getServiceDescriptors(),
         } as ITemplateData;
 
+        const baseTypes = reflection.getBaseTypesToImport();
+        const flatTypes = BaseType.getTypesToImports(...baseTypes);
+        console.log(flatTypes);
+
         // [2] parse all out folder
         console.log('[step 2] generate common files');
         const source = assets.path('out');
@@ -125,7 +139,7 @@ export default class extends CommandBase {
         // [4] copy models
         console.log('[step 4] copy models');
         const modelsSource = resolve(context.cwd, config.value.models.source);
-        const modelsTarget = resolve(config.value.outDir, config.value.models.source);
+        const modelsTarget = resolve(target, config.value.models.source);
         console.log(`  |- [source]  ${modelsSource}`);
         console.log(`  |- [target]  ${modelsTarget}`);
         FS.copyFolder(modelsSource, modelsTarget, (s, t, c) => {
@@ -137,13 +151,13 @@ export default class extends CommandBase {
         console.log('[step 5] clean *.ts files models (remove imports and decorators)');
         console.log(`  |- [imports]    remove '${config.value.models.importsToRemove.join(',')}'`);
         console.log(`  |- [decorators] remove '${config.value.models.decoratorsToRemove.join(',')}'`);
-        const models = new Models(
+        const modelsFolder = new ModelsFolder(
             target,
             config.value.models.importsToRemove,
             config.value.models.decoratorsToRemove,
         );
-        models.apply();
-        models.save();
+        modelsFolder.apply();
+        modelsFolder.save();
 
         // [6] post commands
         console.log('[step 6] post commands');

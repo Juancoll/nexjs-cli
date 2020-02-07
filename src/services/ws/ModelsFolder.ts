@@ -1,7 +1,7 @@
 import { Project, DecoratableNode, ModuledNode } from 'ts-morph';
 import { join, resolve } from 'upath';
 
-export class Models {
+export class ModelsFolder {
     //#region [ fields ]
     private _sourceDir: string;
     private _project: Project;

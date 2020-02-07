@@ -1,11 +1,13 @@
 import * as Enumerable from 'linq';
-import { Project, SourceFile } from 'ts-morph';
+import { Project, SourceFile, ClassDeclaration, InterfaceDeclaration, Type } from 'ts-morph';
 import { resolve, join, relative } from 'upath';
 
 import { HubDescriptor } from './HubDescriptor';
 import { TypesToImport } from './TypesToImport';
 import { RestDescriptor } from './RestDescriptor';
-import { IServiceName } from './commons';
+import { IServiceName, IBaseTypeToImportDescriptor } from './commons';
+import { TypeDescriptor } from './TypeDescriptor';
+import { BaseType } from './Models/BaseType';
 
 export interface IServiceDescriptor {
     service: IServiceName;
@@ -114,9 +116,77 @@ export class WSApiDescriptor {
 
         return result;
     }
+    getTypeDescriptorsToImport() {
+        const descriptors = this.getServiceDescriptors();
+        const types = new TypesToImport();
+        descriptors.forEach(descriptor => {
+            descriptor.typesToImport.items.forEach(type => {
+                types.addIfRequired(type);
+            });
+        });
+        return types.items;
+    }
+    getBaseTypesToImport(): BaseType[] {
+        const types = this.getTypeDescriptorsToImport().map(x => new BaseType(x.tsType));
+        return BaseType.getTypesToImports(...types);
+    }
+    getModelToImportDescriptors(): IBaseTypeToImportDescriptor[] {
+        const result = new Array<IBaseTypeToImportDescriptor>();
+        const types = this.getBaseTypesToImport();
+        console.log(types);
+        types.forEach(t => {
+            try {
+                const filePath = t.importFile + '.ts';
+                const file = this._project.getSourceFile(filePath);
+                if (!file) {
+                    throw new Error(`file "${filePath}" not found.`);
+                }
+                const c = file.getClasses().find(x => x.getName() == t.textType);
+                const i = file.getInterfaces().find(x => x.getName() == t.textType);
+                result.push({
+                    baseType: t,
+                    file,
+                    isClass: c ? true : false,
+                    isInterface: i ? true : false,
+                    declaration: c ? c : i,
+                    name: t.textType,
+                });
+            } catch (err) {
+                console.error(err.message);
+            }
+
+        });
+        return result;
+    }
     //#endregion
 
     //#region [ private ]
+    private extractAllTypesFromType(type: Type): TypeDescriptor[] {
+        let result = new Array<TypeDescriptor>();
+        type.getBaseTypes().forEach(x => {
+            result.push(new TypeDescriptor(x));
+        });
+        type.getProperties().forEach(x => {
+            result.push(new TypeDescriptor(x.getDeclaredType()));
+        });
+        result = result.filter(x => x.import);
+        return result;
+    }
+    private extractAllTypesFromClass(value: ClassDeclaration): TypeDescriptor[] {
+        let result = new Array<TypeDescriptor>();
+        value.getBaseTypes().forEach(x => result.push(new TypeDescriptor(x)));
+        value.getProperties().forEach(x => result.push(new TypeDescriptor(x.getType())));
+        result = result.filter(x => x.import);
+        return result;
+    }
+    private extractTypesFromInterface(value: InterfaceDeclaration): TypeDescriptor[] {
+        let result = new Array<TypeDescriptor>();
+        value.getExtends().forEach(x => result.push(new TypeDescriptor(x.getType())));
+        value.getProperties().forEach(x => result.push(new TypeDescriptor(x.getType())));
+        result = result.filter(x => x.import);
+        return [];
+
+    }
     private extractHubs(): HubDescriptor[] {
         const result = new Array<HubDescriptor>();
         this._contractFiles.forEach(file => {

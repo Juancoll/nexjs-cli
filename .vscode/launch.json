@@ -15,7 +15,10 @@
             "args": [
                 "ws",
                 "generate-ts-client",
-            ]
+            ],
+            "env": {
+                "NODE_ENV": "debug"
+            }
         },
         {
             "type": "node",
@@ -28,7 +31,10 @@
             "args": [
                 "ws",
                 "generate-cs-client",
-            ]
+            ],
+            "env": {
+                "NODE_ENV": "debug"
+            }
         }
     ]
 }
