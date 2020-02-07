@@ -26,6 +26,11 @@ export class CSharpClass {
         let text = d.getName();
         if (d.getBaseClass()) {
             text += ': ' + d.getBaseClass().getName();
+        } else {
+            const parameters = d.getTypeParameters();
+            if (parameters.length > 0) {
+                text += `<${parameters.map(x => x.getText()).join(',')}>`;
+            }
         }
         return text;
     }

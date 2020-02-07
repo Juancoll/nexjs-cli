@@ -9,7 +9,7 @@ export class CSharpProperty {
         this.type = this.getType(p);
     }
 
-    getType(p: PropertyDeclaration): string {
+    getType(p: PropertyDeclaration | PropertySignature): string {
         return this.getTextWithoutImport(p.getType().getText());
     }
 
