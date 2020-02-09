@@ -3,7 +3,12 @@ import * as path from 'path';
 
 export class FS {
 
-    public static copyFolder(source: string, target: string, transform?: (sourceFile: string, targetFile: string, content: string) => string) {
+    public static copyFolder(
+        source: string,
+        target: string,
+        transform?: (sourceFile: string, targetFile: string, content: string) => string,
+        rename?: (fileName: string) => string,
+    ) {
         let entries = [];
 
         // check if folder needs to be created or integrated
@@ -16,9 +21,11 @@ export class FS {
             entries = fs.readdirSync(source);
             entries.forEach((file) => {
                 const curSource = path.join(source, file);
-                const curTarget = path.join(target, file);
+                const curTarget = rename
+                    ? path.join(target, rename(file))
+                    : path.join(target, file);
                 if (fs.lstatSync(curSource).isDirectory()) {
-                    FS.copyFolder(curSource, curTarget, transform);
+                    FS.copyFolder(curSource, curTarget, transform, rename);
                 } else {
                     FS.copyFile(curSource, curTarget, transform);
                 }

@@ -13,7 +13,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "dev:start": "npm run prebuild && tsc --watch",
-    "dev:install": "npm link",
+    "dev:install": "npm run build && npm link",
     "dev:uninstall": "npm unlink",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "publish:npm": "npm run build && npm publish --access public"
@@ -37,6 +37,7 @@
     "rimraf": "^3.0.1",
     "socket.io-client": "^2.3.0",
     "strongly-typed-events": "^1.6.8",
+    "ts-lint": "^4.5.1",
     "typescript": "^3.7.5"
   }
 }
