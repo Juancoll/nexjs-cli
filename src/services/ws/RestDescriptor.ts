@@ -67,20 +67,27 @@ export class RestDescriptor implements IRestDescriptor {
     //#endregion
 
     //#region [ private ]
+    private extractServiceName(method: MethodDeclaration, options: ObjectLiteralExpression): string {
+        const serviceProp = options.getProperty('service');
+        return serviceProp
+            ? this.getStringLiteral(serviceProp)
+            : method.getParent().getProperty('service').getType().getText().replace(/^"(.*)"$/, '$1');
+    }
+
     private extractDecoratorDescriptor(method: MethodDeclaration): IRestDecoratorDescriptor {
         const decorator = method.getDecorators().find(x => x.getName() == 'Rest');
         if (!decorator) {
             throw new Error('method is not decorated with Rest');
         }
 
-        const value = decorator.getArguments()[0] as ObjectLiteralExpression;
-        const serviceProp = value.getProperty('service');
-        const isAuthProp = value.getProperty('isAuth');
-        const rolesProp = value.getProperty('roles');
+        const options = decorator.getArguments()[0] as ObjectLiteralExpression;
+        const service = this.extractServiceName(method, options);
+        const isAuthProp = options.getProperty('isAuth');
+        const rolesProp = options.getProperty('roles');
 
         return {
             tsDecorator: decorator,
-            service: this.getStringLiteral(serviceProp),
+            service,
             isAuth: isAuthProp
                 ? this.getBooleanLiteral(isAuthProp)
                 : false,
@@ -102,9 +109,14 @@ export class RestDescriptor implements IRestDescriptor {
         if (!validation) {
             return undefined;
         } else {
-            const functionType = (validation.getChildren()[2].getType().getCallSignatures()[0].getDeclaration() as SignaturedDeclaration)
-            const type = functionType.getParameters()[1].getType();
-            return new TypeDescriptor(type);
+            const credentialsParamIdx = 2;
+            const functionType = (validation.getType().getCallSignatures()[0].getDeclaration() as SignaturedDeclaration);
+            if (functionType.getParameters().length < credentialsParamIdx + 1) {
+                return undefined;
+            } else {
+                const type = functionType.getParameters()[credentialsParamIdx].getType();
+                return new TypeDescriptor(type);
+            }
         }
     }
 
@@ -194,13 +206,16 @@ export class RestDescriptor implements IRestDescriptor {
         return this.paramsToStringArray(allParams).join(', ');
     }
     private paramsToRequestArgs(param: IParamDescriptor[]): string {
-        let result = `method: '${this.method}'`;
-        if (param.length > 0) {
-            result += `, data: { ${this.params.map(x => x.name).join(', ')} }`;
-        }
-        if (this.credentialsType) {
-            result += `, credentials `;
-        }
+        let result = ``;
+
+        result += param.length > 0
+            ? `{ ${this.params.map(x => x.name).join(', ')} }`
+            : 'null';
+
+        result += this.credentialsType
+            ? ', credentials '
+            : ', null ';
+
         return result;
     }
     //#endregion

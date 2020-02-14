@@ -3,7 +3,8 @@
     "declaration": true,
     "target": "es6",
     "module": "commonjs",
-    "noImplicitAny": true,
+    "noImplicitAny": true,    
+    "experimentalDecorators": true,
     "outDir": "dist",
     "rootDir": "src",
     "typeRoots": [
