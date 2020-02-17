@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+const { isBinary } = require('istextorbinary')
+
 export class FS {
 
     public static copyFolder(
@@ -35,14 +37,20 @@ export class FS {
 
     public static copyFile(source: string, target: string, transform?: (sourceFile: string, targetFile: string, content: string) => string) {
         FS.createFolder(path.dirname(target));
-        const contentSource = fs.readFileSync(source, 'utf8');
-        try {
-            const contentTarget = transform
-                ? transform(source, target, contentSource)
-                : contentSource;
-            fs.writeFileSync(target, contentTarget);
-        } catch (err) {
-            console.log(`error copying file ${source}`, err);
+        var buffer = fs.readFileSync(source);
+        if (isBinary(source, buffer)) {
+            fs.createReadStream(source).pipe(fs.createWriteStream(target));
+        }
+        else {
+            const contentSource = fs.readFileSync(source, 'utf8');
+            try {
+                const contentTarget = transform
+                    ? transform(source, target, contentSource)
+                    : contentSource;
+                fs.writeFileSync(target, contentTarget);
+            } catch (err) {
+                console.log(`error copying file ${source}`, err);
+            }
         }
     }
 

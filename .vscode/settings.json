@@ -1,5 +1,6 @@
 {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
+    "explorer.compactFolders": false,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -8,9 +9,8 @@
         "**/.DS_Store": true,
         "**/node_modules": true
     },
-    "typescript.preferences.quoteStyle": "single",
     "tslint.exclude": [
         "assets/**/*"
     ],
-    "explorer.compactFolders": false
+    "typescript.preferences.quoteStyle": "single"
 }

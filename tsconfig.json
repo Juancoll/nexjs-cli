@@ -10,7 +10,8 @@
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "maxNodeModuleJsDepth": 5
   },
   "exclude": [
     "node_modules",

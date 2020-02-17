@@ -1,20 +1,34 @@
-import { WSServiceBase } from '../../lib';
-{{#typesToImport.items}}
-import { {{import.strType}} } from '{{&import.targetPath}}';
-{{/typesToImport.items}}
+using nex.ws;
+using System.Threading.Tasks;
 
-export class {{service.upper}}WSService extends WSServiceBase {
-    public readonly name = '{{service.name}}';
+namespace {{namespace}}
+{
+    public class {{service.upper}}WSService: WSServiceBase 
+    {
+        #region [ implement WSServiceBase ]
+        public override string Name => "{{service.name}}";
+        #endregion
 
-    //#region [ hub ]
-    {{#hub}}
-    public {{event}} = this.newEvent<{{credentials.strType}}, {{data.strType}}>('{{event}}');
-    {{/hub}}
-    //#endregion
+        #region [ constructor ]
+        public {{service.upper}}WSService(RestClient rest, HubClient hub)
+            :base(rest, hub)
+        {
+            {{#hub}}
+            {{event}} = new HubNotification<{{credentials}}, {{data}}>(hub, Name, "{{event}}");
+            {{/hub}}
+        }
+        #endregion
 
-    //#region [ rest ]
-    {{#rest}}
-    public {{method}}({{&strMethodParams}}) { return this.request<{{returnType.strType}}>( '{{method}}', {{&strRequestArgs}} ); }
-    {{/rest}}
-    //#endregion
+        #region [ hub ]
+        {{#hub}}
+        public HubNotification<{{credentials}}, {{data}}> {{event}} { get; }
+        {{/hub}}
+        #endregion
+
+        #region [ rest ]
+        {{#rest}}
+        public Task<{{&returnType}}> {{method}}({{&methodParams}}) { return Request<{{returnType}}>( "{{method}}", {{&requestParams}} ); }
+        {{/rest}}
+        #endregion
+    }
 }

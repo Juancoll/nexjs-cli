@@ -1,4 +1,4 @@
-set name={{packageName}}
+set name={{namespace}}
 set folder=.\src\%name%
 
 del %folder%\%name%.*.nupkg

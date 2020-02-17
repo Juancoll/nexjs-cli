@@ -1,14 +1,15 @@
 import { command, Context, metadata, Options, option } from 'clime';
 import * as mustache from 'mustache';
 import { resolve, join } from 'path';
-import { existsSync } from 'fs';
+import { existsSync, rename } from 'fs';
 
 import { CommandBase } from '../../base';
 import { FS } from '../../services/fs';
 import { WSApiDescriptor, IServiceDescriptor, ModelsFolder } from '../../services/ws';
 import { Shell } from '../../services/shell';
 import { BaseType } from '../../services/ws/Models/BaseType';
-import { CSharpClass } from '../../services/ws/csharp/CSharpClass';
+import { CSClass } from '../../services/ws/csharp/CSClass';
+import { CSService } from '../../services/ws/csharp/CSService';
 
 interface IConfig {
     outDir: string;
@@ -17,8 +18,14 @@ interface IConfig {
     suffix: string;
 }
 
-interface IConfig {
-    param: string;
+interface ITemplateData {
+    namespace: string;
+    config: IConfig;
+    context: {
+        command: string;
+        cwd: string;
+    };
+    services: IServiceDescriptor[];
 }
 
 export class CommandOptions extends Options {
@@ -93,15 +100,52 @@ export default class extends CommandBase {
         console.log(descriptors);
 
         console.log('[CHSARP]');
-        const csharpDescriptors = descriptors.map(x => new CSharpClass(config.value.packageName, x));
+        const csharpDescriptors = descriptors.map(x => new CSClass(config.value.packageName, x));
         console.log(csharpDescriptors);
 
-        // [3] create service files
-        console.log('[step 3] generate models ');
+        // [1] create data view
+        console.log('[step 1] create data view');
+        const dataView = {
+            namespace: config.value.packageName,
+            config: config.value,
+            context: {
+                cwd: context.cwd,
+                command: this.commandPath.join(' '),
+            },
+            services: reflection.getServiceDescriptors(),
+        } as ITemplateData;
+
+        // [2] parse all out folder
+        console.log('[step 2] generate common files');
+        const source = assets.path('out');
         const target = resolve(context.cwd, config.value.outDir);
+        FS.copyFolder(
+            source,
+            target,
+            (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, dataView);
+            },
+            (filename) => mustache.render(filename, dataView),
+        );
+
+        // [3] create service files
+        console.log('[step 3] generate ws service files');
+        dataView.services.forEach(item => {
+            var service = new CSService(config.value.packageName, item);
+            const src = assets.path('templates/WSService.cs');
+            const dest = join(target, 'src', config.value.packageName, 'src', 'api', 'services', `${service.service.upper}WSService.cs`);
+            FS.copyFile(src, dest, (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, service);
+            });
+        });
+
+        // [4] create model files
+        console.log('[step 4] generate models ');
         csharpDescriptors.forEach(item => {
-            const src = assets.path('templates/class.cs');
-            const dest = join(target, 'src', 'models', `${item.fileName}.cs`);
+            const src = assets.path('templates/model.cs');
+            const dest = join(target, 'src', config.value.packageName, 'src', 'models', `${item.fileName}.cs`);
             FS.copyFile(src, dest, (s, t, c) => {
                 console.log(`  |- [create]  ${t}`);
                 return mustache.render(c, item);

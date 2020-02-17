@@ -15,7 +15,7 @@
     "dev:start": "npm run prebuild && tsc --watch",
     "dev:install": "npm run build && npm link",
     "dev:uninstall": "npm unlink",
-    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "lint": "eslint -c .eslintrc.js --ext .ts src",
     "publish:npm": "npm run build && npm publish --access public"
   },
   "author": "juancoll",
@@ -24,6 +24,8 @@
     "ansicolor": "^1.1.93",
     "clime": "^0.5.10",
     "fs-extra": "^8.1.0",
+    "isbinaryfile": "^4.0.4",
+    "istextorbinary": "^3.3.0",
     "linq": "^3.2.1",
     "mustache": "^4.0.0",
     "ts-morph": "^6.0.2",
@@ -34,10 +36,12 @@
     "@types/mustache": "^4.0.0",
     "@types/node": "^12.12.6",
     "@types/socket.io-client": "^1.4.32",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint": "^6.8.0",
     "rimraf": "^3.0.1",
     "socket.io-client": "^2.3.0",
     "strongly-typed-events": "^1.6.8",
-    "ts-lint": "^4.5.1",
     "typescript": "^3.7.5"
   }
 }
