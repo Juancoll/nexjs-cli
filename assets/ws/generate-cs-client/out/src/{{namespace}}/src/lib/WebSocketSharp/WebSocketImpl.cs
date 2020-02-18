@@ -38,7 +38,7 @@ namespace nex.WebSocketSharp
             _ws.Close();            
         }
 
-        public async void connect(string url)
+        public void connect(string url)
         {
             if (_ws != null)
             {

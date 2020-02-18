@@ -39,16 +39,44 @@
                     <WrapPanel Orientation="Horizontal">
                         <Button Click="Button_FuncA" Padding="5 2" Width="80" Height="28" Margin="2">FuncA</Button>
                         <Button Click="Button_FuncB" Padding="5 2" Width="80" Height="28" Margin="2">FuncB</Button>
-                        <Button Click="Button_ChangeUser" Padding="5 2" Width="80" Height="28" Margin="2">ChangeUser</Button>
+                        <Button Click="Button_FuncC" Padding="5 2" Width="80" Height="28" Margin="2">FuncC</Button>
+                        <Button Click="Button_FuncD" Padding="5 2" Width="80" Height="28" Margin="2">FuncD</Button>
+                        <Button Click="Button_FuncE" Padding="5 2" Width="80" Height="28" Margin="2">FuncE</Button>
+                        <Button Click="Button_emitEvents" Padding="5 2" Width="80" Height="28" Margin="2">Emit Events</Button>
+                        <Button Click="Button_ChangeUser" Padding="5 2" Width="80" Height="28" Margin="2">Change User</Button>
                     </WrapPanel>
                     <Label>(User Service) WS Hub Api</Label>
                    
                     <WrapPanel Orientation="Horizontal">
-                        <Label Foreground="white" Width="100">'onUserUpdate'</Label>
-                        <Button Click="Button_Subscribe" Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
-                        <Button Click="Button_Unsubscribe" Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
-                        <Button Click="Button_On" Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
-                        <Button Click="Button_Off" Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
+                        <Label Foreground="white" Width="150">'onUpdateCredentials'</Label>
+                        <Button Name="onUpdateCredentials_Subscribe"    Click="onUpdateCredentials" Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
+                        <Button Name="onUpdateCredentials_Unsubscribe"  Click="onUpdateCredentials" Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
+                        <Button Name="onUpdateCredentials_On"           Click="onUpdateCredentials" Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
+                        <Button Name="onUpdateCredentials_Off"          Click="onUpdateCredentials" Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Foreground="white" Width="150">'onUpdateCredentialsData'</Label>
+                        <Button Name="onUpdateCredentialsData_Subscribe"    Click="onUpdateCredentialsData" Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
+                        <Button Name="onUpdateCredentialsData_Unsubscribe"  Click="onUpdateCredentialsData" Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
+                        <Button Name="onUpdateCredentialsData_On"           Click="onUpdateCredentialsData" Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
+                        <Button Name="onUpdateCredentialsData_Off"          Click="onUpdateCredentialsData" Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Foreground="white" Width="150">'onUpdateData'</Label>
+                        <Button Name="onUpdateData_Subscribe"    Click="onUpdateData" Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
+                        <Button Name="onUpdateData_Unsubscribe"  Click="onUpdateData" Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
+                        <Button Name="onUpdateData_On"           Click="onUpdateData" Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
+                        <Button Name="onUpdateData_Off"          Click="onUpdateData" Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Foreground="white" Width="150">'onUpdate'</Label>
+                        <Button Name="onUpdate_Subscribe"    Click="onUpdate" Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
+                        <Button Name="onUpdate_Unsubscribe"  Click="onUpdate" Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
+                        <Button Name="onUpdate_On"           Click="onUpdate" Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
+                        <Button Name="onUpdate_Off"          Click="onUpdate" Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
                     </WrapPanel>
                 </WrapPanel>
             </Border>

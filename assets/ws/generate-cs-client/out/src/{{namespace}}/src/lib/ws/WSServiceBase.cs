@@ -42,10 +42,6 @@ namespace nex.ws
                 credentials = credentials
             }, timeout);
         }
-
-        protected HubNotification<TCredentials, TData> NewEvent<TCredentials, TData>(string eventName){
-            return new HubNotification<TCredentials, TData>(_hub, Name, eventName);
-        }
         #endregion
     }
 }

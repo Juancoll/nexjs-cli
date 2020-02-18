@@ -1,34 +1,40 @@
-using nex.ws;
+using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using nex.ws;
 
 namespace {{namespace}}
 {
-    public class {{service.upper}}WSService: WSServiceBase 
+    public class {{serviceUpperName}}WSService: WSServiceBase 
     {
         #region [ implement WSServiceBase ]
-        public override string Name => "{{service.name}}";
+        public override string Name => "{{serviceName}}";
         #endregion
 
         #region [ constructor ]
-        public {{service.upper}}WSService(RestClient rest, HubClient hub)
+        public {{serviceUpperName}}WSService(RestClient rest, HubClient hub)
             :base(rest, hub)
         {
-            {{#hub}}
-            {{event}} = new HubNotification<{{credentials}}, {{data}}>(hub, Name, "{{event}}");
-            {{/hub}}
+            {{#hubEvents}}
+            {{name}} = new {{notification}}{{&arguments}}(hub, Name, "{{name}}");
+            {{/hubEvents}}
         }
         #endregion
 
         #region [ hub ]
-        {{#hub}}
-        public HubNotification<{{credentials}}, {{data}}> {{event}} { get; }
-        {{/hub}}
+        {{#hubEvents}}
+
+        // isAuth: {{isAuth}}
+        public {{notification}}{{&arguments}} {{name}} { get; }
+        {{/hubEvents}}
         #endregion
 
         #region [ rest ]
-        {{#rest}}
-        public Task<{{&returnType}}> {{method}}({{&methodParams}}) { return Request<{{returnType}}>( "{{method}}", {{&requestParams}} ); }
-        {{/rest}}
+        {{#restMethods}}
+
+        // isAuth: {{isAuth}}
+        public Task{{&returnType}} {{name}}({{&methodParams}}) { return Request{{&returnType}}( "{{name}}", {{&requestParams}} ); }
+        {{/restMethods}}
         #endregion
     }
 }

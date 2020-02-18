@@ -1,13 +1,14 @@
-using Newtonsoft.Json.Linq;
-using Newtonsoft;
 using System;
+using System.Collections.Generic;
+using Newtonsoft;
+using Newtonsoft.Json.Linq;
 
-namespace {{namespace}} 
+namespace {{&namespace}} 
 {
-    public class {{declaration}} 
+    public class {{&declaration}} 
     {
         {{#properties}}
-        public {{type}} {{name}} { get; set; }
+        public {{&type}} {{&name}} { get; set; }
         {{/properties}}
     }
 }

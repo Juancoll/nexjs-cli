@@ -10,6 +10,8 @@ import { Shell } from '../../services/shell';
 import { BaseType } from '../../services/ws/Models/BaseType';
 import { CSClass } from '../../services/ws/csharp/CSClass';
 import { CSService } from '../../services/ws/csharp/CSService';
+import { TSCode } from '../../services/api-export/tscode/TSCode';
+import { CSConverter } from '../../services/api-export/exporters/cs/CSConverter';
 
 interface IConfig {
     outDir: string;
@@ -30,15 +32,6 @@ interface ITemplateData {
 
 export class CommandOptions extends Options {
     @option({
-        flag: 'i',
-        default: false,
-        required: false,
-        toggle: true,
-        description: 'after, execute npm install',
-    })
-    public install: boolean;
-
-    @option({
         flag: 'b',
         default: false,
         required: false,
@@ -58,7 +51,7 @@ export default class extends CommandBase {
     }
 
     @metadata
-    execute(
+    async execute(
         options: CommandOptions,
         context: Context,
     ) {
@@ -89,68 +82,81 @@ export default class extends CommandBase {
             throw new Error(`file tsconfig.json not found.`);
         }
 
-        const reflection = new WSApiDescriptor(
-            context.cwd,
-            config.value.outDir,
-            config.value.suffix,
-        );
-
-        console.log('[Models to Import]');
-        const descriptors = reflection.getModelToImportDescriptors();
-        console.log(descriptors);
-
-        console.log('[CHSARP]');
-        const csharpDescriptors = descriptors.map(x => new CSClass(config.value.packageName, x));
-        console.log(csharpDescriptors);
-
-        // [1] create data view
-        console.log('[step 1] create data view');
-        const dataView = {
-            namespace: config.value.packageName,
-            config: config.value,
-            context: {
-                cwd: context.cwd,
-                command: this.commandPath.join(' '),
-            },
-            services: reflection.getServiceDescriptors(),
-        } as ITemplateData;
-
-        // [2] parse all out folder
-        console.log('[step 2] generate common files');
-        const source = assets.path('out');
         const target = resolve(context.cwd, config.value.outDir);
+
+        //#region [1] Code analysis 
+        console.log('[step 1] code analisis');
+        const tscode = new TSCode(context.cwd, config.value.suffix);
+        const services = tscode.WSService.convert();
+        const dependencies = tscode.getDependencies(services);
+        //#endregion
+
+        const cs = new CSConverter();
+
+        //#region [2] create model files
+        console.log('[step 2] create models');
+
+        const modelViews = dependencies.map(x => cs.Model.convert({
+            namespace: config.value.packageName,
+            typeDeclaration: x.declaration,
+        }));
+
+        modelViews.forEach(view => {
+            const src = assets.path('templates/model.cs');
+            const dest = join(target, 'src', config.value.packageName, 'src', 'models', `${view.name}.cs`);
+            FS.copyFile(src, dest, (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, view);
+            });
+        });
+        //#endregion
+
+        //#region [3] generate ws service files
+        const serviceViews = services.map(service => cs.WSService.convert({
+            namespace: config.value.packageName,
+            wsservice: service
+        }));
+
+        console.log('[step 3] generate ws service files');
+        serviceViews.forEach(view => {
+            const src = assets.path('templates/WSService.cs');
+            const dest = join(target, 'src', config.value.packageName, 'src', 'api', 'services', `${view.serviceUpperName}WSService.cs`);
+            FS.copyFile(src, dest, (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, view);
+            });
+        });
+        //#endregion
+
+        //#region [4] copy and parse out folder
+        console.log('[step 4] copy and parse out folder');
+        const source = assets.path('out');
+        const apiView = cs.WSApi.convert({
+            namespace: config.value.packageName,
+            version: config.value.packageVersion,
+            services: services,
+        });
         FS.copyFolder(
             source,
             target,
             (s, t, c) => {
                 console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, dataView);
+                return mustache.render(c, apiView);
             },
-            (filename) => mustache.render(filename, dataView),
+            (filename) => mustache.render(filename, apiView),
         );
+        //#endregion
 
-        // [3] create service files
-        console.log('[step 3] generate ws service files');
-        dataView.services.forEach(item => {
-            var service = new CSService(config.value.packageName, item);
-            const src = assets.path('templates/WSService.cs');
-            const dest = join(target, 'src', config.value.packageName, 'src', 'api', 'services', `${service.service.upper}WSService.cs`);
-            FS.copyFile(src, dest, (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, service);
-            });
-        });
-
-        // [4] create model files
-        console.log('[step 4] generate models ');
-        csharpDescriptors.forEach(item => {
-            const src = assets.path('templates/model.cs');
-            const dest = join(target, 'src', config.value.packageName, 'src', 'models', `${item.fileName}.cs`);
-            FS.copyFile(src, dest, (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, item);
-            });
-        });
+        //#region [5] post commands
+        console.log('[step 6] post commands');
+        if (options.build) {
+            try {
+                await Shell.exec(`cd ${target} && .\\build.bat`, { stdout: true, rejectOnError: true });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        //#endregion
 
         return `${this.commandName} finished.`;
     }

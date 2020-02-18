@@ -6,7 +6,7 @@ namespace {{namespace}}
     {
         #region [ services ]
         {{#services}}
-        public {{service.upper}}WSService {{service.name}} { get; }
+        public {{serviceUpperName}}WSService {{serviceName}} { get; }
         {{/services}}
         #endregion
 
@@ -14,7 +14,7 @@ namespace {{namespace}}
         public WSApi()
         {
             {{#services}}
-            {{service.name}} = new {{service.upper}}WSService(Rest, Hub);
+            {{serviceName}} = new {{serviceUpperName}}WSService(Rest, Hub);
             {{/services}}
         }
         #endregion

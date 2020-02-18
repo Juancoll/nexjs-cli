@@ -30,7 +30,7 @@ namespace nex.ws
         #region [ constructor ]
         public RestClient(IWSBase ws)
         {
-            DefaultRequestTimeout = 3000;
+            DefaultRequestTimeout = 33000;
             _ws = ws;
         }
         #endregion
@@ -70,7 +70,7 @@ namespace nex.ws
             var timer = new Stopwatch();
             timer.Start();
 
-            while (!_requestQueue.IsDone(req) || timer.Elapsed < timeoutSpan)
+            while (!_requestQueue.IsDone(req) && timer.Elapsed < timeoutSpan)
             {
                 await Task.Delay(100);
             }
@@ -138,7 +138,14 @@ namespace nex.ws
 
             return response.data is JToken
                 ? (response.data as JToken).ToObject<T>()
-                : (T)response.data;
+                : Cast<T>(response.data);
+        }
+        #endregion
+
+        #region [ private ]
+        private TOutput Cast<TOutput>(object value)
+        {
+            return (TOutput)Convert.ChangeType(value, typeof(TOutput));
         }
         #endregion
     }

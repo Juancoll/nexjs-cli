@@ -1,4 +1,4 @@
-import { RDecorator } from '../../reflection/RDecorator';
+import { RDecorator } from '../../base/RDecorator';
 
 export class WSDataDecorator extends RDecorator<string> {
 }
