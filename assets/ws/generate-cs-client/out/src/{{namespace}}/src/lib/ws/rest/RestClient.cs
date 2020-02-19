@@ -43,8 +43,8 @@ namespace nex.ws
                 var res = data.ToObject<RestResponse>();
                 if (!_requestQueue.Contains(res) || _requestQueue.IsDone(res))
                 {
-                    var error = $"error with id = {_requestQueue.GetId(res)}. not exists or is done";
-                    EventResponseError?.Invoke(this, new EventArgs<RestResponseError>(new RestResponseError(res, error)));
+                    var error = string.Format("error with id = {0}. not exists or is done", _requestQueue.GetId(res));
+                    if (EventResponseError != null) EventResponseError(this, new EventArgs<RestResponseError>(new RestResponseError(res, error)));
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace nex.ws
                 throw new Exception("ws is not connected");
 
             if (_requestQueue.Contains(req))
-                throw new Exception($"RequestQueue already contains request id {_requestQueue.GetId(req)}");
+                throw new Exception(string.Format("RequestQueue already contains request id {0}", _requestQueue.GetId(req)));
 
             _requestQueue.Add(req);
             _ws.Publish(REQUEST_EVENT, req);
@@ -79,13 +79,13 @@ namespace nex.ws
 
             timer.Stop();
             if (timer.Elapsed >= timeoutSpan)
-                throw new TimeoutException($"elapsed time = {timer.Elapsed.TotalMilliseconds} millis");
+                throw new TimeoutException(string.Format("elapsed time = {0} millis", timer.Elapsed.TotalMilliseconds));
 
             if (!response.isSuccess)
             {
                 if (response.error != null)
                 {
-                    EventWSError?.Invoke(this, new EventArgs<WSError>(response.error));
+                    if (EventWSError != null) EventWSError(this, new EventArgs<WSError>(response.error));
                     throw new Exception(response.error.Message);
                 }
                 else
@@ -101,7 +101,7 @@ namespace nex.ws
                 throw new Exception("ws is not connected");
 
             if (_requestQueue.Contains(req))
-                throw new Exception($"RequestQueue already contains request id {_requestQueue.GetId(req)}");
+                throw new Exception(string.Format("RequestQueue already contains request id {0}", _requestQueue.GetId(req)));
 
             _requestQueue.Add(req);
             _ws.Publish(REQUEST_EVENT, req);
@@ -121,13 +121,13 @@ namespace nex.ws
 
             timer.Stop();
             if (timer.Elapsed >= timeoutSpan)
-                throw new TimeoutException($"elapsed time = {timer.Elapsed.TotalMilliseconds} millis");
+                throw new TimeoutException(string.Format("elapsed time = {0} millis", timer.Elapsed.TotalMilliseconds));
 
             if (!response.isSuccess)
             {
                 if (response.error != null)
                 {
-                    EventWSError?.Invoke(this, new EventArgs<WSError>(response.error));
+                    if (EventWSError != null) EventWSError(this, new EventArgs<WSError>(response.error));
                     throw new Exception(response.error.Message);
                 }
                 else

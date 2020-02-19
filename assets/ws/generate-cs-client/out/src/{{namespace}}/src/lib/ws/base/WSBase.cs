@@ -41,24 +41,24 @@ namespace nex.ws
             public void Add(string eventName)
             {
                 if (_requests.ContainsKey(eventName))
-                    throw new Exception($"RequestQueue already contains event '{eventName}'");
+                    throw new Exception(String.Format("RequestQueue already contains event '{0}'", eventName));
 
                 _requests.Add(eventName, new Request());
             }
             public bool IsDone(string eventName)
             {
                 if (!_requests.ContainsKey(eventName))
-                    throw new Exception($"RequestQueue not contains event '{eventName}'");
+                    throw new Exception(string.Format("RequestQueue not contains event '{0}'", eventName));
 
                 return _requests[eventName].Done;
             }
             public void Receive(string eventName, object data ) 
             {
                 if (!_requests.ContainsKey(eventName))
-                    throw new Exception($"RequestQueue not contains event '{eventName}'");
+                    throw new Exception(string.Format("RequestQueue not contains event '{0}'", eventName));
 
                 if (!(data is JToken))
-                    throw new Exception($"event'{eventName}' response data is not typeof JToken");
+                    throw new Exception(string.Format("event'{0}' response data is not typeof JToken", eventName));
 
                 _requests[eventName].Done = true;
                 _requests[eventName].ResponseData = data as JToken;
@@ -66,7 +66,7 @@ namespace nex.ws
             public JToken Dequeue(string eventName)
             {
                 if (!_requests.ContainsKey(eventName))
-                    throw new Exception($"RequestQueue not contains event '{eventName}'");
+                    throw new Exception(string.Format("RequestQueue not contains event '{0}'", eventName));
 
                 var data = _requests[eventName].ResponseData;
                 _requests.Remove(eventName);
@@ -82,7 +82,7 @@ namespace nex.ws
         #endregion
 
         #region [ properties ]
-        public string Id => _socket.id;
+        public string Id { get { return _socket.id; } }
         public int DefaultRequestTimeout { get; set; }
         public bool IsConnected { get { return _socket == null ? false : _socket.connected; } }
         public string Url { get; private set; }
@@ -124,28 +124,28 @@ namespace nex.ws
             _socket
                 .on("connect", data =>
                 {
-                    EventConnectionChange?.Invoke(this, new EventArgs<bool>(true));
+                    if (EventConnectionChange != null) EventConnectionChange(this, new EventArgs<bool>(true));
                 })
                 .on("disconnect", data =>
                 {
-                    EventConnectionChange?.Invoke(this, new EventArgs<bool>(false));
+                    if (EventConnectionChange != null) EventConnectionChange(this, new EventArgs<bool>(false));
                 })
                 .on("exception", data =>
                 {
                     var error = (data as JToken).ToObject<NestJSWSException>();
-                    EventNestJSException?.Invoke(this, new EventArgs<NestJSWSException>(error));
+                    if (EventNestJSException != null) EventNestJSException(this, new EventArgs<NestJSWSException>(error));
                 });
 
             _socket.EventReceive += (s, e) =>
             {
-                EventReceive?.Invoke(this, new EventArgs<EventData>(new EventData(e.Value.Name, e.Value.Data)));
+                if (EventReceive != null ) EventReceive(this, new EventArgs<EventData>(new EventData(e.Value.Name, e.Value.Data)));
 
                 if (_requestQueue.Contains(e.Value.Name))
                 {
                     _requestQueue.Receive(e.Value.Name, e.Value.Data);
                 }
             };
-            EventNewSocketInstance?.Invoke(this, new EventArgs());
+            if (EventNewSocketInstance != null ) EventNewSocketInstance(this, new EventArgs());
         }
         public void Disconnect()
         {
@@ -158,7 +158,7 @@ namespace nex.ws
                 throw new Exception("websocket not connected");
 
             if (_requestQueue.Contains(eventName))
-                throw new Exception($"RequestQueue already contains request {eventName}");
+                throw new Exception(string.Format("RequestQueue already contains request {0}", eventName));
 
             _requestQueue.Add(eventName);
             _socket.emit(eventName, data);
@@ -178,7 +178,7 @@ namespace nex.ws
 
             timer.Stop();
             if (timer.Elapsed >= timeoutSpan)
-                throw new TimeoutException($"elapsed time = {timer.Elapsed.TotalMilliseconds} millis");
+                throw new TimeoutException(string.Format("elapsed time = {0} millis", timer.Elapsed.TotalMilliseconds));
            
             return responseData.ToObject<T>();
         }
@@ -188,7 +188,7 @@ namespace nex.ws
                 throw new Exception("websocket not connected");
 
             if (_requestQueue.Contains(eventName))
-                throw new Exception($"RequestQueue already contains request {eventName}");
+                throw new Exception(string.Format("RequestQueue already contains request {0}", eventName));
 
             _requestQueue.Add(eventName);
             _socket.emit(eventName, data);
@@ -208,7 +208,7 @@ namespace nex.ws
 
             timer.Stop();
             if (timer.Elapsed >= timeoutSpan)
-                throw new TimeoutException($"elapsed time = {timer.Elapsed.TotalMilliseconds} millis");
+                throw new TimeoutException(string.Format("elapsed time = {0} millis", timer.Elapsed.TotalMilliseconds));
         }
         
         public IWSBase Subscribe(string eventName, Action<JToken> action)
@@ -224,8 +224,7 @@ namespace nex.ws
                 }
                 catch (Exception ex)
                 {
-                    EventSubscriptionError?
-                        .Invoke(this, new EventArgs<EventError>(new EventError(eventName, ex)));
+                    if (EventSubscriptionError != null) EventSubscriptionError(this, new EventArgs<EventError>(new EventError(eventName, ex)));
                 }
             });
             return this;
@@ -238,7 +237,7 @@ namespace nex.ws
                 ? null
                 : JToken.FromObject(data);
 
-            EventSend?.Invoke(this, new EventArgs<EventData>(new EventData(eventName, jtoken)));
+            if (EventSend != null) EventSend(this, new EventArgs<EventData>(new EventData(eventName, jtoken)));
         }
         #endregion
     }

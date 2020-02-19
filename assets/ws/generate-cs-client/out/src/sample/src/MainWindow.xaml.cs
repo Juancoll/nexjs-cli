@@ -29,21 +29,21 @@ namespace sample
             };
 
             // IWSBase events 
-            //wsapi.Ws.EventConnectionChange += (s, e) =>
-            //{
-            //    if (e.Value)
-            //        Console.WriteLine($"[IWSBase] connected id = '{e.Value}'");
-            //    else
-            //        Console.WriteLine($"[IWSBase] disconnected");
-            //};
+            wsapi.Ws.EventConnectionChange += (s, e) =>
+            {
+               if (e.Value)
+                   Console.WriteLine($"[IWSBase] connected id = '{e.Value}'");
+               else
+                   Console.WriteLine($"[IWSBase] disconnected");
+            };
             //wsapi.Ws.EventSubscriptionError += (s, e) =>
             //{
             //    Console.WriteLine($"[IWSBase] EventSubscriptionError event = {e.Value.Name}, error = {e.Value.Exception.Message}");
             //};
             //wsapi.Ws.EventNewSocketInstance += (s, e) =>
-            //{
-            //    Console.WriteLine($"[IWSBase] EventNewSocketInstance");
-            //};
+            {
+               Console.WriteLine($"[IWSBase] EventNewSocketInstance");
+            };
             //wsapi.Ws.EventSend += (s, e) =>
             //{
             //    var strData = e.Value.Data == null
@@ -275,7 +275,7 @@ namespace sample
         private async void onUpdateCredentials(object sender, RoutedEventArgs e)
         {
             var name = (sender as Button).Name;
-            Console.WriteLine($"[ui] {Name}");
+            Console.WriteLine($"[ui] {name}");
             try
             {               
                 if (name.EndsWith("Subscribe"))
@@ -308,7 +308,7 @@ namespace sample
         private async void onUpdateCredentialsData(object sender, RoutedEventArgs e)
         {
             var name = (sender as Button).Name;
-            Console.WriteLine($"[ui] {Name}");
+            Console.WriteLine($"[ui] {name}");
             try
             {
                 if (name.EndsWith("Subscribe"))
@@ -341,7 +341,7 @@ namespace sample
         private async void onUpdateData(object sender, RoutedEventArgs e)
         {
             var name = (sender as Button).Name;
-            Console.WriteLine($"[ui] {Name}");
+            Console.WriteLine($"[ui] {name}");
             try
             {
                 if (name.EndsWith("Subscribe"))
@@ -374,7 +374,7 @@ namespace sample
         private async void onUpdate(object sender, RoutedEventArgs e)
         {
             var name = (sender as Button).Name;
-            Console.WriteLine($"[ui] {Name}");
+            Console.WriteLine($"[ui] {name}");
             try
             {
                 if (name.EndsWith("Subscribe"))

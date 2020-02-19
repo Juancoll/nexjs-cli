@@ -21,15 +21,19 @@ namespace nex.types
         #region[ class ]
         class Listener
         {
-            public Emitter Emitter { get; }
-            public string EventName { get; }
-            public Action<object> Action { get; }
+            Emitter _emitter;
+            string _eventName;
+            Action<object> _action;
+
+            public Emitter Emitter { get { return _emitter; } }
+            public string EventName { get { return _eventName; } }
+            public Action<object> Action { get { return _action; } }
 
             public Listener(Emitter emitter, string eventName, Action<object> action)
             {
-                EventName = eventName;
-                Emitter = emitter;
-                Action = action;
+                _eventName = eventName;
+                _emitter = emitter;
+                _action = action;
             }
             virtual public void Call(object arg)
             {
@@ -69,7 +73,7 @@ namespace nex.types
         #region [ public ]
         public Emitter on(string eventName, Action<object> action)
         {
-            Logger.Log($"Emitter.on('{eventName}')");
+            Logger.Log(string.Format("Emitter.on('{0}')", eventName));
 
             if (!_callbacks.ContainsKey(eventName))
                 _callbacks.Add(eventName, new List<Listener>());
@@ -79,7 +83,7 @@ namespace nex.types
         }
         public Emitter once(string eventName, Action<object> action)
         {
-            Logger.Log($"Emitter.once('{eventName}')");
+            Logger.Log(string.Format("Emitter.once('{0}')", eventName));
 
             if (!_callbacks.ContainsKey(eventName))
                 _callbacks.Add(eventName, new List<Listener>());
@@ -89,7 +93,7 @@ namespace nex.types
         }
         public Emitter off(string eventName, Action<object> action)
         {
-            Logger.Log($"Emitter.off('{eventName}', action)");
+            Logger.Log(string.Format("Emitter.off('{0}', action)", eventName));
             if (_callbacks.ContainsKey(eventName))
             {
                 var foundAction = _callbacks[eventName].Find(x => x.Action == action);
@@ -102,7 +106,7 @@ namespace nex.types
         }
         public Emitter off(string eventName)
         {
-            Logger.Log($"Emitter.off('{eventName}')");
+            Logger.Log(string.Format("Emitter.off('{0}')", eventName));
             if (_callbacks.ContainsKey(eventName))
             {
                 _callbacks.Remove(eventName);
@@ -111,7 +115,7 @@ namespace nex.types
         }
         public Emitter off()
         {
-            Logger.Log($"Emitter.off()");
+            Logger.Log("Emitter.off()");
             _callbacks.Clear();
             return this;
         }
@@ -136,7 +140,7 @@ namespace nex.types
                 : args is string
                     ? args as string
                     : "{ ... }";
-            Logger.Log($"Emitter.emit '{eventName}' {strData}");
+            Logger.Log(string.Format("Emitter.emit '{0}' {1}", eventName, strData));
 
             if (_callbacks.ContainsKey(eventName))
             {

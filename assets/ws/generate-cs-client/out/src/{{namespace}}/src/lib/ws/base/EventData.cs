@@ -4,13 +4,16 @@ namespace nex.ws
 {
     public class EventData
     {
-        public string Name { get; }
-        public JToken Data { get; }
+        private string _name;
+        private JToken _data;
+
+        public string Name { get { return _name; } }
+        public JToken Data { get { return _data; } }
 
         public EventData(string name, JToken data)
         {
-            Name = name;
-            Data = data;
+            _name = name;
+            _data = data;
         }
     }
 }

@@ -49,8 +49,8 @@ namespace nex.ws
                     var res = data.ToObject<HubResponse>();
                     if (!_requestQueue.Contains(res) || _requestQueue.IsDone(res))
                     {
-                        var error = $"RequestQueue error with id = {_requestQueue.GetId(res)}";
-                        EventResponseError?.Invoke(this, new EventArgs<HubResponseError>(new HubResponseError(res, error)));
+                        var error = string.Format("RequestQueue error with id = {0}", _requestQueue.GetId(res));
+                        if (EventResponseError != null) EventResponseError(this, new EventArgs<HubResponseError>(new HubResponseError(res, error)));
                     }
                     else
                     {
@@ -60,7 +60,7 @@ namespace nex.ws
                 .Subscribe(PUBLISH_EVENT, data =>
                 {
                     var msg = data.ToObject<HubMessage>();
-                    EventReceive?.Invoke(this, new EventArgs<HubMessage>(msg));
+                    if (EventReceive != null) EventReceive(this, new EventArgs<HubMessage>(msg));
                 });
         }
         public void connect()
@@ -92,7 +92,7 @@ namespace nex.ws
 
             await RequestAsync(subRequest);
             _subscriptions.Add(subRequest);
-            EventSubscribed?.Invoke(this, new EventArgs<HubRequest>(subRequest));
+            if (EventSubscribed != null ) EventSubscribed(this, new EventArgs<HubRequest>(subRequest));
         }
         public async Task Unsubscribe(string service, string eventName)
         {
@@ -124,7 +124,7 @@ namespace nex.ws
                 throw new Exception("ws is not connected");
 
             if (_requestQueue.Contains(req))
-                throw new Exception($"RequestQueue already contains request id {_requestQueue.GetId(req)}");
+                throw new Exception(string.Format("RequestQueue already contains request id {0}", _requestQueue.GetId(req)));
 
             _requestQueue.Add(req);
             _ws.Publish(REQUEST_EVENT, req);
@@ -143,14 +143,14 @@ namespace nex.ws
             timer.Stop();
          
             if (timer.Elapsed >= timeoutSpan)
-                throw new TimeoutException($"elapsed time = {timer.Elapsed.TotalMilliseconds} millis");
+                throw new TimeoutException(string.Format("elapsed time = {0} millis", timer.Elapsed.TotalMilliseconds));
 
 
             if (!response.isSuccess)
             {
                 if (response.error != null)
                 {
-                    EventWSError?.Invoke(this, new EventArgs<WSError>(response.error));
+                    if (EventWSError != null) EventWSError(this, new EventArgs<WSError>(response.error));
                     throw new Exception(response.error.Message);
                 }
                 else
@@ -170,7 +170,7 @@ namespace nex.ws
                 catch (Exception ex)
                 {
                     _subscriptions.Remove(req);
-                    EventSubscriptionError?.Invoke(this, new EventArgs<HubSubscriptionError>(new HubSubscriptionError(req, ex)));
+                    if (EventSubscriptionError != null) EventSubscriptionError(this, new EventArgs<HubSubscriptionError>(new HubSubscriptionError(req, ex)));
                 }
             }
         }

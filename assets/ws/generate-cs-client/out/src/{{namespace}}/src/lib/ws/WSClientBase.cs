@@ -5,10 +5,16 @@ namespace nex.ws
 {
     public abstract class WSClientBase
     {
+        #region [ private ]
+        private RestClient _rest;
+        private HubClient _hub;
+        private IWSBase _ws;
+        #endregion
+
         #region [ properties ]
-        public RestClient Rest { get; }
-        public HubClient Hub { get; }
-        public IWSBase    Ws { get; }
+        public RestClient Rest { get { return _rest; } }
+        public HubClient Hub { get { return _hub; } }
+        public IWSBase    Ws { get { return _ws; } }
         #endregion
 
         #region [ events ]
@@ -18,9 +24,9 @@ namespace nex.ws
         #region [ constructor  ]
         public WSClientBase()
         {
-            Ws = new WSBase();
-            Hub = new HubClient(Ws);
-            Rest = new RestClient(Ws);
+            _ws = new WSBase();
+            _hub = new HubClient(_ws);
+            _rest = new RestClient(_ws);
 
             Ws.EventNewSocketInstance += (s, e) =>
             {
@@ -35,8 +41,8 @@ namespace nex.ws
                 }
             };
 
-            Rest.EventWSError += (s, e) => EventWSError?.Invoke(this, e);
-            Hub.EventWSError += (s, e) => EventWSError?.Invoke(this, e);
+            Rest.EventWSError += (s, e) => { if (EventWSError != null) EventWSError(this, e); };
+            Hub.EventWSError += (s, e) => { if (EventWSError != null) EventWSError(this, e); };
         }
         #endregion
     }

@@ -124,7 +124,7 @@ namespace nex.engineio
         #region [ private ]
         private void Send(EngineIOPacket packet)
         {
-            Logger.Log($"send packet type = '{packet.Type}', rawData = {packet.Serialize()}");
+            Logger.Log(string.Format("send packet type = '{0}', rawData = {1}", packet.Type, packet.Serialize()));
             _websocket.Send(packet.Serialize());
         }
         private void Receive(string input)
@@ -134,7 +134,7 @@ namespace nex.engineio
 
             var p = (new EngineIOPacket(input));
             packets.Add(p);
-            Logger.Log($"receive packet type = '{p.Type}', rawData = {input}");     
+            Logger.Log(string.Format("receive packet type = '{0}', rawData = {1}", p.Type, input));     
 
             // [2] - Execute
             packets.ToList().ForEach(packet =>
@@ -172,7 +172,7 @@ namespace nex.engineio
                 }
                 catch (Exception ex)
                 {
-                    emit("error", $"error in executing packet {packet.Serialize()}: {ex.Message}");
+                    emit("error", string.Format("error in executing packet {0}: {1}", packet.Serialize(), ex.Message));
                 }
             });
         }

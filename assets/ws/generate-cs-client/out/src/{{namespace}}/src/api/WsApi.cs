@@ -4,6 +4,12 @@ namespace {{namespace}}
 {
     public class WSApi : WSClientBase
     {
+        #region [ private ]
+        {{#services}}
+        private {{serviceUpperName}}WSService _{{serviceName}};
+        {{/services}}
+        #endregion
+
         #region [ services ]
         {{#services}}
         public {{serviceUpperName}}WSService {{serviceName}} { get; }
@@ -14,7 +20,7 @@ namespace {{namespace}}
         public WSApi()
         {
             {{#services}}
-            {{serviceName}} = new {{serviceUpperName}}WSService(Rest, Hub);
+            _{{serviceName}} = new {{serviceUpperName}}WSService(Rest, Hub);
             {{/services}}
         }
         #endregion

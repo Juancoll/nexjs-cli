@@ -37,18 +37,21 @@ namespace nex.engineio
 
     public class EngineIOPacket
     {
-        public EngineIOPacketType Type { get;  }
-        public string Data { get; }
+        EngineIOPacketType _type;
+        string _data;
+
+        public EngineIOPacketType Type { get { return _type; }  }
+        public string Data { get { return _data; } }
         
         public EngineIOPacket(string input)
         {
-            Type = (EngineIOPacketType)int.Parse(new string(input[0], 1));
-            Data = input.Substring(1);
+            _type = (EngineIOPacketType)int.Parse(new string(input[0], 1));
+            _data = input.Substring(1);
         }
         public EngineIOPacket(EngineIOPacketType type, string data)
         {
-            Type = type;
-            Data = data;
+            _type = type;
+            _data = data;
         }
         public string Serialize()
         {

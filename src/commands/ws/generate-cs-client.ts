@@ -18,6 +18,10 @@ interface IConfig {
     packageName: string;
     packageVersion: string;
     suffix: string;
+    feed?: {
+        name: string;
+        url: string;
+    }
 }
 
 interface ITemplateData {
@@ -145,6 +149,27 @@ export default class extends CommandBase {
             },
             (filename) => mustache.render(filename, apiView),
         );
+        //#endregion
+
+        //#region [5] private feed
+        console.log('[step 5] private feed files');
+        if (config.value.feed) {
+            const feedSrc = assets.path('templates/feed');
+            const feedView = {
+                namespace: config.value.packageName,
+                feed: config.value.feed,
+            }
+            FS.copyFolder(
+                feedSrc,
+                target,
+                (s, t, c) => {
+                    console.log(`  |- [create]  ${t}`);
+                    return mustache.render(c, feedView);
+                }
+            );
+        } else {
+            console.log(`  |- [none]  no private feed defined in nex-cli.json`);
+        }
         //#endregion
 
         //#region [5] post commands

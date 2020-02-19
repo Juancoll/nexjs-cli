@@ -2,13 +2,16 @@
 {
     public class RestResponseError
     {
-        public RestResponse Response { get;  }
-        public string Error { get;  }
+        private RestResponse _response;
+        private string _error;
+
+        public RestResponse Response { get { return _response; }  }
+        public string Error { get { return _error; } }
 
         public RestResponseError(RestResponse res, string error)
         {
-            Response = res;
-            Error = error;
+            _response = res;
+            _error = error;
         }
 
     }

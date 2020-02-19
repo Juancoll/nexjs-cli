@@ -7,7 +7,6 @@ import {
     BooleanLiteral,
     ArrayLiteralExpression,
     Decorator,
-    ClassDeclaration
 } from 'ts-morph';
 import { WSHubEvent } from '../../models/ws/WSHubEvent';
 import { RType } from '../../models/base/RType';
@@ -16,10 +15,18 @@ import { TSCode } from '../TSCode';
 import { CodeConverterBase } from '../base/CodeConverterBase';
 import { RDecorator } from '../../models/base/RDecorator';
 
+enum Hubevents {
+    'HubEvent' = 'HubEvent',
+    'HubEventCredentials' = 'HubEventCredentials',
+    'HubEventCredentialsData' = 'HubEventCredentialsData',
+    'HubEventData' = 'HubEventData'
+}
+
 export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, WSHubEvent> {
 
     //#region [ implements CodeConverterBase ]
     public convert(input: PropertyDeclaration): WSHubEvent {
+        this.check(input);
         let output: WSHubEvent = new WSHubEvent({
             name: input.getName(),
             data: this.getData(input),
@@ -43,6 +50,15 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
     //#endregion
 
     //#region [ private ]
+    private check(property: PropertyDeclaration): void {
+        const decorator = property.getDecorators().find(x => x.getName() == 'Hub');
+        var type = this.ts.RType.convert(property.getType());
+        if (!Hubevents[type.name] && decorator) {
+            const m = property.getParent().getName();
+            const p = property.getName();
+            throw new Error(`[WSHubEventConverter] check(...): model: ${m}, prop: ${p}: invalid type ${type.name} with @Hub decorator`);
+        }
+    }
     private extractServiceName(property: PropertyDeclaration, options: ObjectLiteralExpression): string {
         const serviceProp = options ? options.getProperty('service') : undefined;
         return serviceProp
@@ -71,8 +87,14 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
             credentials: this.extractValidationCredentialsType(decorator),
         };
     }
-    private getData(property: PropertyDeclaration): RType {
-        return this.ts.RType.convert(property.getType().getTypeArguments()[1]);
+    private getData(property: PropertyDeclaration): RType | undefined {
+        var type = this.ts.RType.convert(property.getType());
+        switch (type.name) {
+            case Hubevents.HubEvent: return undefined;
+            case Hubevents.HubEventCredentials: return undefined;
+            case Hubevents.HubEventCredentialsData: return this.ts.RType.convert(property.getType().getTypeArguments()[1]);;
+            case Hubevents.HubEventData: return this.ts.RType.convert(property.getType().getTypeArguments()[0]);;
+        }
     }
     private extractValidationCredentialsType(decorator: Decorator): RType | undefined {
         const options = decorator.getArguments()[0] as ObjectLiteralExpression;

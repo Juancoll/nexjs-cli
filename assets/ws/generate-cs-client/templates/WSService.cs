@@ -16,16 +16,22 @@ namespace {{namespace}}
             :base(rest, hub)
         {
             {{#hubEvents}}
-            {{name}} = new {{notification}}{{&arguments}}(hub, Name, "{{name}}");
+            _{{name}} = new {{notification}}{{&arguments}}(hub, Name, "{{name}}");
             {{/hubEvents}}
         }
         #endregion
 
-        #region [ hub ]
+        #region [ hub private ]
+        {{#hubEvents}}
+        private {{notification}}{{&arguments}} _{{name}} { get; }
+        {{/hubEvents}}
+        #endregion
+
+        #region [ hub public ]
         {{#hubEvents}}
 
         // isAuth: {{isAuth}}
-        public {{notification}}{{&arguments}} {{name}} { get; }
+        public {{notification}}{{&arguments}} {{name}} { get { return _{{name}}; } }
         {{/hubEvents}}
         #endregion
 

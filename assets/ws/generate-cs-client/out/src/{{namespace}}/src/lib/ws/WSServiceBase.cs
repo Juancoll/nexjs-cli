@@ -9,8 +9,8 @@ namespace nex.ws
         #endregion
 
         #region [ private ]
-        private RestClient _rest { get; }
-        private HubClient _hub { get; }
+        private RestClient _rest;
+        private HubClient _hub;
         #endregion
 
         #region [ constructor ]

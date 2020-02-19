@@ -4,10 +4,11 @@ namespace nex.types
 {
     public class EventArgs<T>: EventArgs
     {
-        public T Value { get; }
+        T _value;
+        public T Value { get { return _value; } }
         public EventArgs(T value)
         {
-            Value = value;
+            _value = value;
         }
     }
 }

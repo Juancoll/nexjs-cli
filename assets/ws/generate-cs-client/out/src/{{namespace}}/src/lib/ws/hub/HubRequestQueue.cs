@@ -33,7 +33,7 @@ namespace nex.ws
         {
             var id = GetId(msg);
             if (_request.ContainsKey(id))
-                throw new Exception($"[RequestQueue] already contains id '{id}'");
+                throw new Exception(string.Format("[RequestQueue] already contains id '{0}'", id));
 
             _request.Add(id, new Request());
         }
@@ -41,7 +41,7 @@ namespace nex.ws
         {
             var id = GetId(msg);
             if (!_request.ContainsKey(id))
-                throw new Exception($"[RequestQueue] not contains id '{id}'");
+                throw new Exception(string.Format("[RequestQueue] not contains id '{0}'", id));
 
             return _request[id].Done;
         }
@@ -49,7 +49,7 @@ namespace nex.ws
         {
             var id = GetId(response);
             if (!_request.ContainsKey(id))
-                throw new Exception($"[RequestQueue] not contains id '{id}'");
+                throw new Exception(string.Format("[RequestQueue] not contains id '{0}'", id));
 
             _request[id].Done = true;
             _request[id].ResponseData = response;
@@ -58,7 +58,7 @@ namespace nex.ws
         {
             var id = GetId(msg);
             if (!_request.ContainsKey(id))
-                throw new Exception($"[RequestQueue] not contains id '{id}'");
+                throw new Exception(string.Format("[RequestQueue] not contains id '{0}'", id));
 
             var data = _request[id].ResponseData;
             _request.Remove(id);
@@ -67,7 +67,7 @@ namespace nex.ws
 
         public string GetId(HubRestMessage msg)
         {
-            return $"#{msg.method}::{msg.service}.{msg.eventName}";
+            return string.Format("#{0}::{1}.{2}", msg.service, msg.service, msg.eventName);
         }
         #endregion
     }

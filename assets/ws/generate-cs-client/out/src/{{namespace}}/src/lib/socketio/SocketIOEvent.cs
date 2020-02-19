@@ -4,13 +4,16 @@ namespace nex.socketio
 {
     public class SocketIOEvent
     {
-        public string Name { get; }
-        public JToken Data { get; }
+        string _name;
+        JToken _data;
+
+        public string Name { get { return _name; } }
+        public JToken Data { get { return _data; } }
 
         public SocketIOEvent(string name, JToken data)
         {
-            Name = name;
-            Data = data;
+            _name = name;
+            _data = data;
         }
     }
 }

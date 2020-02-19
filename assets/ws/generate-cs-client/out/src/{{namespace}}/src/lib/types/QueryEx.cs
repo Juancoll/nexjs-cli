@@ -10,7 +10,7 @@ namespace nex.types
         {
             if (value == null || value.Count == 0)
                 return "";
-            return value.Aggregate("", (str, item) => $"{str}&{item.Key}={item.Value}");
+            return value.Aggregate("", (str, item) => string.Format("{0}&{1}={2}", str, item.Key, item.Value));
         }
     }
 }

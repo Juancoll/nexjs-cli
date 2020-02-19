@@ -21,7 +21,7 @@ namespace nex.socketio
         public string id { get { return _engineio.id; } }
         public string nsp { get; private set; }
         public bool connected { get; private set; }
-        public bool disconnected => !connected;
+        public bool disconnected { get { return !connected; } }
         #endregion
 
         #region [ event ]
@@ -50,7 +50,7 @@ namespace nex.socketio
                     if (data is string)
                     {
                         var packet = new SocketIOPacket(data as string);
-                        Logger.Log($"receive package type = '{packet.Type}', data = {data}");
+                        Logger.Log(string.Format("receive package type = '{0}', data = {1}", packet.Type, data));
                         switch (packet.Type)
                         {
                             case SocketIOPacketType.connect:
@@ -78,7 +78,7 @@ namespace nex.socketio
                             case SocketIOPacketType.eventMessage:
                                 var e = packet.GetEvent();                                
                                 emit(e.Name, e.Data);
-                                EventReceive?.Invoke(this, new EventArgs<SocketIOEvent>(new SocketIOEvent(e.Name, e.Data)));
+                                if (EventReceive != null) EventReceive(this, new EventArgs<SocketIOEvent>(new SocketIOEvent(e.Name, e.Data)));
                                 break;
 
                             case SocketIOPacketType.disconnect:

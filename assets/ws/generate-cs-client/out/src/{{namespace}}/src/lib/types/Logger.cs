@@ -12,24 +12,31 @@ namespace nex.types
 
     public class LoggerMessage
     {
-        public LogType Type { get; }
-        public string Id { get; }
-        public string Message { get; }
-        public object Data { get; }
+        LogType _type;
+        string _id;
+        string _message;
+        object _data;
+
+        public LogType Type { get { return _type ; } }
+        public string Id { get { return _id; } }
+        public string Message { get { return _message; } }
+        public object Data { get { return _data; } }
 
         public LoggerMessage(LogType type, string id, string msg, object data = null)
         {
-            Type = type;
-            Id = id;
-            Message = msg;
-            Data = data;
+            _type = type;
+            _id = id;
+            _message = msg;
+            _data = data;
         }
     }
 
     public class Logger
     {
+        string _id;
+
         #region[ properties ]
-        public string Id { get; }
+        public string Id { get { return _id; } }
         public bool Enabled { get; set; }
         public bool EnableEvent { get; set; }
         public bool EnableConsole { get; set; }
@@ -42,7 +49,7 @@ namespace nex.types
         #region [ constructor ]
         public Logger(string id)
         {
-            Id = id;
+            _id = id;
             EnableConsole = true;
             EnableEvent = true;
             Enabled = false;
@@ -74,11 +81,11 @@ namespace nex.types
 
             if (EnableEvent)
             {
-                EventLog?.Invoke(this, new EventArgs<LoggerMessage>(msg));
+                if (EventLog != null) EventLog(this, new EventArgs<LoggerMessage>(msg));
             }
             if (EnableConsole)
             {
-                Console.WriteLine($"[{msg.Type}][{msg.Id}] {msg.Message}");
+                Console.WriteLine(string.Format("[{0}][{1}] {2}", msg.Type, msg.Id, msg.Message));
             }
         }
         #endregion

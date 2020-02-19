@@ -32,18 +32,21 @@ namespace nex.socketio
 
     public class SocketIOPacket
     {
-        public SocketIOPacketType Type { get; }
-        public string Data { get; }
+        SocketIOPacketType _type;
+        string _data;
+
+        public SocketIOPacketType Type { get { return _type; } }
+        public string Data { get { return _data; } }
 
         public SocketIOPacket(string input)
         {
-            Type = (SocketIOPacketType)int.Parse(new string(input[0], 1));
-            Data = input.Substring(1);
+            _type = (SocketIOPacketType)int.Parse(new string(input[0], 1));
+            _data = input.Substring(1);
         }
         public SocketIOPacket(SocketIOPacketType type, string data)
         {
-            Type = type;
-            Data = data;
+            _type = type;
+            _data = data;
         }
         public string Serialize()
         {
@@ -104,7 +107,7 @@ namespace nex.socketio
 
             var strData = nsp == "/"
                 ? array.ToString(Formatting.None)
-                : $"{nsp},{array.ToString(Formatting.None)}";
+                : string.Format("{0},{1}", nsp, array.ToString(Formatting.None));
 
             return new SocketIOPacket(SocketIOPacketType.eventMessage, strData);
         }

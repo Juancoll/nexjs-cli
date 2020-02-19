@@ -24,8 +24,8 @@ namespace nex.WebSocketSharp
         #endregion
 
         #region [ IWebsocket implementation ]
-        public string url => _ws == null ? null : _ws.Url.AbsoluteUri;
-        public ReadyState readyState => _ws == null ? ReadyState.CLOSED : (ReadyState)((int)_ws.ReadyState);
+        public string url { get { return _ws == null ? null : _ws.Url.AbsoluteUri; } }
+        public ReadyState readyState { get { return _ws == null ? ReadyState.CLOSED : (ReadyState)((int)_ws.ReadyState); } }
 
         public event EventHandler onopen;
         public event EventHandler<EventArgs<string>> onerror;
@@ -34,7 +34,7 @@ namespace nex.WebSocketSharp
 
         public void close(string reason)
         {
-            Logger.Log($"close( {reason} )");
+            Logger.Log(string.Format("close( {0} )", reason));
             _ws.Close();            
         }
 
@@ -58,12 +58,12 @@ namespace nex.WebSocketSharp
             _ws.OnOpen += (s, e) =>
             {
                 Logger.Log("OnOpen");
-                onopen?.Invoke(this, new EventArgs());
+                if (onopen != null) onopen(this, new EventArgs());
             };
             _ws.OnClose += (s, e) =>
             {
                 Logger.Log("OnClose");
-                onclose?.Invoke(this, new EventArgs<CloseState>(new CloseState
+                if (onclose != null) onclose(this, new EventArgs<CloseState>(new CloseState
                 {
                     code = e.Code,
                     wasClean = e.WasClean,
@@ -74,7 +74,7 @@ namespace nex.WebSocketSharp
             _ws.OnError += (s, e) =>
             {
                 Logger.Log("OnError");
-                onerror?.Invoke(this, new EventArgs<string>(e.Message));
+                if (onerror != null) onerror(this, new EventArgs<string>(e.Message));
             };
             _ws.OnMessage += (s, e) =>
             {
@@ -82,7 +82,7 @@ namespace nex.WebSocketSharp
                 if (e.IsBinary) Logger.Log("OnMessage binary data");
                 if (e.IsPing) Logger.Log("OnMessage ping");
 
-                onmessage?.Invoke(this, new EventArgs<Message>(new Message
+                if (onmessage != null) onmessage(this, new EventArgs<Message>(new Message
                 {
                     Data = e.Data,
                     IsBInary = e.IsBinary,

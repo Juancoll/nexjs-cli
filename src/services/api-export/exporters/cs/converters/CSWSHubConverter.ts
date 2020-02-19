@@ -30,7 +30,7 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
 
     //#region [ private ]
     private getNotificationType(hub: WSHubEvent): string {
-        if (hub.data.name == 'void') {
+        if (!hub.data) {
             if (!hub.options.credentials) {
                 return 'HubNotification';
             } else {
@@ -46,7 +46,7 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
     }
 
     private getArguments(hub: WSHubEvent): string {
-        if (hub.data.name == 'void') {
+        if (!hub.data) {
             if (!hub.options.credentials) {
                 return '';
             } else {
