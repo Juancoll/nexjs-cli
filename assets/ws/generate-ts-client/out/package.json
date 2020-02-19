@@ -1,12 +1,12 @@
 {
-  "name": "{{&config.packageName}}",
-  "version": "{{&config.packageVersion}}",
-  "description": "wsapi client for {{&config.packageName}}",
-  "author": "cli: nex {{&context.command}}",
+  "name": "{{&name}}",
+  "version": "{{&version}}",
+  "description": "wsapi client for {{&name}}",
+  "author": "nexjs-cli",
   "keywords": [
     "socket.io-client",
     "typescript",
-    "{{&config.packageName}}"
+    "{{&name}}"
   ],
   "license": "Unlicense",
   "main": "./dist/index.js",

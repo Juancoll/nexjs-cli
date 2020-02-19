@@ -8,7 +8,7 @@ namespace {{namespace}}
     public class {{serviceUpperName}}WSService: WSServiceBase 
     {
         #region [ implement WSServiceBase ]
-        public override string Name => "{{serviceName}}";
+        public override string Name { get { return "{{serviceName}}"; } }
         #endregion
 
         #region [ constructor ]

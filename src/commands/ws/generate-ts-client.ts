@@ -5,9 +5,8 @@ import { existsSync } from 'fs';
 
 import { CommandBase } from '../../base';
 import { FS } from '../../services/fs';
-import { WSApiDescriptor, IServiceDescriptor, ModelsFolder } from '../../services/ws';
-import { Shell } from '../../services/shell';
-import { BaseType } from '../../services/ws/Models/BaseType';
+import { TSCode } from '../../services/api-export/tscode/TSCode';
+import { TSConverter } from '../../services/api-export/exporters/ts/TSConverter';
 
 interface IConfigModels {
     source: string;
@@ -24,14 +23,6 @@ interface IConfig {
 
 }
 
-interface ITemplateData {
-    config: IConfig;
-    context: {
-        command: string;
-        cwd: string;
-    };
-    services: IServiceDescriptor[];
-}
 
 export class CommandOptions extends Options {
     @option({
@@ -95,87 +86,154 @@ export default class extends CommandBase {
             throw new Error(`file tsconfig.json not found.`);
         }
 
-        const reflection = new WSApiDescriptor(
-            context.cwd,
-            config.value.outDir,
-            config.value.suffix,
-        );
-
-        // [1] create data view
-        console.log('[step 1] create data view');
-        const dataView = {
-            config: config.value,
-            context: {
-                cwd: context.cwd,
-                command: this.commandPath.join(' '),
-            },
-            services: reflection.getServiceDescriptors(),
-        } as ITemplateData;
-
-        const baseTypes = reflection.getBaseTypesToImport();
-        const flatTypes = BaseType.getTypesToImports(...baseTypes);
-        console.log(flatTypes);
-
-        // [2] parse all out folder
-        console.log('[step 2] generate common files');
-        const source = assets.path('out');
         const target = resolve(context.cwd, config.value.outDir);
-        FS.copyFolder(source, target, (s, t, c) => {
-            console.log(`  |- [create]  ${t}`);
-            return mustache.render(c, dataView);
-        });
 
-        // [3] create service files
-        console.log('[step 3] generate ws service files');
-        dataView.services.forEach(item => {
-            const src = assets.path('templates/WSService.ts');
-            const dest = join(target, 'src', 'api', 'services', `${item.service.upper}WSService.ts`);
+        //#region [1] Code analysis 
+        console.log('[step 1] code analisis');
+        const tscode = new TSCode(context.cwd, config.value.suffix);
+        const services = tscode.WSService.convert();
+        const dependencies = tscode.getDependencies(services);
+        //#endregion
+
+        const ts = new TSConverter();
+
+        //#region [2] create model files
+        console.log('[step 2] create models');
+        const modelViews = dependencies.map(x => ts.Model.convert(x.declaration));
+        modelViews.forEach(view => {
+            const src = assets.path('templates/model.ts');
+            const dest = join(target, 'src', 'models', `${view.name}.ts`);
             FS.copyFile(src, dest, (s, t, c) => {
                 console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, item);
+                return mustache.render(c, view);
             });
         });
 
-        // [4] copy models
-        console.log('[step 4] copy models');
-        const modelsSource = resolve(context.cwd, config.value.models.source);
-        const modelsTarget = resolve(target, config.value.models.source);
-        console.log(`  |- [source]  ${modelsSource}`);
-        console.log(`  |- [target]  ${modelsTarget}`);
-        FS.copyFolder(modelsSource, modelsTarget, (s, t, c) => {
+        //#region [3] create index model
+        console.log('[step 2] create index model');
+        const modelsIndexView = ts.ModelIndex.convert(dependencies.map(x => x.declaration));
+        const modelIndexSrc = assets.path('templates/model.index.ts');
+        const modelIndexDest = join(target, 'src', 'models', `index.ts`);
+        FS.copyFile(modelIndexSrc, modelIndexDest, (s, t, c) => {
             console.log(`  |- [create]  ${t}`);
-            return c;
+            return mustache.render(c, modelsIndexView);
         });
+        //#endregion
 
-        // [5] clean models
-        console.log('[step 5] clean *.ts files models (remove imports and decorators)');
-        console.log(`  |- [imports]    remove '${config.value.models.importsToRemove.join(',')}'`);
-        console.log(`  |- [decorators] remove '${config.value.models.decoratorsToRemove.join(',')}'`);
-        const modelsFolder = new ModelsFolder(
+
+        //#region [4] generate ws service files
+        const serviceViews = services.map(service => ts.WSService.convert(service));
+        console.log('[step 4] generate ws service files');
+        serviceViews.forEach(view => {
+            const src = assets.path('templates/WSService.ts');
+            const dest = join(target, 'src', 'api', 'services', `${view.serviceUpperName}WSService.ts`);
+            FS.copyFile(src, dest, (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, view);
+            });
+        });
+        //#endregion
+
+        //#region [5] copy and parse out folder
+        console.log('[step 5] copy and parse out folder');
+        const source = assets.path('out');
+        const apiView = ts.WSApi.convert({
+            packageName: config.value.packageName,
+            packageVersion: config.value.packageVersion,
+            services: services,
+        });
+        FS.copyFolder(
+            source,
             target,
-            config.value.models.importsToRemove,
-            config.value.models.decoratorsToRemove,
+            (s, t, c) => {
+                console.log(`  |- [create]  ${t}`);
+                return mustache.render(c, apiView);
+            },
+            (filename) => mustache.render(filename, apiView),
         );
-        modelsFolder.apply();
-        modelsFolder.save();
+        //#endregion
 
-        // [6] post commands
-        console.log('[step 6] post commands');
-        if (options.install) {
-            try {
-                await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
-            } catch (err) {
-                console.error(err);
-            }
-        }
+        // const reflection = new WSApiDescriptor(
+        //     context.cwd,
+        //     config.value.outDir,
+        //     config.value.suffix,
+        // );
 
-        if (options.build) {
-            try {
-                await Shell.exec(`cd ${target} && npm run build`, { stdout: true, rejectOnError: true });
-            } catch (err) {
-                console.error(err);
-            }
-        }
+        // // [1] create data view
+        // console.log('[step 1] create data view');
+        // const dataView = {
+        //     config: config.value,
+        //     context: {
+        //         cwd: context.cwd,
+        //         command: this.commandPath.join(' '),
+        //     },
+        //     services: reflection.getServiceDescriptors(),
+        // } as ITemplateData;
+
+        // const baseTypes = reflection.getBaseTypesToImport();
+        // const flatTypes = BaseType.getTypesToImports(...baseTypes);
+        // console.log(flatTypes);
+
+        // // [2] parse all out folder
+        // console.log('[step 2] generate common files');
+        // const source = assets.path('out');
+        // const target = resolve(context.cwd, config.value.outDir);
+        // FS.copyFolder(source, target, (s, t, c) => {
+        //     console.log(`  |- [create]  ${t}`);
+        //     return mustache.render(c, dataView);
+        // });
+
+        // // [3] create service files
+        // console.log('[step 3] generate ws service files');
+        // dataView.services.forEach(item => {
+        //     const src = assets.path('templates/WSService.ts');
+        //     const dest = join(target, 'src', 'api', 'services', `${item.service.upper}WSService.ts`);
+        //     FS.copyFile(src, dest, (s, t, c) => {
+        //         console.log(`  |- [create]  ${t}`);
+        //         return mustache.render(c, item);
+        //     });
+        // });
+
+        // // [4] copy models
+        // console.log('[step 4] copy models');
+        // const modelsSource = resolve(context.cwd, config.value.models.source);
+        // const modelsTarget = resolve(target, config.value.models.source);
+        // console.log(`  |- [source]  ${modelsSource}`);
+        // console.log(`  |- [target]  ${modelsTarget}`);
+        // FS.copyFolder(modelsSource, modelsTarget, (s, t, c) => {
+        //     console.log(`  |- [create]  ${t}`);
+        //     return c;
+        // });
+
+        // // [5] clean models
+        // console.log('[step 5] clean *.ts files models (remove imports and decorators)');
+        // console.log(`  |- [imports]    remove '${config.value.models.importsToRemove.join(',')}'`);
+        // console.log(`  |- [decorators] remove '${config.value.models.decoratorsToRemove.join(',')}'`);
+        // const modelsFolder = new ModelsFolder(
+        //     target,
+        //     config.value.models.importsToRemove,
+        //     config.value.models.decoratorsToRemove,
+        // );
+        // modelsFolder.apply();
+        // modelsFolder.save();
+
+        // // [6] post commands
+        // console.log('[step 6] post commands');
+        // if (options.install) {
+        //     try {
+        //         await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
+        //     } catch (err) {
+        //         console.error(err);
+        //     }
+        // }
+
+        // if (options.build) {
+        //     try {
+        //         await Shell.exec(`cd ${target} && npm run build`, { stdout: true, rejectOnError: true });
+        //     } catch (err) {
+        //         console.error(err);
+        //     }
+        // }
 
         return `${this.commandName} finished.`;
     }

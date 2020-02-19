@@ -1,20 +1,31 @@
 import { WSServiceBase } from '../../lib';
-{{#typesToImport.items}}
-import { {{import.strType}} } from '{{&import.targetPath}}';
-{{/typesToImport.items}}
+import { HubNotification } from '../../lib/hub/notifications/HubNotification';
+import { HubNotificationCredentials } from '../../lib/hub/notifications/HubNotificationCredentials';
+import { HubNotificationCredentialsData } from '../../lib/hub/notifications/HubNotificationCredentialsData';
+import { HubNotificationData } from '../../lib/hub/notifications/HubNotificationData';
 
-export class {{service.upper}}WSService extends WSServiceBase {
-    public readonly name = '{{service.name}}';
+{{#imports}}
+import { {{&type}} } from '{{&path}}';
+{{/imports}}
+
+export class {{serviceUpperName}}WSService extends WSServiceBase {
+    //#region [ implement WSServiceBase ]
+    public readonly name = '{{serviceName}}';
+    //#endregion
 
     //#region [ hub ]
-    {{#hub}}
-    public {{event}} = this.newEvent<{{credentials.strType}}, {{data.strType}}>('{{event}}');
-    {{/hub}}
+    {{#hubEvents}}
+
+    // isAuth: {{isAuth}}
+    public readonly {{name}} = new {{notification}}{{&arguments}}(this._hub, this.name,'{{name}}');
+    {{/hubEvents}}
     //#endregion
 
     //#region [ rest ]
-    {{#rest}}
-    public {{method}}({{&strMethodParams}}) { return this.request<{{returnType.strType}}>( '{{method}}', {{&strRequestArgs}} ); }
-    {{/rest}}
+    {{#restMethods}}
+
+     // isAuth: {{isAuth}}
+    public {{name}}({{&methodParams}}): Promise{{&returnType}} { return this.request{{&returnType}}( '{{name}}', {{&requestParams}} ); }
+    {{/restMethods}}
     //#endregion
 }

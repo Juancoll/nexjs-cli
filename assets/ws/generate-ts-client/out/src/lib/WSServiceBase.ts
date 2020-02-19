@@ -1,6 +1,5 @@
 import { RestClient } from './rest/RestClient';
 import { HubClient } from './hub/HubClient';
-import { HubNotification } from './hub/HubNotification';
 
 export abstract class WSServiceBase {
     //#region [ abstract ]
@@ -8,8 +7,8 @@ export abstract class WSServiceBase {
     //#endregion
 
     //#region [ private ]
-    private readonly _rest: RestClient;
-    private readonly _hub: HubClient;
+    protected readonly _rest: RestClient;
+    protected readonly _hub: HubClient;
     //#endregion
 
     //#region [ constructor ]
@@ -30,9 +29,6 @@ export abstract class WSServiceBase {
             },
             timeout,
         );
-    }
-    protected newEvent<TCredentials, TData>(event: string) {
-        return new HubNotification<TCredentials, TData>(this._hub, this.name, event);
     }
     //#endregion
 }
