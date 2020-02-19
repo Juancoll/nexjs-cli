@@ -12,7 +12,7 @@ namespace {{namespace}}
 
         #region [ services ]
         {{#services}}
-        public {{serviceUpperName}}WSService {{serviceName}} { get; }
+        public {{serviceUpperName}}WSService {{serviceName}} { get { return _{{serviceName}}; } }
         {{/services}}
         #endregion
 
