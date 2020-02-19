@@ -261,7 +261,7 @@ namespace sample
             try
             {
                 Console.WriteLine("[ui] changeUser");
-                var res = await wsapi.user.changeUser("juan", "coll");
+                var res = await wsapi.user.changeUser("juan", "coll", new Player(), new Org());
                 Console.WriteLine($"[Response] {JsonConvert.SerializeObject(res)}");
             }
             catch (Exception ex)

@@ -2,7 +2,7 @@
 using nex.websocket;
 using System;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using nex.WebSocketSharp;
 
 namespace nex.WebSocketSharp
 {
