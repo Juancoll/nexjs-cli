@@ -7,30 +7,34 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ws generate-ts-client",
+            "name": "nex ts ws gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "args": [
+                "ts",
                 "ws",
-                "generate-ts-client",
+                "gen-client",
+                "--build"
             ],
             "env": {
-                "NODE_ENV": "debug"
+                "NODE_ENV": "debug",               
             }
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ws generate-cs-client",
+            "name": "nex cs ws gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "args": [
+                "cs",
                 "ws",
-                "generate-cs-client",
+                "gen-client",
+                "--build"
             ],
             "env": {
                 "NODE_ENV": "debug"
