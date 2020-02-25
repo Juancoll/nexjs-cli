@@ -20,7 +20,10 @@ export class TSConverter {
     //#region [ commons ]
     public getTypeInstanceName(t: RType): string {
         if (t.isArray) {
-            return `Array<${this.getTypeInstanceName(t.arguments[0])}>`
+            var type = this.getTypeInstanceName(t.arguments[0]);
+            return type.indexOf('<') == -1
+                ? `${type}[]`
+                : `Array<${type}>`;
         }
         else {
             let result = t.name;
