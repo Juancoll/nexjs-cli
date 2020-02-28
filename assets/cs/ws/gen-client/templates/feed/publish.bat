@@ -1,7 +1,6 @@
-set name={{namespace}}
-set folder=.\src\%name%
+set name=template.api.wsclient
 
-del %folder%\%name%.*.nupkg
+del %name%.*.nupkg
 .\.nuget\nuget.exe restore
-.\.nuget\nuget.exe pack -Build -OutputDirectory %folder% %folder%\%name%.csproj
-.\.nuget\nuget.exe push -Source "{{feed.name}}" -ApiKey myazurekey %folder%\%name%.*.nupkg      
+.\.nuget\nuget.exe pack -Build -OutputDirectory . %name%.csproj
+.\.nuget\nuget.exe push -Source "{{feedName}}" -ApiKey myazurekey %name%.*.nupkg      

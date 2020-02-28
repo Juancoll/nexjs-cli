@@ -22,7 +22,7 @@ export class RestProtocolClient<TRequest, TResponse> {
 
     //#region [ properties ]
     public readonly name: string;
-    public defaultRequestTimeout = 300000;
+    public defaultRequestTimeout = 3000;
     //#endregion
 
     //#region [events]
