@@ -45,21 +45,22 @@ export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaratio
 
     //#region  [ private ]
     private getImports(d: RTypeDeclaration): ITSImport[] {
-        return d.getDependencies().map(x => ({
+        const dependencies = d.getDependencies();
+        return dependencies.map(x => ({
             type: x.name,
             path: `./${x.name}`,
         }));
     }
-    private getConstructorPartialArgument( d: RTypeDeclaration): string{
+    private getConstructorPartialArgument(d: RTypeDeclaration): string {
         let result = d.name;
         if (d.arguments.length > 0) {
             result += `<${d.arguments.map(x => this.parent.getTypeInstanceName(x)).join(',')}>`
         }
         return result;
     }
-    private getConstructorSuperCall( d: RTypeDeclaration): string{
+    private getConstructorSuperCall(d: RTypeDeclaration): string {
         let result = '';
-        if (d.baseType){
+        if (d.baseType) {
             result = 'super(); ';
         }
         return result;

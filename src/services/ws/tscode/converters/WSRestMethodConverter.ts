@@ -47,10 +47,10 @@ export class WSHRestEventConverter extends CodeConverterBase<MethodDeclaration, 
 
     //#region [ private ]  
     private extractServiceName(method: MethodDeclaration, options: ObjectLiteralExpression): string {
-        const serviceProp = options ? options.getProperty('service') : undefined;
+        const serviceProp = options ? options.getProperty('name') : undefined;
         return serviceProp
             ? this.getStringLiteral(serviceProp)
-            : method.getParent().getProperty('service').getType().getText().replace(/^"(.*)"$/, '$1');
+            : method.getParent().getProperty('name').getType().getText().replace(/^"(.*)"$/, '$1');
     }
     private extractHubDecoratorOptions(method: MethodDeclaration): WSRestDecoratorOptions {
         const decorator = method.getDecorators().find(x => x.getName() == 'Rest');

@@ -19,11 +19,13 @@ export class RTypeConverter extends CodeConverterBase<Type, RType> {
         if (!output.isPrimitive && !output.isArray) {
 
             output.sourceFile = this.getImportFile(input);
-            output.declaration = this.ts.RTypeDeclaration.convert({
-                isInterface: input.isInterface(),
-                name: output.name,
-                sourceFile: output.sourceFile
-            });
+            if (output.sourceFile) {
+                output.declaration = this.ts.RTypeDeclaration.convert({
+                    isInterface: input.isInterface(),
+                    name: output.name,
+                    sourceFile: output.sourceFile
+                });
+            }
         }
         return output;
     }
@@ -37,7 +39,7 @@ export class RTypeConverter extends CodeConverterBase<Type, RType> {
 
     //#region [ private ]
     private isPrimitive(t: Type): boolean {
-        return !this.isImport(t) && !t.isArray();
+        return !this.isImport(t) && !t.isArray() && !t.getText().startsWith('Promise');
     }
 
     private isImport(t: Type) {

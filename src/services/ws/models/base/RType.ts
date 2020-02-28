@@ -30,5 +30,5 @@ export class RType {
             }
         });
         return output;
-    }
+    }    
 }

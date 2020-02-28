@@ -60,10 +60,10 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
         }
     }
     private extractServiceName(property: PropertyDeclaration, options: ObjectLiteralExpression): string {
-        const serviceProp = options ? options.getProperty('service') : undefined;
+        const serviceProp = options ? options.getProperty('name') : undefined;
         return serviceProp
             ? this.getStringLiteral(serviceProp)
-            : property.getParent().getProperty('service').getType().getText().replace(/^"(.*)"$/, '$1');
+            : property.getParent().getProperty('name').getType().getText().replace(/^"(.*)"$/, '$1');
     }
     private extractHubDecoratorOptions(property: PropertyDeclaration): WSHubDecoratorOptions {
         const decorator = property.getDecorators().find(x => x.getName() == 'Hub');

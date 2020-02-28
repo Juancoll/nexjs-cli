@@ -15,10 +15,10 @@ export class Assets {
         }
     }
 
-    public path(...args: string[]): string {
+    public getPath(...args: string[]): string {
         return resolve(this.root, ...args);
     }
     public readTextFile(...args: string[]): string {
-        return readFileSync(this.path(...args), 'utf8');
+        return readFileSync(this.getPath(...args), 'utf8');
     }
 }

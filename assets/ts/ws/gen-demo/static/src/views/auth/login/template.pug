@@ -1,0 +1,18 @@
+v-container.flex.v-container.full.items.h-center.v-center
+    v-card
+        div.flex.v-container           
+            div.flex.v-container(style="padding:2rem")
+                div(style="text-align:center;max-width:100vw;margin:2rem")
+                    img(v-bind:src="logo" alt='logo' style="width:100%")
+                    h4(style="margin-top:10px") Hello! let&apos;s get started
+                    h5.font-weight-light Register in to continue.
+                div
+                    v-form(@keyup.native.enter="login")
+                        div
+                            v-text-field(label="email" type='email'  v-model="email" required)
+                        div
+                            v-text-field(label="password"  type='password' v-model="password" required)
+                        v-btn.flex.h-center.h-full.primary(@click="login") SIGN IN
+                div.h-full.flex.v-container.items.right(style="margin-top:5px")
+                    router-link(to="/auth/register") ...or register
+            v-progress-linear(v-if="isWaiting" indeterminate  color="primary")

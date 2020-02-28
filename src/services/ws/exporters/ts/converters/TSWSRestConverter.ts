@@ -9,18 +9,33 @@ export interface ITSRestMethodView {
     methodParams: string;
     requestParams: string;
     returnType: string;
+    defaults: {
+        credentials: string;
+        data: string;
+    }
 }
 
 export class TSRestConverter extends ConverterBase<TSConverter, WSRestMethod, ITSRestMethodView>{
 
     //#region  [ implement ConverterBase ]
     convert(input: WSRestMethod): ITSRestMethodView {
-        return {
-            isAuth: input.options.isAuth,
-            name: input.name,
-            returnType: this.getRestReturnType(input),
-            methodParams: this.getRestMethodParams(input),
-            requestParams: this.getRestResquestParams(input)
+        try {
+            return {
+                isAuth: input.options.isAuth,
+                name: input.name,
+                returnType: this.getRestReturnType(input),
+                methodParams: this.getRestMethodParams(input),
+                requestParams: this.getRestResquestParams(input),
+                defaults: {
+                    credentials: this.parent.TypeDefaultValue.convert(input.options.credentials),
+                    data: input.params.length == 0
+                        ? '{}'
+                        : `{ ${input.params.map(x => `${x.name}: ${this.parent.TypeDefaultValue.convert(x.type)}`).join(', ')} }`,
+                }
+            }
+        }
+        catch (err) {
+            console.log(err);
         }
     }
     //#endregion
@@ -47,7 +62,7 @@ export class TSRestConverter extends ConverterBase<TSConverter, WSRestMethod, IT
         const allParams = rest.params.concat();
         let result = allParams.map(x => `${x.name}: ${this.parent.getTypeInstanceName(x.type)}`).join(', ');
         if (rest.options.credentials) {
-            result += `${allParams.length == 0 ? "" : ", "}credentials: ${ this.parent.getTypeInstanceName(rest.options.credentials)}`;
+            result += `${allParams.length == 0 ? "" : ", "}credentials: ${this.parent.getTypeInstanceName(rest.options.credentials)}`;
         }
         return result;
     }

@@ -1,0 +1,13 @@
+{
+    "common": {
+        "name": "name",
+        "title": "title",
+        "messageNamedParam": "My param is: {value}",
+        "messageListParam": "list of param is {0}, {1}",
+        "html": "<b style=\"color:blue\"> I m bold and blue</b>"
+    },
+    "pluralization": {
+        "car": "car | cars",
+        "apple": "no apples | one apple | {count} apples"
+    }
+}

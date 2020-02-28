@@ -9,39 +9,28 @@ import { TSCode } from '../../../services/ws/tscode/TSCode';
 import { TSConverter } from '../../../services/ws/exporters/ts/TSConverter';
 import { Shell } from '../../../services/shell';
 
-interface IConfigModels {
-    source: string;
-    importsToRemove: string[];
-    decoratorsToRemove: string[];
-}
-
-interface IConfig {
-    outDir: string;
-    packageName: string;
-    packageVersion: string;
-    suffix: string;
-    models: IConfigModels;
-
-}
-
 class CommandOptions extends Options {
     @option({
-        flag: 'i',
-        default: false,
+        flag: 's',
         required: false,
-        toggle: true,
-        description: 'after, execute npm install',
+        description: 'source folder - must contain ws contract server',
     })
-    public install: boolean;
+    public source: string;
 
     @option({
-        flag: 'b',
-        default: false,
+        flag: 'o',
         required: false,
-        toggle: true,
-        description: 'after, execute npm build',
+        description: 'output folder - where npm package are created.',
     })
-    public build: boolean;
+    public output: string;
+
+    @option({
+        flag: 'x',
+        required: false,
+        default: ".contract.ts",
+        description: 'suffix file, to select posible contracts',
+    })
+    public suffix: string;
 }
 
 // tslint:disable-next-line: max-classes-per-file
@@ -59,21 +48,17 @@ export default class extends CommandBase {
         options: CommandOptions,
         context: Context,
     ): Promise<string> {
-        if (process.env.NODE_ENV == 'debug') {
-            const cwd = resolve('../../../nodall-training/template.api.server');
-            if (!existsSync(cwd)) {
-                throw new Error(`cwd '${cwd}' not found`);
-            }
-            console.log(`[DEBUG] context.env: ${cwd}`);
-            context.cwd = cwd;
-        }
 
-        const config = this.getConfig<IConfig>(context);
+        const config = this.getOptions<CommandOptions>(options, options.source ? options.source : context.cwd);
+        const cwd = config.source
+            ? resolve(options.source)
+            : context.cwd;
+
         const assets = this.getAssets();
 
-        console.log('[read] read config from nex-cli.json file');
-        if (!config.exists) {
-            throw new Error(`config not found. create nex-cli.json file and add config for "${this.commandPath.join(' ')}" command.`);
+        //#region [ check ]
+        if (!existsSync(cwd)) {
+            throw new Error(`source folder '${cwd}' not found`);
         }
 
         console.log('[check] command assets');
@@ -82,95 +67,60 @@ export default class extends CommandBase {
         }
 
         console.log('[check] is typescript project');
-        if (!existsSync(resolve(context.cwd, 'tsconfig.json'))) {
+        if (!existsSync(resolve(cwd, 'tsconfig.json'))) {
             throw new Error(`file tsconfig.json not found.`);
         }
+        //#endregion
 
-        const target = resolve(context.cwd, config.value.outDir);
+        const target = resolve(context.cwd, config.output);
+        const targetLib = join(target, 'src', 'lib', 'ws');
+        const targetServiceViews = join(target, 'src', 'views', 'ws', 'services');
 
-        //#region [1] Code analysis 
-        console.log('[step 1] code analisis');
-        const tscode = new TSCode(context.cwd, config.value.suffix);
+        //#region [1] STATIC FOLDER
+        console.log('[1] copy and parse out folder');
+        const staticSource = assets.getPath('static');
+        FS.copyFolder(staticSource, target);
+        //#endregion   
+
+        //#region [2] create lib 
+        console.log('[2] create lib');
+        // gen lib without package 
+        await Shell.exec(`nex ts ws up-client -s ${cwd} -o ${targetLib}`, { stdout: true, rejectOnError: true });
+        //#endregion
+
+        //#region [3] Code analysis 
+        console.log('[3] code analisis');
+        const tscode = new TSCode(cwd, config.suffix);
         const services = tscode.WSService.convert();
-        const dependencies = tscode.getDependencies(services);
         //#endregion
 
         const ts = new TSConverter();
 
-        //#region [2] create model files
-        console.log('[step 2] create models');
-        const modelViews = dependencies.map(x => ts.Model.convert(x.declaration));
-        modelViews.forEach(view => {
-            const src = assets.path('templates/model.ts');
-            const dest = join(target, 'src', 'models', `${view.name}.ts`);
-            FS.copyFile(src, dest, (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, view);
-            });
-        });
-
-        //#region [3] create index model
-        console.log('[step 2] create index model');
-        const modelsIndexView = ts.ModelIndex.convert(dependencies.map(x => x.declaration));
-        const modelIndexSrc = assets.path('templates/model.index.ts');
-        const modelIndexDest = join(target, 'src', 'models', `index.ts`);
-        FS.copyFile(modelIndexSrc, modelIndexDest, (s, t, c) => {
-            console.log(`  |- [create]  ${t}`);
-            return mustache.render(c, modelsIndexView);
-        });
-        //#endregion
-
-
-        //#region [4] generate ws service files
+        //#region [4] Services
+        console.log('[4] SERVICES');
         const serviceViews = services.map(service => ts.WSService.convert(service));
-        console.log('[step 4] generate ws service files');
+
+        console.log('[4.1] App Service Views');
         serviceViews.forEach(view => {
-            const src = assets.path('templates/WSService.ts');
-            const dest = join(target, 'src', 'api', 'services', `${view.serviceUpperName}WSService.ts`);
-            FS.copyFile(src, dest, (s, t, c) => {
+            const src = assets.getPath('templates/services');
+            const dest = join(targetServiceViews, `${view.serviceName}`);
+            FS.copyFolder(src, dest, (s, t, c) => {
                 console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, view);
+                return s.endsWith(".pug")
+                    ? c
+                    : mustache.render(c, view);
             });
         });
-        //#endregion
 
-        //#region [5] copy and parse out folder
-        console.log('[step 5] copy and parse out folder');
-        const source = assets.path('out');
-        const apiView = ts.WSApi.convert({
-            packageName: config.value.packageName,
-            packageVersion: config.value.packageVersion,
-            services: services,
+        console.log('[4.2] App Routes');
+        const routesSource = assets.getPath('templates/routes/defaultRoutes.ts');
+        const routesTarget = join(target, 'src', 'router', `defaultRoutes.ts`);
+        const routesView = { services: serviceViews }
+        FS.copyFile(routesSource, routesTarget, (s, t, c) => {
+            console.log(`  |- [create]  ${t}`);
+            return mustache.render(c, routesView);
         });
-        FS.copyFolder(
-            source,
-            target,
-            (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, apiView);
-            },
-            (filename) => mustache.render(filename, apiView),
-        );
-        //#endregion      
-
-        //#region [6] post commands
-        console.log('[step 6] post commands');
-        if (options.install) {
-            try {
-                await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        if (options.build) {
-            try {
-                await Shell.exec(`cd ${target} && npm run build`, { stdout: true, rejectOnError: true });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        //#endregion 
+        //#endregion          
 
         return `${this.commandName} finished.`;
     }

@@ -8,6 +8,7 @@ import { WSHRestEventConverter } from './converters/WSRestMethodConverter';
 import { WSServicesConverter } from './converters/WSServicesConverter';
 import { WSService } from '../models/ws/WSService';
 import { RType } from '../models/base/RType';
+import { RDependencies } from '../models/base/RDependencies';
 
 export class TSCode {
 
@@ -38,17 +39,10 @@ export class TSCode {
     }
 
     getDependencies(services: WSService[]): RType[] {
-        var output: RType[] = [];
-        const addType = (t: RType): void => {
-            if (t && !t.isPrimitive && !t.isArray) {
-                if (!output.find(x => t.name == x.name && t.sourceFile == x.sourceFile)) {
-                    output.push(t);
-                }
-            }
-        }
-        services.forEach(x => {
-            x.getDependencies().forEach(x => addType(x))
-        });
-        return output;
+        var dependencies = new RDependencies();
+
+        services.forEach(x => dependencies.addTypes(x.getDependencies()));
+
+        return dependencies.get();
     }
 }

@@ -21,6 +21,7 @@
   "author": "juancoll",
   "license": "ISC",
   "dependencies": {
+    "@types/rimraf": "^2.0.3",
     "ansicolor": "^1.1.93",
     "clime": "^0.5.10",
     "fs-extra": "^8.1.0",

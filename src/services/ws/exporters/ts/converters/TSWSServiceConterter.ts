@@ -41,9 +41,10 @@ export class TSWSServiceConterter extends ConverterBase<TSConverter, WSService, 
 
     //#region [ private ]
     private getImports(s: WSService): ITSImport[] {
-        return s.getDependencies().map(x => ({
+        const dependencies = s.getDependencies();
+        return dependencies.map(x => ({
             type: x.name,
-            path: `../../models/${x.name}`,
+            path: `${x.name}`,
         }));
     }
     //#endregion

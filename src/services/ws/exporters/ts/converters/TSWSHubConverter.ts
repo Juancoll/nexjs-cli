@@ -7,6 +7,9 @@ export interface ITSHubEventView {
     name: string;
     notification: string;
     arguments: string;
+    defaults: {
+        credentials: string;
+    }
 }
 
 export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHubEventView>{
@@ -18,6 +21,7 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
             name: input.name,
             notification: this.getNotificationType(input),
             arguments: this.getArguments(input),
+            defaults: { credentials: this.parent.TypeDefaultValue.convert(input.options.credentials) },
         }
     }
     //#endregion

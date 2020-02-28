@@ -5,6 +5,7 @@ import { TSHubConverter } from './converters/TSWSHubConverter';
 import { TSRestConverter } from './converters/TSWSRestConverter';
 import { TSWSServiceConterter } from './converters/TSWSServiceConterter';
 import { TSWSApiConverter } from './converters/TSWSApiConverter';
+import { TSTypeDefaultValue } from './converters/TSTypeDefaultValue';
 
 export class TSConverter {
 
@@ -15,6 +16,7 @@ export class TSConverter {
     public readonly WSHub = new TSHubConverter(this);
     public readonly WSService = new TSWSServiceConterter(this);
     public readonly WSApi = new TSWSApiConverter(this);
+    public readonly TypeDefaultValue = new TSTypeDefaultValue(this);
     //#endregion
 
     //#region [ commons ]

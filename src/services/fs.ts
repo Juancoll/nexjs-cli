@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as rimraf from 'rimraf';
 
 const { isBinary } = require('istextorbinary')
 
@@ -58,5 +59,8 @@ export class FS {
         if (!fs.existsSync(source)) {
             fs.mkdirSync(source, { recursive: true });
         }
+    }
+    public static removeFolder(source: string) {
+        rimraf.sync(source);
     }
 }

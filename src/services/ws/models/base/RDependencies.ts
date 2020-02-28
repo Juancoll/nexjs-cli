@@ -6,8 +6,9 @@ export class RDependencies {
     addType(value: RType) {
         if (value && !value.isPrimitive) {
             if (!this._types.find(x => value.name == x.name && value.sourceFile == x.sourceFile)) {
-                if (!value.isArray)
+                if (value.declaration) {
                     this._types.push(value);
+                }
                 this.addTypes(value.getDependencies());
             }
         }
