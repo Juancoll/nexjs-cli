@@ -44,7 +44,7 @@ class CommandOptions extends Options {
 
 // tslint:disable-next-line: max-classes-per-file
 @command({
-    description: 'update wsapi client',
+    description: 'update typescript wsapi client',
 })
 export default class extends CommandBase {
 

@@ -4,13 +4,13 @@ import { WSService } from 'src/services/ws/models/ws/WSService';
 import { ICSWSServiceView } from './CSWSServiceConterter';
 
 export interface ICSWSApiInput {
-    namespace: string;
+    name: string;
     version: string;
     services: WSService[];
 }
 
 export interface ICSWSApiView {
-    namespace: string;
+    name: string;
     version: string;
     services: ICSWSServiceView[];
 }
@@ -20,10 +20,10 @@ export class CSWSApiConverter extends ConverterBase<CSConverter, ICSWSApiInput, 
     //#region  [ implement ConverterBase ]
     convert(input: ICSWSApiInput): ICSWSApiView {
         return {
-            namespace: input.namespace,
+            name: input.name,
             version: input.version,
             services: input.services.map(x => this.parent.WSService.convert({
-                namespace: input.namespace,
+                namespace: input.name,
                 wsservice: x,
             })),
         };

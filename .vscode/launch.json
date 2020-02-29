@@ -106,7 +106,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex cs ws up-client",
+            "name": "nex cs ws gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -115,7 +115,10 @@
                 "cs",
                 "ws",
                 "gen-client",
-                "--build"
+                "-s",
+                "C:/git/nodall-training/template.api.server",
+                "-o",
+                "c:/wsclient-cs",
             ],
             "env": {
                 "NODE_ENV": "debug"

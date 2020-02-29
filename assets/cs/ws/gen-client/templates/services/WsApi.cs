@@ -1,21 +1,27 @@
 ﻿using nex.ws;
 
-namespace template.api.wsclient
+namespace {{namespace}}
 {
     public class WSApi<TUser, TToken> : WSApiBase<TUser, TToken>
     {
         #region [ private ]
-        private DemoWSService<TUser, TToken> _demo;
+        {{#services}}
+        private {{serviceUpperName}}WSService<TUser, TToken> _{{serviceName}};
+        {{/services}}
         #endregion
 
         #region [ services ]
-        public DemoWSService<TUser, TToken> demo { get { return _demo; } }
+        {{#services}}
+        public {{serviceUpperName}}WSService<TUser, TToken> {{serviceName}} { get { return _{{serviceName}}; } }
+        {{/services}}
         #endregion
 
         #region [ constructor ]
         public WSApi()
         {
-            _demo = new DemoWSService<TUser, TToken>(Rest, Hub);
+            {{#services}}
+            _{{serviceName}} = new {{serviceUpperName}}WSService<TUser, TToken>(Rest, Hub);
+            {{/services}}
         }
         #endregion
     }

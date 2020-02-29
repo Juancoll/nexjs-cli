@@ -5,14 +5,14 @@ using nex.ws;
 
 namespace {{namespace}}
 {
-    public class {{serviceUpperName}}WSService: WSServiceBase 
+    public class {{serviceUpperName}}WSService<TUser, TToken>: WSServiceBase<TUser, TToken>
     {
         #region [ implement WSServiceBase ]
         public override string Name { get { return "{{serviceName}}"; } }
         #endregion
 
         #region [ constructor ]
-        public {{serviceUpperName}}WSService(RestClient rest, HubClient hub)
+        public {{serviceUpperName}}WSService(RestClient<TUser, TToken> rest, HubClient<TUser, TToken> hub)
             :base(rest, hub)
         {
             {{#hubEvents}}

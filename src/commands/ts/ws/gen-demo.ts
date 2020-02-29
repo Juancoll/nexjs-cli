@@ -35,7 +35,7 @@ class CommandOptions extends Options {
 
 // tslint:disable-next-line: max-classes-per-file
 @command({
-    description: 'Generate wsapi client for typescript context',
+    description: 'Generate wsapi demo project for typescript context',
 })
 export default class extends CommandBase {
 

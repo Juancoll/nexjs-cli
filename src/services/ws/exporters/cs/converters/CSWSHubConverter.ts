@@ -48,15 +48,15 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
     private getArguments(hub: WSHubEvent): string {
         if (!hub.data) {
             if (!hub.options.credentials) {
-                return '';
+                return '<TUser, TToken>';
             } else {
-                return `<${this.getCredentialType(hub)}>`
+                return `<TUser, TToken, ${this.getCredentialType(hub)}>`
             }
         } else {
             if (!hub.options.credentials) {
-                return `<${this.getDataType(hub)}>`
+                return `<TUser, TToken, ${this.getDataType(hub)}>`
             } else {
-                return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
+                return `<TUser, TToken, ${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
             }
         }
     }

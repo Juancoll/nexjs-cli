@@ -41,7 +41,10 @@ export class TSCode {
     getDependencies(services: WSService[]): RType[] {
         var dependencies = new RDependencies();
 
-        services.forEach(x => dependencies.addTypes(x.getDependencies()));
+        services.forEach(x => {
+            const serviceName = x.name;
+            dependencies.addTypes(x.getDependencies())
+        });
 
         return dependencies.get();
     }

@@ -9,6 +9,10 @@ export class RTypeConverter extends CodeConverterBase<Type, RType> {
     public convert(input: Type): RType {
         const output = new RType();
 
+        if (input.getText() == "OrgType") {
+            const a = 0;
+        }
+
         output.isPrimitive = this.isPrimitive(input);
         output.isArray = input.isArray();
         output.name = input.isArray()
