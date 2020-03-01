@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="demo.wsclient.HubControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <WrapPanel>
+            <Label x:Name="_uiName" Width="200"></Label>
+            <Button Name="onUpdateCredentials_Subscribe"    Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
+            <Button Name="onUpdateCredentials_Unsubscribe"  Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
+            <Button Name="onUpdateCredentials_On"           Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>
+            <Button Name="onUpdateCredentials_Off"          Padding="5 2" Width="80" Height="28" Margin="2">off</Button>
+        </WrapPanel>
+    </Grid>
+</UserControl>

@@ -6,21 +6,44 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Controls;
-using {{name}};
+using template.api.wsclient;
 
 namespace demo.wsclient
 {
     public partial class MainWindow : Window
     {
         #region [ properties ]
-        public WSApi<User, string> wsapi { get; set; } 
-        public string token { get; set; }
+        public WSApi<User, string> wsapi { get; set; }
+        public List<WSServiceDescriptor> Services = new List<WSServiceDescriptor>
+        {
+            {{#services}}
+            new WSServiceDescriptor
+            {
+                Name = "{{serviceUpperName}}",
+                Hubs = new List<HubDescriptor>
+                {
+                    {{#hubEvents}}
+                    new HubDescriptor { IsAuth = {{isAuth}}, Service = "{{serviceUpperName}}", Name = "{{name}}", Credentials = "{{&defaults.credentials}}"  },
+                    {{/hubEvents}}                   
+                },
+                Rests = new List<RestDescriptor>
+                {
+                    {{#restMethods}}
+                    new RestDescriptor { IsAuth = {{isAuth}}, Service = "{{serviceUpperName}}", Name = "{{name}}", Data="{{&defaults.data}}", Credentials = "{{&defaults.credentials}}"  },                  
+                    {{/restMethods}}
+                }
+            },
+            {{/services}}
+        };
         #endregion
 
         #region [ constructor ]
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += (s, e) => UpdateView(Services);
+
+
             wsapi = new WSApi<User, string>();
 
             wsapi.EventWSError += (s, e) =>
@@ -78,6 +101,14 @@ namespace demo.wsclient
             {
                 Console.WriteLine($"[HubClient] EventSubscriptionException service = {e.Value.Request.service}, event = {e.Value.Request.eventName}, exception = {e.Value.Exception.Message}");
             };
+        }
+        #endregion
+
+        #region [ private ]
+        private void UpdateView(List<WSServiceDescriptor> services)
+        {
+            _uiTab.Items.Clear();
+            services.ForEach(x => _uiTab.Items.Add(new TabItem { Header = x.Name, Content = new WSServiceControl(x) }));
         }
         #endregion
 
@@ -415,10 +446,6 @@ namespace demo.wsclient
                 Console.WriteLine($"[error] {ex.Message}");
             }
         }
-
-
-        #endregion
-
-        
+        #endregion        
     }
 }

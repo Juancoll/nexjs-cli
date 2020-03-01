@@ -79,20 +79,35 @@ export default class extends CommandBase {
 
         const target = resolve(cwd, config.output);
 
-        //#region [1] OUT FOLDER
-        console.log('[1] OUT FOLDER');
+        //#region [1] create lib 
+        console.log('[1] create lib');
+        const libTarget = join(target, 'src', 'ws');
+        await Shell.exec(`nex cs ws up-client -s ${cwd} -o ${libTarget} -n ${config.name}`, { stdout: true, rejectOnError: true });
+
+        //#region [2] Code analysis 
+        console.log('[2] code analisis');
+        const tscode = new TSCode(cwd, config.suffix);
+        const services = tscode.WSService.convert();
+        //#endregion
+
+        const cs = new CSConverter();
+
+        //#region [3] OUT FOLDER
+        console.log('[3] OUT FOLDER');
+        const serviceViews = services.map(service => cs.WSService.convert({
+            namespace: config.name,
+            wsservice: service,
+        }));
         const outSource = assets.getPath('out');
-        const outView = { name: config.name };
+        const outView = {
+            name: config.name,
+            services: serviceViews
+        };
         FS.copyFolder(outSource, target, (s, t, c) => {
             console.log(`  |- [create]  ${t}`);
             return mustache.render(c, outView);
         });
         //#endregion  
-
-        //#region [2] create lib 
-        console.log('[2] create lib');
-        const libTarget = join(target, 'src', 'ws');
-        await Shell.exec(`nex cs ws up-client -s ${cwd} -o ${libTarget} -n ${config.name}`, { stdout: true, rejectOnError: true });
 
         return `${this.commandName} finished.`;
     }
