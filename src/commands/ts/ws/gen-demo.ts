@@ -77,7 +77,7 @@ export default class extends CommandBase {
         const targetServiceViews = join(target, 'src', 'views', 'ws', 'services');
 
         //#region [1] STATIC FOLDER
-        console.log('[1] copy and parse out folder');
+        console.log('[1] STATIC FOLDER');
         const staticSource = assets.getPath('static');
         FS.copyFolder(staticSource, target);
         //#endregion   

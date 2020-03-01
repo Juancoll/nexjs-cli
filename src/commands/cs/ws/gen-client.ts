@@ -99,6 +99,10 @@ export default class extends CommandBase {
         const assets = this.getAssets();
 
         //#region [ checks ]
+        console.log('[check] name');
+        if (!config.name) {
+            throw new Error(`option name is required.`);
+        }
         console.log('[check] feed options');
         if (config.feedName && !config.feedUrl || !config.feedName && config.feedUrl) {
             throw new Error(`both feeds options must be undefined or defined`);
@@ -174,9 +178,16 @@ export default class extends CommandBase {
         });
         //#endregion
 
-        //#region [4] OUT FOLDER
-        console.log('[4] OUT FOLDER');
-        const source = assets.getPath('out');
+        //#region [4] STATIC  WS LIB FILES
+        console.log('[4] STATIC  WS LIB FILES');
+        const staticSource = assets.getPath('static');
+        const staticTarget = join(target);
+        FS.copyFolder(staticSource, staticTarget);
+        //#endregion
+
+        //#region [5] PACKAGE  FILES
+        console.log('[5] PACKAGE  FILES');
+        const source = assets.getPath('templates/package');
         const apiView = cs.WSApi.convert({
             name: config.name,
             version: config.version,
@@ -193,8 +204,8 @@ export default class extends CommandBase {
         );
         //#endregion
 
-        //#region [5] private feed
-        console.log('[5] PRIVATE FEED');
+        //#region [6] private feed
+        console.log('[6] PRIVATE FEED');
         if (config.feedName) {
             const feedSrc = assets.getPath('templates/feed');
             const feedView = {
@@ -213,8 +224,8 @@ export default class extends CommandBase {
         }
         //#endregion
 
-        //#region [6] post commands
-        console.log('[6] post commands');
+        //#region [7] post commands
+        console.log('[7] post commands');
         if (options.build) {
             try {
                 await Shell.exec(`cd ${target} && .\\build.bat`, { stdout: true, rejectOnError: true });

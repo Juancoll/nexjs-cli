@@ -6,9 +6,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Controls;
-using template.api.wsclient;
+using {{name}};
 
-namespace sample
+namespace demo.wsclient
 {
     public partial class MainWindow : Window
     {

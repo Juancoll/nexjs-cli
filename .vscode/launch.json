@@ -13,7 +13,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ts ws gen-client",
+            "name": "ts ws gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -35,7 +35,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ts ws up-client",
+            "name": "ts ws up-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -62,7 +62,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ts ws gen-demo",
+            "name": "ts ws gen-demo",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -80,7 +80,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "nex ts ws up-demo",
+            "name": "ts ws up-demo",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -103,10 +103,13 @@
         // --------------------
         // CS WS Commands
         //  -------------------
+        /* 
+         * ws client     
+         */
         {
             "type": "node",
             "request": "launch",
-            "name": "nex cs ws gen-client",
+            "name": "cs ws gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -119,10 +122,55 @@
                 "C:/git/nodall-training/template.api.server",
                 "-o",
                 "c:/wsclient-cs",
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cs ws up-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
             ],
-            "env": {
-                "NODE_ENV": "debug"
-            }
-        }
+            "args": [
+                "cs",
+                "ws",
+                "up-client",
+                "-s",
+                "C:/git/nodall-training/template.api.server",
+                "-o",
+                "c:/wsclient-cs/src",
+                "-n",
+                "template.api.wsclient"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "------------------"
+        },
+        /* 
+         * ws demo     
+         */
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cs ws gen-demo",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "cs",
+                "ws",
+                "gen-demo",
+                "-s",
+                "C:/git/nodall-training/template.api.server",
+                "-o",
+                "c:/demo.wsclient-cs",
+                "-n",
+                "template.api.wsclient"
+            ]
+        },
     ]
 }
