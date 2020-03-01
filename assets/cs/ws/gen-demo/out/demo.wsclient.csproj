@@ -67,6 +67,7 @@
     <Compile Include="src\controls\WSServiceControl.xaml.cs">
       <DependentUpon>WSServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\types\Context.cs" />
     <Compile Include="src\types\HubDescriptor.cs" />
     <Compile Include="src\types\RestDescriptor.cs" />
     <Compile Include="src\types\WSServiceDescriptor.cs" />
