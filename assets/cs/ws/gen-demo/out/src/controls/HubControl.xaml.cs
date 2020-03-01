@@ -14,6 +14,7 @@ namespace demo.wsclient
 
             Hub = hub;
             _uiName.Content = hub.Name;
+            _uiCredentials.Text = hub.Credentials;
         }
     }
 }

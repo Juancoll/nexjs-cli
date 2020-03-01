@@ -4,6 +4,7 @@ import { RType } from '../../models/base/RType';
 import { CSHubConverter } from './converters/CSWSHubConverter';
 import { CSRestConverter } from './converters/CSWSRestConverter';
 import { CSWSApiConverter } from './converters/CSWSApiConverter';
+import { CSTypeDefaultValue } from './converters/CSTypeDefaultValue';
 
 export class CSConverter {
 
@@ -13,6 +14,7 @@ export class CSConverter {
     public readonly WSHub = new CSHubConverter(this);
     public readonly WSService = new CSWSServiceConterter(this);
     public readonly WSApi = new CSWSApiConverter(this);
+    public readonly TypeDefaultValue = new CSTypeDefaultValue(this);
     //#endregion
 
     //#region [ commons ]

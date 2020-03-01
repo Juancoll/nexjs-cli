@@ -7,6 +7,9 @@ export interface ICSHubEventView {
     name: string;
     notification: string;
     arguments: string;
+    defaults: {
+        credentials: string;
+    }
 }
 
 export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHubEventView>{
@@ -18,6 +21,7 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
             name: input.name,
             notification: this.getNotificationType(input),
             arguments: this.getArguments(input),
+            defaults: { credentials: this.parent.TypeDefaultValue.convert(input.options.credentials) },
         }
     }
     //#endregion

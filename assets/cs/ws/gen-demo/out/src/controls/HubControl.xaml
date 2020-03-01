@@ -8,6 +8,7 @@
     <Grid>
         <WrapPanel>
             <Label x:Name="_uiName" Width="200"></Label>
+            <TextBox x:Name="_uiCredentials" Width="200"></TextBox>
             <Button Name="onUpdateCredentials_Subscribe"    Padding="5 2" Width="80" Height="28" Margin="2">subscribe</Button>
             <Button Name="onUpdateCredentials_Unsubscribe"  Padding="5 2" Width="80" Height="28" Margin="2">unsubscribe</Button>
             <Button Name="onUpdateCredentials_On"           Padding="5 2" Width="80" Height="28" Margin="2">on(...)</Button>

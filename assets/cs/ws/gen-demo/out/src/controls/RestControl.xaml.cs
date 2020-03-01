@@ -13,6 +13,8 @@ namespace demo.wsclient
             InitializeComponent();
             Rest = rest;
             _uiName.Content = rest.Name;
+            _uiTextBoxCredentials.Text = rest.Credentials;
+            _uiTextBoxData.Text = rest.Data;
         }
     }
 }

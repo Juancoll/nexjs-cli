@@ -9,6 +9,10 @@ export interface ICSRestMethodView {
     methodParams: string;
     requestParams: string;
     returnType: string;
+    defaults: {
+        credentials: string;
+        data: string;
+    }
 }
 
 export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, ICSRestMethodView>{
@@ -20,7 +24,13 @@ export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, IC
             name: input.name,
             returnType: this.getRestReturnType(input),
             methodParams: this.getRestMethodParams(input),
-            requestParams: this.getRestResquestParams(input)
+            requestParams: this.getRestResquestParams(input),
+            defaults: {
+                credentials: this.parent.TypeDefaultValue.convert(input.options.credentials),
+                data: input.params.length == 0
+                    ? '{}'
+                    : `{ ${input.params.map(x => `${x.name}: ${this.parent.TypeDefaultValue.convert(x.type)}`).join(', ')} }`,
+            },
         }
     }
     //#endregion
