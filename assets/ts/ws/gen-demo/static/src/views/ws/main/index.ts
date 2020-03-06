@@ -1,6 +1,10 @@
 import './style.scss';
 import { Component, Vue } from 'vue-property-decorator';
 import { wsapi } from '@/services/wsapi';
+import { env } from '@/services/env';
+
+// tslint:disable-next-line: interface-over-type-literal
+type ILoginData = { [key: string]: string };
 
 @Component({
     template: require('./template.pug'),
@@ -14,8 +18,19 @@ export default class UserWSServiceView extends Vue {
 
     public isConnected: boolean = wsapi.ws.isConnected;
     public isAuthenticate: boolean = wsapi.auth.authInfo ? true : false;
-    public mail: string = 'admin@nex-group.io';
-    public pass: string = '123456';
+
+    public loginData = {
+        user: {
+            provider: 'user',
+            email: env.vars.defaults.login.user.email || '',
+            password: env.vars.defaults.login.user.password || '',
+        } as ILoginData,
+        player: {
+            provider: 'player',
+            name: env.vars.defaults.login.player.name || '',
+            serial: env.vars.defaults.login.player.serial || '',
+        } as ILoginData,
+    };
     //#endregion
 
     //#region [ constructor ]
@@ -47,12 +62,12 @@ export default class UserWSServiceView extends Vue {
     //#endregion
 
     //#region [ http api ]
-    async register() {
+    async register(data: any) {
         try {
             console.log(`[ui][wsapi.auth] register`);
 
             const t1 = new Date().getTime();
-            const response = await wsapi.auth.register({ email: this.mail, password: this.pass });
+            const response = await wsapi.auth.register(data);
             const t2 = new Date().getTime();
 
             console.log(`[response] in ${t2 - t1} ms`, response);
@@ -60,12 +75,12 @@ export default class UserWSServiceView extends Vue {
             console.error('[response][error]', err);
         }
     }
-    async login() {
+    async login(data: any) {
         try {
             console.log(`[ui][wsapi.auth] login`);
 
             const t1 = new Date().getTime();
-            const response = await wsapi.auth.login({ email: this.mail, password: this.pass });
+            const response = await wsapi.auth.login(data);
             const t2 = new Date().getTime();
 
             console.log(`[response] in ${t2 - t1} ms`, response);

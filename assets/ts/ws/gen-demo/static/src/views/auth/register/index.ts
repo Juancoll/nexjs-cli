@@ -11,7 +11,7 @@ import router from '@/router';
 export default class RegisterView extends Vue {
 
     //#region [ data ]
-    public logo = require('@/assets/img/logo.png');
+    public logo = require('@/assets/img/icons/icon_256.png');
     public email: string = '';
     public password: string = '';
     public isWaiting: boolean = false;

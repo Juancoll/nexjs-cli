@@ -19,23 +19,36 @@ v-container.flex.v-container.full.items.h-center.top
                 v-btn.custom.primary(v-on:click="disconnect") disconnect
 
     v-card.custom.h-full
-        div.h-full.flex.v-container     
+        div.h-full.flex.v-container  
             div.flex.h-container.h-center
                 div(style="margin-right: 15px") WS Auth Client  
                 div(style="margin-right: 05px;color:gray") [ isAuthenticate: 
                 div(v-if="isAuthenticate" style="color: green") true
                 div(v-else style="color: red") false
                 div(style="margin-left: 5px; color: gray") ]
-                div.flex.item.grow-x1   
+                div.flex.item.grow-x1  
 
+            div.h-full.flex.h-container  
+                div.h-full.flex.v-container                 
+                    v-text-field(v-model="loginData.user.provider" style="margin:5px" label="provider" disabled)
+                    v-text-field(v-model="loginData.user.email" style="margin:5px" label="email")
+                    v-text-field(v-model="loginData.user.password" style="margin:5px" label="password")
+
+                    div.flex.h-container.items.v-center
+                        v-btn.custom.primary(v-on:click="register(loginData.user)") register
+                        v-btn.custom.primary(v-on:click="login(loginData.user)") login
+
+                div.h-full.flex.v-container     
+                    v-text-field(v-model="loginData.player.provider" style="margin:5px" label="provider" disabled)
+                    v-text-field(v-model="loginData.player.name" style="margin:5px" label="name")
+                    v-text-field(v-model="loginData.player.serial" style="margin:5px" label="serial")
+
+                    div.flex.h-container.items.v-center
+                        v-btn.custom.primary(v-on:click="register(loginData.player)") register
+                        v-btn.custom.primary(v-on:click="login(loginData.player)") login
             
-            v-text-field(v-model="mail" style="margin:5px" label="email")
-            v-text-field(v-model="pass" style="margin:5px" label="password")
-
-            div.flex.h-container.items.v-center
-                v-btn.custom.primary(v-on:click="register") register
-                v-btn.custom.primary(v-on:click="login") login
-                v-btn.custom.primary(v-on:click="authenticate") authenticate
-                v-btn.custom.primary(v-on:click="logout") logout
-
-    router-view
+            div.h-full.flex.h-container.items.v-center 
+                div.h-full.flex.v-container      
+                    v-btn.custom.primary(v-on:click="authenticate" full-width) authenticate
+                div.h-full.flex.v-container 
+                    v-btn.custom.primary(v-on:click="logout" full-width) logout

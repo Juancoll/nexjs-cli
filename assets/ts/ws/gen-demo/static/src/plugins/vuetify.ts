@@ -13,7 +13,7 @@ export default new Vuetify({
         },
         themes: {
             light: {
-                primary: '#4bf9cd',
+                primary: '#ed1e79',
                 secondary: '#6348B5',
                 accent: '#6348B5',
                 error: colors.deepOrange.base,
@@ -22,7 +22,7 @@ export default new Vuetify({
                 success: colors.green.base,
             },
             dark: {
-                primary: '#4bf9cd',
+                primary: '#ed1e79',
                 secondary: '#6348B5',
                 accent: '#6348B5',
                 error: colors.red.base,

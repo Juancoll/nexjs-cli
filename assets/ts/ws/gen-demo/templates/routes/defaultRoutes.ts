@@ -1,6 +1,7 @@
 import { IRouteMetadata } from '@/lib/router';
 
 import HomeView from '@/views/home';
+import WSDocView from '@/views/ws/doc';
 import WSMainView from '@/views/ws/main';
 
 {{#services}}
@@ -24,16 +25,29 @@ export let routes: RouteConfig[] = [
         } as IRouteMetadata,
     },
     {
+        path: '/default/ws/doc',
+        name: 'default-ws-doc',
+        component: WSDocView,
+        meta: {
+            showInToolbar: true,
+            showInDrawer: true,
+            icon: 'mdi-file-document-box',
+            iconColor: 'primary',
+            title: 'WS Doc',
+            subtitle: 'documentation',
+        } as IRouteMetadata,
+    },
+    {
         path: '/default/ws/main',
         name: 'default-ws-main',
         component: WSMainView,
         meta: {
-            showInToolbar: false,
+            showInToolbar: true,
             showInDrawer: true,
             icon: 'mdi-power-socket',
             iconColor: 'primary',
             title: 'WS Main',
-            subtitle: 'Connection and doc.',
+            subtitle: 'Connection and authentication',
         } as IRouteMetadata,
     },
     {{#services}}

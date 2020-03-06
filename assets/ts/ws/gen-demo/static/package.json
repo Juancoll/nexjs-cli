@@ -29,6 +29,8 @@
         "core-js": "^3.6.2",
         "linq": "^3.2.1",
         "lodash": "^4.17.15",
+        "markdown-it-katex": "^2.0.3",
+        "markdown-it-vue": "^1.0.11",
         "moment": "^2.24.0",
         "roboto-fontface": "^0.10.0",
         "serve": "^11.3.0",

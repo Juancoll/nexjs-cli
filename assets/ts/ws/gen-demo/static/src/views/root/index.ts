@@ -21,13 +21,13 @@ Vue.component('RouterMenuItem', RouterMenuItem);
 export default class RootView extends Vue {
 
     //#region [ data ]
-    public logo = require('../../assets/img/logo.png');
-    public title: string = 'web app template';
+    public logo = require('@/assets/img/icons/icon_256.png');
+    public title: string = 'wsapi demo';
     public showDrawer: boolean = false;
     public footer = {
         left: '<span style=\'color:red\'><b>STATUS</b></span>',
         center: '',
-        right: '&copy; trademark',
+        right: '&copy; ne)( group',
     };
     public userValidRoles: string[] = [];
     public showUserMenu: boolean = true;

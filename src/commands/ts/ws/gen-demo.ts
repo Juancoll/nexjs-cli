@@ -31,6 +31,16 @@ class CommandOptions extends Options {
         description: 'suffix file, to select posible contracts',
     })
     public suffix: string;
+
+    @option({
+        flag: 'i',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'execute npm install after generation',
+    })
+    public install: boolean;
+}
 }
 
 // tslint:disable-next-line: max-classes-per-file
@@ -120,7 +130,18 @@ export default class extends CommandBase {
             console.log(`  |- [create]  ${t}`);
             return mustache.render(c, routesView);
         });
-        //#endregion          
+        //#endregion  
+
+        //#region [5] post commands
+        console.log('[5] post commands');
+        if (options.install) {
+            try {
+                await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        //#endregion
 
         return `${this.commandName} finished.`;
     }

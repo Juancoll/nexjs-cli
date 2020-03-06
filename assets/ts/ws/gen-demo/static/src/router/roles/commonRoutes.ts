@@ -1,6 +1,6 @@
 import { IRouteMetadata } from '@/lib/router';
 
-import CommonView from '@/views/commons';
+import CommonView from '@/views/roles/commons';
 import { RouteConfig } from 'vue-router';
 
 export let routes: RouteConfig[] = [

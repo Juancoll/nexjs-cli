@@ -1,8 +1,9 @@
 import { WSApi, User } from '@/lib/ws';
 import { SocketIOClient, WSErrorCode } from '@/lib/ws/lib';
-import { env } from '../env';
 
-export const wsapi = new WSApi<User, string>(new SocketIOClient());
+interface IToken { provider: string; value: string; }
+
+export const wsapi = new WSApi<User, IToken>(new SocketIOClient());
 
 //#region [ debug configuration ]
 

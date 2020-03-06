@@ -18,7 +18,7 @@ router.setBranches({
     default: {
         name: 'default',
         routes: defaultRoutes,
-        startup: '/default',
+        startup: '/default/ws/main',
     },
     authenticate: {
         anyRole: {

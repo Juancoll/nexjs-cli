@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/png" href="/images/icon_32.png">
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>title</title>
+    <link href='/css/nexcode.flex.css' rel='stylesheet' type='text/css'>
+    <link href='/css/colors.css' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #888;
+            margin: 10px;
+            background-color: #212121;
+        }
+
+        #main {
+            width: 100%;
+            text-align: center;
+        }
+
+        .button {
+            background-color: transparent;
+            border-radius: 10px;
+            border-width: 2px;
+            border-color: #ed1e79;
+            color: #ed1e79;
+            padding: 10px 50px;
+            font-size: 18px;
+        }
+
+        .nex {
+            color: #ed1e79;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+        }
+
+        .group {
+            color: #cccccc;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+        }
+    </style>
+    <script type="text/javascript">
+        let url = "/api";
+        fetch(url).then(async response => {
+
+            let packageJsonString = await response.text();
+            let packageJson = JSON.parse(packageJsonString);
+
+            document.title = packageJson.name;
+            let versionDiv = document.getElementById('version');
+            versionDiv.innerHTML = 'Version ' + packageJson.version;
+
+            let titleDiv = document.getElementById('title');
+            titleDiv.innerHTML = packageJson.name;
+        })
+            .catch(error => console.log('error:', error));
+    </script>
+</head>
+
+<body>
+    <div class="flex h-container">
+        <span class="nex">ne)(</span>
+        <span class="group">group</span>
+    </div>
+    <div id="main">
+        <div>
+            <h1 class="color-primary">Welcome to </h1>
+            <h2 id="title">Welcome to </h2>
+            <h3 id="version" class="color-secondary">Version ?</h3>
+            <img src="/images/icon_512.png" />
+            <p>
+                <a href="/api/doc/">
+                    <div class="button">Go to swagger doc</div>
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

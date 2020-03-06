@@ -137,7 +137,7 @@ export class VueRouterExtended extends Router {
     }
 
     public get userValidRoles(): string[] {
-        return !this._user
+        return !this._user || !this._user.roles
             ? []
             : this._user.roles.filter(x => this.roles.indexOf(x) != -1);
     }
@@ -199,7 +199,7 @@ export class VueRouterExtended extends Router {
         this.replaceRoutes(this._currentBranch.routes);
         this.onBranchChange.dispatch({ from: oldBranch, to: this._currentBranch });
         this.push({ path: this._currentBranch.startup })
-            .catch();
+            .catch(e => { console.log(`[router] try to push existing current path = ${this._currentBranch.startup}`); });
     }
 
     pushIfNotCurrent(path: string) {

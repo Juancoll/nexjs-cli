@@ -6,9 +6,6 @@ export class Environment {
             locale: string,
             fallback_local: string,
         },
-        api: {
-            url: string;
-        }
         wsapi: {
             url: string;
             path: string;
@@ -16,8 +13,14 @@ export class Environment {
         },
         defaults: {
             login: {
-                email: string;
-                password: string;
+                user: {
+                    email: string;
+                    password: string;
+                }
+                player: {
+                    name: string;
+                    serial: string;
+                },
             },
         }
     };
@@ -29,9 +32,6 @@ export class Environment {
                 locale: this.var('VUE_APP_I18N_LOCALE'),
                 fallback_local: this.var('VUE_APP_I18N_FALLBACK_LOCALE'),
             },
-            api: {
-                url: this.var('VUE_APP_API_URL'),
-            },
             wsapi: {
                 url: this.var('VUE_APP_WSAPI_URL'),
                 path: this.var('VUE_APP_WSAPI_PATH'),
@@ -39,8 +39,14 @@ export class Environment {
             },
             defaults: {
                 login: {
-                    email: this.var('VUE_APP_LOGIN_DEFAULT_EMAIL'),
-                    password: this.var('VUE_APP_LOGIN_DEFAULT_PASSWORD'),
+                    user: {
+                        email: this.var('VUE_APP_LOGIN_DEFAULT_USER_EMAIL'),
+                        password: this.var('VUE_APP_LOGIN_DEFAULT_USER_PASSWORD'),
+                    },
+                    player: {
+                        name: this.var('VUE_APP_LOGIN_DEFAULT_PLAYER_NAME'),
+                        serial: this.var('VUE_APP_LOGIN_DEFAULT_PLAYER_SERIAL'),
+                    },
                 },
             },
         };
@@ -49,7 +55,6 @@ export class Environment {
         this.checkExists('VUE_APP_MODE');
         this.checkExists('VUE_APP_I18N_LOCALE');
         this.checkExists('VUE_APP_I18N_FALLBACK_LOCALE');
-        this.checkExists('VUE_APP_API_URL');
     }
     print() {
         // console.log('[Environment Variables]', this.vars);

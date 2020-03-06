@@ -25,9 +25,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsclient",
-                "-n",
-                "aaaa",
+                "c:/wsclient.api.ts",
                 "-i",
                 "-b"
             ],
@@ -47,7 +45,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsclient/src",
+                "c:/wsclient.api.ts/src",
                 "-b"
             ],
         },
@@ -74,7 +72,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsdemo",
+                "c:/wsclient.demo.ts",
             ],
         },
         {
@@ -92,7 +90,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsdemo",
+                "c:/wsclient.demo.ts",
             ],
         },
         {
@@ -121,7 +119,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsclient-cs",
+                "c:/wsclient.api.cs",
             ]
         },
         {
@@ -139,7 +137,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/wsclient-cs/src",
+                "c:/wsclient.api.cs/src",
                 "-n",
                 "template.api.wsclient"
             ]
@@ -167,7 +165,7 @@
                 "-s",
                 "C:/git/nodall-training/template.api.server",
                 "-o",
-                "c:/demo.wsclient-cs",
+                "c:/wsclient.demo.cs",
                 "-n",
                 "template.api.wsclient"
             ]
