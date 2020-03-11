@@ -1,0 +1,44 @@
+
+  /*#region [ Size ] */
+.h-full{
+    width: 100%;
+}
+.v-full{
+    height: 100%;
+}
+.full{
+    width: 100%;
+    height: 100%;
+}
+
+  /*#region [ Overflows ] */
+.overflow{
+    overflow-x: auto;
+    overflow-y: auto;  
+}
+.v-overflow{
+    overflow-x: hidden;
+    overflow-y: auto;  
+}
+.h-overflow{
+    overflow-x: auto;
+    overflow-y: hidden;  
+}
+.no-overflow{
+    overflow-x: hidden;
+    overflow-y: hidden;  
+}
+
+/* Ellipsis */
+.ellipsis-overflow{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+span.ellipsis{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+}

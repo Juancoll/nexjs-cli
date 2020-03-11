@@ -1,6 +1,6 @@
-import { ConverterBase } from '../../base/ConverterBase';
+import { RParam } from '../../../models/base/RParam';
 import { RTypeDeclaration } from '../../../models/base/RTypeDeclaration';
-import { RParam } from 'src/services/ws/models/base/RParam';
+import { ConverterBase } from '../../base/ConverterBase';
 import { TSConverter } from '../TSConverter';
 
 export interface ITSImport {

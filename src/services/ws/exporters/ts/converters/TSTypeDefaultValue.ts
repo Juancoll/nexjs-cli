@@ -1,6 +1,6 @@
+import { RType } from '../../../models/base/RType';
 import { ConverterBase } from '../../base/ConverterBase';
 import { TSConverter } from '../TSConverter';
-import { RType } from 'src/services/ws/models/base/RType';
 
 export class TSTypeDefaultValue extends ConverterBase<TSConverter, RType, string>{
 

@@ -1,0 +1,13 @@
+{
+    "common": {
+        "name": "nombre",
+        "title": "titulo",
+        "messageNamedParam": "Mu parametro es: {value}",
+        "messageListParam": "la lista de parametros es {0}, {1}",
+        "html": "<b style=\"color:blue\"> soy negrita y azul</b>"
+    },
+    "pluralization": {
+        "car": "coche | coches",
+        "apple": "ninguna manzana | una manzana | {count} son muchas manzanas"
+    }
+}

@@ -41,7 +41,6 @@ class CommandOptions extends Options {
     })
     public install: boolean;
 }
-}
 
 // tslint:disable-next-line: max-classes-per-file
 @command({

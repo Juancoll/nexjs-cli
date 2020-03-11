@@ -1,12 +1,10 @@
 import { command, Context, metadata, Options, option } from 'clime';
 import * as mustache from 'mustache';
-import { resolve, join } from 'path';
+import { resolve, join, basename } from 'path';
 import { existsSync } from 'fs';
 
 import { CommandBase } from '../../../base';
 import { FS } from '../../../services/fs';
-import { TSCode } from '../../../services/ws/tscode/TSCode';
-import { TSConverter } from '../../../services/ws/exporters/ts/TSConverter';
 import { Shell } from '../../../services/shell';
 
 class CommandOptions extends Options {
@@ -16,6 +14,29 @@ class CommandOptions extends Options {
         description: 'output folder - where npm package are created.',
     })
     public output: string;
+
+    @option({
+        flag: 'n',
+        required: true,
+        description: 'package base name -> [name].api.server will be created.',
+    })
+    public name: string;
+
+    @option({
+        flag: 'm',
+        required: false,
+        default: 'mongo://localhost:27017',
+        description: 'mongo base url',
+    })
+    public mongo: string;
+
+    @option({
+        flag: 's',
+        required: false,
+        default: 'mongo://localhost:27017',
+        description: 'style in format: [primary;secondary;isDark;icon] > default: "#ed1e79;#29b6f6;true;default"',
+    })
+    public style: string;
 
     @option({
         flag: 'i',
@@ -59,7 +80,12 @@ export default class extends CommandBase {
         //#region [1] STATIC FOLDER
         console.log('[1] STATIC FOLDER');
         const staticSource = assets.getPath('static');
-        FS.copyFolder(staticSource, target);
+        const view = {
+            name: basename(target),
+        };
+        FS.copyFolder(staticSource, target, (s, t, c) => {
+            return mustache.render(c, view);
+        });
         //#endregion           
 
         //#region [2] post commands

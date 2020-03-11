@@ -3,7 +3,6 @@ import { WSService } from '../../../models/ws/WSService';
 import { TSConverter } from '../TSConverter';
 import { ITSHubEventView } from './TSWSHubConverter';
 import { ITSRestMethodView } from './TSWSRestConverter';
-import { RTypeDeclaration } from 'src/services/ws/models/base/RTypeDeclaration';
 
 export interface ITSImport {
     type: string;

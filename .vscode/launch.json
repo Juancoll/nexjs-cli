@@ -170,5 +170,117 @@
                 "template.api.wsclient"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "------------------"
+        },
+        // --------------------
+        // HTTP Commands
+        //  -------------------
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts http gen-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ts",
+                "http",
+                "gen-client",
+                "-s",
+                "C:/git/nodall-training/template.api.server/dist/swagger-spec.json",
+                "-o",
+                "c:/httpclient-ts",
+                "-n",
+                "@template/api.httpclient",
+                "-v",
+                "0.0.1",
+                "-f",
+                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/npm/registry/",
+                "-i",
+                "-b"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cs http gen-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "cs",
+                "http",
+                "gen-client",
+                "-s",
+                "C:/git/nodall-training/template.api.server/dist/swagger-spec.json",
+                "-o",
+                "c:/httpclient-cs",
+                "-n",
+                "template.api.httpclient",
+                "-v",
+                "0.0.1",
+                "--feed-name",
+                "nodall-dev",
+                "--feed-url",
+                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/nuget/v3/index.json",
+                "-b"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "------------------"
+        },
+        // --------------------
+        // TS Main Commands
+        //  -------------------
+        /* 
+         * ts gen-server     
+         */
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts gen-server",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ts",
+                "gen-server",
+                "-o",
+                "c:/workspace",
+                "-n",
+                "tradin",
+                "--style",
+                "#6200EE;#03dac6;false;icon_primary_256.png"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts gen-web",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ts",
+                "gen-web",
+                "-o",
+                "c:/workspace",
+                "--namespace",
+                "tradin",
+                "-n",
+                "home",
+                "--style",
+                "#6200EE;#03dac6;false;icon_primary_256.png"
+            ]
+        },
     ]
 }

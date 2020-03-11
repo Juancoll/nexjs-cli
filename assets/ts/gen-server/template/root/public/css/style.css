@@ -1,0 +1,36 @@
+.color-primary {
+    color: {{style.colors.primary}};
+}
+.color-secondary {
+    color: {{style.colors.secondary}};
+}
+
+html {
+    height: 100%;
+}
+
+a {
+    color: inherit;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    color: {{style.colors.fg}};
+    margin: 10px;
+    background-color: {{style.colors.bg}};
+}
+
+#main {
+    width: 100%;
+    text-align: center;
+}
+
+.button {
+    background-color: transparent;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: {{style.colors.primary}};
+    color: {{style.colors.primary}};
+    padding: 10px 50px;
+    font-size: 18px;
+}

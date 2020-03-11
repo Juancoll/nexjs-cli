@@ -1,6 +1,6 @@
+import { WSService } from '../../../models/ws/WSService';
 import { ConverterBase } from '../../base/ConverterBase';
 import { TSConverter } from '../TSConverter';
-import { WSService } from 'src/services/ws/models/ws/WSService';
 import { ITSWSServiceView } from './TSWSServiceConterter';
 
 export interface ITSWSApiInput {

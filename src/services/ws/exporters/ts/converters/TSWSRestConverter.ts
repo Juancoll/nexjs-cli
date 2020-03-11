@@ -1,7 +1,7 @@
+import { WSRestMethod } from '../../../models/ws/WSRestMethod';
+import { RParam } from '../../../models/base/RParam';
 import { ConverterBase } from '../../base/ConverterBase';
-import { WSRestMethod } from 'src/services/ws/models/ws/WSRestMethod';
 import { TSConverter } from '../TSConverter';
-import { RParam } from 'src/services/ws/models/base/RParam';
 
 export interface ITSRestMethodView {
     isAuth: boolean;

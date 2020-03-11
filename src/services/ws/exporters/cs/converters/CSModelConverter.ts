@@ -1,8 +1,6 @@
-import { ConverterBase } from '../../base/ConverterBase';
+import { RParam } from '../../../models/base/RParam';
 import { RTypeDeclaration } from '../../../models/base/RTypeDeclaration';
-import { RType } from '../../../models/base/RType';
-import { RParam } from 'src/services/ws/models/base/RParam';
-import { isArray } from 'util';
+import { ConverterBase } from '../../base/ConverterBase';
 import { CSConverter } from '../CSConverter';
 
 export interface ICSModelInput {

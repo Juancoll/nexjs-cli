@@ -21,6 +21,7 @@
   "author": "juancoll",
   "license": "ISC",
   "dependencies": {
+    "@openapitools/openapi-generator-cli": "^1.0.10-4.2.3",
     "@types/rimraf": "^2.0.3",
     "ansicolor": "^1.1.93",
     "clime": "^0.5.10",
@@ -29,6 +30,7 @@
     "istextorbinary": "^3.3.0",
     "linq": "^3.2.1",
     "mustache": "^4.0.0",
+    "sharp": "^0.25.1",
     "ts-morph": "^6.0.2",
     "upath": "^1.2.0"
   },
@@ -36,6 +38,7 @@
     "@types/fs-extra": "^8.0.1",
     "@types/mustache": "^4.0.0",
     "@types/node": "^12.12.6",
+    "@types/sharp": "^0.24.0",
     "@types/socket.io-client": "^1.4.32",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",

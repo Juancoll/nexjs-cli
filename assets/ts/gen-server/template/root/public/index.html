@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/png" href="/images/icon_32.png">
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>title</title>
+    <link href='/css/nexcode.flex.css' rel='stylesheet' type='text/css'>
+    <link href='/css/style.css' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script type="text/javascript">
+        let url = "/api";
+        fetch(url).then(async response => {
+
+            let packageJsonString = await response.text();
+            let packageJson = JSON.parse(packageJsonString);
+
+            document.title = packageJson.name;
+            let versionDiv = document.getElementById('version');
+            versionDiv.innerHTML = 'Version ' + packageJson.version;
+
+            let titleDiv = document.getElementById('title');
+            titleDiv.innerHTML = packageJson.name;
+        })
+            .catch(error => console.log('error:', error));
+    </script>
+</head>
+
+<body>
+    <div class="flex h-container items v-center">
+        <img src="/images/icon_32.png" />
+        <span style="margin-left: 10px;">{{&name}}</span>
+    </div>
+    <div id="main">
+        <div>
+            <h1 class="color-primary">Welcome to </h1>
+            <h2 id="title">Welcome to </h2>
+            <h3 id="version" class="color-secondary">Version ?</h3>
+            <img src="/images/icon_512.png" />
+            <p>
+                <a href="/api/doc/">
+                    <div class="button">Go to swagger doc</div>
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
