@@ -7,16 +7,16 @@ import { existsSync } from 'fs';
 import { CommandBase } from '../../base';
 import { FS } from '../../services/fs';
 import { Shell } from '../../services/shell';
+import { ParamsParser } from '../../services/parsers/ParamsParser';
 
 interface IStyle {
-    colors: {
-        primary: string;
-        secondary: string;
-        fg: string;
-        bg: string;
-    },
-    isDark: boolean;
+    primary: string;
+    secondary: string;
+    dark: boolean;
     icon: string;
+
+    fg: string;
+    bg: string;
 }
 
 interface IView {
@@ -62,11 +62,11 @@ class CommandOptions extends Options {
     @option({
         flag: 's',
         required: false,
-        default: '#ed1e79;#29b6f6;true;default',
-        description: 'style in format: [primary;secondary;isDark;icon] > default: "#ed1e79;#29b6f6;true;default"',
+        default: 'primary=#ed1e79;secondary=#29b6f6;accent=#29b6f6;dark=true;icon=default',
+        description: 'style in format: primary=[color];secondary=[color];dark=[boolean];icon=path > default: primary=#ed1e79;secondary=#29b6f6;dark=true;icon=default',
     })
     public style: string;
-
+    
     @option({
         flag: 'i',
         default: false,
@@ -156,30 +156,13 @@ export default class extends CommandBase {
 
     //#region [ private ]
     parseStyle(value: string): IStyle {
-        const params = value.split(";");
-        if (params.length != 4) {
-            throw new Error("Style format error");
+        let style: IStyle = new ParamsParser().parse(value);
+        style = Object.assign(style, style.dark ? colors.dark : colors.light);
+        style.icon = resolve(style.icon);
+        if (!existsSync(style.icon)) {
+            style.icon = this.getAssets().getPath('images/icon_512.png');
         }
-        const primary = params[0];
-        const secondary = params[1];
-        const isDark = params[2] == 'true' ? true : false;
-        const fg = isDark ? colors.dark.fg : colors.light.fg;
-        const bg = isDark ? colors.dark.bg : colors.light.bg;
-
-        let icon = resolve(params[3]);
-        if (!existsSync(icon)) {
-            icon = this.getAssets().getPath('images/icon_512.png');
-        }
-        return {
-            colors: {
-                primary,
-                secondary,
-                fg,
-                bg
-            },
-            icon,
-            isDark
-        }
+        return style;
     }
     async create_icon(source: string, output: string, size: number) {
         var file = join(output, `icon_${size.toString()}.png`);

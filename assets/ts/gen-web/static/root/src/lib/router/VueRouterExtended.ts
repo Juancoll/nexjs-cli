@@ -219,28 +219,11 @@ export class VueRouterExtended extends Router {
         (this as any).matcher = (newRouter as any).matcher;
     }
     private findRoute(routes: RouteConfig[], path: string): RouteConfig | undefined {
-        for (const route of routes) {
-            if (route) {
-                const found = this.findPathInRoute(route, path);
-                if (found) {
-                    return found;
-                }
-            }
-        }
-        return undefined;
-    }
-    private findPathInRoute(route: RouteConfig, path: string): RouteConfig | undefined {
-        if (route.path == path) {
-            return route;
-        } else if (route.children && route.children.length > 0) {
-            for (const child of route.children) {
-                if (child) {
-                    const found = this.findPathInRoute(child, path);
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
+
+        const matcher = (this as any).matcher;
+        const result = matcher.match(path);
+        if (result.matched && result.matched.length > 0) {
+            return result.matched[0];
         }
         return undefined;
     }

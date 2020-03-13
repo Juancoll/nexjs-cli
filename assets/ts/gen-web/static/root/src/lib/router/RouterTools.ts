@@ -16,11 +16,11 @@ export class RouterTools {
         });
         return list;
     }
-    public static createMenuRoutes(routes: RouteConfig[]): RouteConfig[] {
+    public static createDrawerRoutes(routes: RouteConfig[]): RouteConfig[] {
 
         const routesCopy = JSON.parse(JSON.stringify(routes)) as RouteConfig[];
 
-        const flat = RouterTools.flatRoutes(routesCopy);
+        const flat = RouterTools.flatRoutes(routesCopy).filter(x => x.meta.showInDrawer);
         const list = new Array<RouteConfig>();
         flat.forEach(route => {
             if (!route.meta.parent) {

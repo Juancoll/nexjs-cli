@@ -13,19 +13,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "ts ws gen-client",
+            "name": "ts ws gen-package",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "args": [
                 "ts",
-                "ws",
-                "gen-client",
+                "ws",                
+                "gen-package",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "C:/workspace/tradin.api.server",
                 "-o",
-                "c:/wsclient.api.ts",
+                "C:/workspace/tradin.api.wsclient-ts",
+                "-n",
+                "@tradin/api.wsclient",
+                "-v",
+                "0.0.2",
                 "-i",
                 "-b"
             ],
@@ -43,24 +47,16 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "C:/workspace/tradin.api.server",
                 "-o",
-                "c:/wsclient.api.ts/src",
+                "C:/workspace/tradin.api.wsclient-ts/src",
                 "-b"
             ],
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "------------------"
-        },
-        /* 
-         * ws demo     
-         */
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts ws gen-demo",
+            "name": "ts ws add-views",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
@@ -68,36 +64,20 @@
             "args": [
                 "ts",
                 "ws",
-                "gen-demo",
+                "add-views",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "C:/workspace/tradin.api.server",
                 "-o",
-                "c:/wsclient.demo.ts",
-            ],
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts ws up-demo",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "args": [
-                "ts",
-                "ws",
-                "up-demo",
-                "-s",
-                "C:/git/nodall-training/template.api.server",
-                "-o",
-                "c:/wsclient.demo.ts",
+                "C:/workspace/tradin.web.home",
+                "-n",
+                "@tradin/api.wsclient",
             ],
         },
         {
             "type": "node",
             "request": "launch",
             "name": "------------------"
-        },
+        },       
         // --------------------
         // CS WS Commands
         //  -------------------
@@ -191,11 +171,11 @@
                 "http",
                 "gen-client",
                 "-s",
-                "C:/git/nodall-training/template.api.server/dist/swagger-spec.json",
+                "C:/workspace/tradin.api.server/dist/swagger-spec.json",
                 "-o",
-                "c:/httpclient-ts",
+                "c:/workspace/tradin.api.httpclient-ts",
                 "-n",
-                "@template/api.httpclient",
+                "@tradin/api.httpclient",
                 "-v",
                 "0.0.1",
                 "-f",
@@ -258,7 +238,7 @@
                 "-n",
                 "tradin",
                 "--style",
-                "#6200EE;#03dac6;false;icon_primary_256.png"
+                "primary=#ed1e79;secondary=#29b6f6;accent=#29b6f6;dark=false;icon=default",
             ]
         },
         {
@@ -279,7 +259,8 @@
                 "-n",
                 "home",
                 "--style",
-                "#6200EE;#03dac6;false;icon_primary_256.png"
+                "primary=#ed1e79;secondary=#29b6f6;accent=#29b6f6;dark=false;icon=default",
+                "-f"
             ]
         },
     ]

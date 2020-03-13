@@ -7,16 +7,16 @@ import { existsSync } from 'fs';
 import { CommandBase } from '../../base';
 import { FS } from '../../services/fs';
 import { Shell } from '../../services/shell';
+import { ParamsParser } from '../../services/parsers/ParamsParser';
 
 interface IStyle {
-    colors: {
-        primary: string;
-        secondary: string;
-        fg: string;
-        bg: string;
-    },
-    isDark: boolean;
+    primary: string;
+    secondary: string;
+    dark: boolean;
     icon: string;
+
+    fg: string;
+    bg: string;
 }
 
 interface IView {
@@ -60,10 +60,19 @@ class CommandOptions extends Options {
     @option({
         flag: 's',
         required: false,
-        default: '#ed1e79;#29b6f6;true;default',
-        description: 'style in format: [primary;secondary;isDark;icon] > default: "#ed1e79;#29b6f6;true;default"',
+        default: 'primary=#ed1e79;secondary=#29b6f6;accent=#29b6f6;dark=true;icon=default',
+        description: 'style in format: primary=[color];secondary=[color];dark=[boolean];icon=path > default: primary=#ed1e79;secondary=#29b6f6;dark=true;icon=default',
     })
     public style: string;
+
+    @option({
+        flag: 'f',
+        default: false,
+        required: false,
+        toggle: true,
+        description: 'disable protections (folder exists)',
+    })
+    public force: boolean;
 
     @option({
         flag: 'i',
@@ -97,15 +106,21 @@ export default class extends CommandBase {
 
         //#region [ check ]
         console.log('[check] output folder');
-        // if (existsSync(target)) {
-        //     throw new Error(`output folder already exists.`);
-        // }
+        if ( !config.force  && existsSync(target)) {
+            throw new Error(`output folder already exists.`);
+        }
 
         console.log('[check] command assets');
         if (!assets.exists) {
             throw new Error(`assets folder for command "nex ${this.commandPath.join(' ')}" is missing`);
         }
         //#endregion
+
+        //#region [0] STATIC ROOT FOLDER
+        console.log('[0] STATIC ROOT FOLDER');
+        const staticRoot = assets.getPath('static/root');
+        FS.copyFolder(staticRoot, target);
+        //#endregion   
 
         //#region [1] TEMPLATE ROOT FOLDER
         console.log('[1] TEMPLATE ROOT FOLDER');
@@ -136,11 +151,7 @@ export default class extends CommandBase {
         }
         //#endregion
 
-        //#region [3] STATIC ROOT FOLDER
-        console.log('[3] STATIC ROOT FOLDER');
-        const staticRoot = assets.getPath('static/root');
-        FS.copyFolder(staticRoot, target);
-        //#endregion   
+
 
         //#region [4] post commands
         console.log('[4] post commands');
@@ -158,30 +169,13 @@ export default class extends CommandBase {
 
     //#region [ private ]
     parseStyle(value: string): IStyle {
-        const params = value.split(";");
-        if (params.length != 4) {
-            throw new Error("Style format error");
+        let style: IStyle = new ParamsParser().parse(value);
+        style = Object.assign(style, style.dark ? colors.dark : colors.light);
+        style.icon = resolve(style.icon);
+        if (!existsSync(style.icon)) {
+            style.icon = this.getAssets().getPath('images/icon_512.png');
         }
-        const primary = params[0];
-        const secondary = params[1];
-        const isDark = params[2] == 'true' ? true : false;
-        const fg = isDark ? colors.dark.fg : colors.light.fg;
-        const bg = isDark ? colors.dark.bg : colors.light.bg;
-
-        let icon = resolve(params[3]);
-        if (!existsSync(icon)) {
-            icon = this.getAssets().getPath('images/icon_512.png');
-        }
-        return {
-            colors: {
-                primary,
-                secondary,
-                fg,
-                bg
-            },
-            icon,
-            isDark
-        }
+        return style;
     }
     async create_icon(source: string, output: string, size: number): Promise<void> {
         var file = join(output, `icon_${size.toString()}.png`);

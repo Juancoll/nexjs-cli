@@ -1,3 +1,3 @@
-export * from './base/IAuthApp';
-export * from './base/IAuthUser';
-export * from './WSAuthApp';
+export * from './IAuthApp';
+export * from './IAuthUser';
+export * from './LocalStorageRepository';

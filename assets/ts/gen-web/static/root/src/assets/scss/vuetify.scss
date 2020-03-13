@@ -10,3 +10,15 @@ $padding: 10px;
     padding: $padding !important;
     height: calc(100% - #{$margin*2}) !important;
 }    
+.v-btn.custom{
+    margin: 2px;
+}
+
+.v-list-item.drawer-item{
+    padding-left: 15px !important;
+}
+.v-list-item.drawer-group{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
