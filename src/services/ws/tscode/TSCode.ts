@@ -1,5 +1,5 @@
 import { resolve, join } from 'upath';
-import { Project, SourceFile } from 'ts-morph';
+import { Project, SourceFile, Type } from 'ts-morph';
 
 import { RTypeConverter } from './converters/RTypeConverter';
 import { WSHubEventConverter } from './converters/WSHubConverter';
@@ -42,10 +42,25 @@ export class TSCode {
         var dependencies = new RDependencies();
 
         services.forEach(x => {
-            const serviceName = x.name;
             dependencies.addTypes(x.getDependencies())
         });
 
+        this.getIncludedModels().forEach(x => {
+            dependencies.addType(x);
+        });
+        return dependencies.get();
+    }
+    getIncludedModels(): RType[] {
+        var dependencies = new RDependencies();
+
+        this.project.getSourceFiles().forEach(file => {
+            file.getClasses().forEach(classDec => {
+                const decorator = classDec.getDecorators().find(d => d.getName() == "IncludeModel");
+                if (decorator) {
+                    dependencies.addType(this.RType.convert(classDec.getType()));
+                }
+            });
+        });
         return dependencies.get();
     }
 }

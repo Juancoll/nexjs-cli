@@ -20,6 +20,7 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             ? this.convertFromInterface(sourceFile.getInterfaces().find(x => x.getName() == input.name))
             : this.convertFromClass(sourceFile.getClasses().find(x => x.getName() == input.name))
 
+        output.codeToInclude = 
         return output;
     }
     //#endregion
@@ -67,6 +68,20 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             decorators: new Array<RDecorator>(),
         }));
         return output;
+    }
+
+    getIncludedCode(declaration: ClassDeclaration): string | undefined {
+        const results: string[] = [];
+        declaration.getMethods().forEach(method => {
+            method.getDecorators().forEach(deco => {
+                if (deco.getName() == 'IncludeMethod') {
+                    results.push(deco.getText());
+                }
+            });
+        });
+        return results.length == 0
+            ? undefined
+            : results.join('\n');
     }
 
     private getPropertyDecorators(p: PropertyDeclaration) {
