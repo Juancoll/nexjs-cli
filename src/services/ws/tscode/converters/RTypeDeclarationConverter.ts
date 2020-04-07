@@ -20,7 +20,10 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             ? this.convertFromInterface(sourceFile.getInterfaces().find(x => x.getName() == input.name))
             : this.convertFromClass(sourceFile.getClasses().find(x => x.getName() == input.name))
 
-        output.codeToInclude = 
+        output.codeToInclude = input.isInterface
+            ? undefined
+            : this.getIncludedCode(sourceFile.getClasses().find(x => x.getName() == input.name));
+
         return output;
     }
     //#endregion
@@ -70,18 +73,19 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
         return output;
     }
 
-    getIncludedCode(declaration: ClassDeclaration): string | undefined {
+    getIncludedCode(declaration: ClassDeclaration): string[] | undefined {
         const results: string[] = [];
         declaration.getMethods().forEach(method => {
             method.getDecorators().forEach(deco => {
                 if (deco.getName() == 'IncludeMethod') {
-                    results.push(deco.getText());
+                    const text = this.removeDecorator(method.getText());
+                    results.push(text);
                 }
             });
         });
         return results.length == 0
             ? undefined
-            : results.join('\n');
+            : results;
     }
 
     private getPropertyDecorators(p: PropertyDeclaration) {
@@ -103,5 +107,10 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
                     : undefined
             });
         });
+    }
+    private removeDecorator(text: string) {
+        let newText = text.replace('@IncludeMethod()', '');     // remove decorator
+        newText = newText.replace(/^\s*\n/g, "")                    // remove white lines.
+        return newText;
     }
 }

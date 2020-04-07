@@ -8,4 +8,12 @@ export class {{&declaration}} {
     {{/properties}}
 
     constructor(init?: Partial<{{&constructorPartialArgument}}>) { {{&constructorSuperCall}} Object.assign(this, init); }
+
+    {{#codeToInclude.length}}
+    //#region [ Included Methods ]
+    {{#codeToInclude}}
+    {{.}}
+    {{/codeToInclude}}
+    //#rendregion
+    {{/codeToInclude.length}}
 }

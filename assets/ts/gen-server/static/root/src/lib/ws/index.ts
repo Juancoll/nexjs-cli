@@ -1,6 +1,8 @@
 export * from './decorators/csharp/CSHub';
 export * from './decorators/csharp/CSProperty';
 export * from './decorators/csharp/CSRest';
+export * from './decorators/IncludeModelDecorator';
+export * from './decorators/IncludeMethodDecorator';
 
 export * from './WSServer';
 

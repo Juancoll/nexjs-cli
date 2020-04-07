@@ -20,6 +20,7 @@ export interface ITSModelView {
     constructorSuperCall: string;
     declaration: string;
     properties: ITSModelProperty[];
+    codeToInclude: string[] | undefined;
 }
 
 export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaration, ITSModelView>{
@@ -32,7 +33,8 @@ export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaratio
             constructorPartialArgument: this.getConstructorPartialArgument(input),
             constructorSuperCall: this.getConstructorSuperCall(input),
             declaration: this.getDeclaration(input),
-            properties: input.properties.map(x => this.getProperty(x))
+            properties: input.properties.map(x => this.getProperty(x)),
+            codeToInclude: input.codeToInclude
         };
     }
     //#endregion
