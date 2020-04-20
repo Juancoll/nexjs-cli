@@ -1,6 +1,6 @@
 import { SimpleEventDispatcher } from 'strongly-typed-events';
 
-import { IAuthStrategy, IAuthInfo, ISocketClient } from '@/lib/ws';
+import { IAuthStrategy, IAuthInfo, ISocketClient } from '@nexjs/wsserver';
 import { crypt } from '@/services/crypt';
 import { db } from '@/services/db';
 import { jwt } from '@/services/jwt';

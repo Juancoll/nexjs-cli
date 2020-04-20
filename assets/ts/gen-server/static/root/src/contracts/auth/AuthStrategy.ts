@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User, Player } from '@/models/main';
-import { IAuthStrategy, IAuthInfo, ISocketClient } from '@/lib/ws';
+import { IAuthStrategy, IAuthInfo, ISocketClient } from '@nexjs/wsserver';
 import { PlayerAuthProvider } from './providers/PlayerAuthProvider';
 import { UserAuthProvider } from './providers/UserAuthProvider';
 

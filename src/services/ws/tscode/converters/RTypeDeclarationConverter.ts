@@ -15,6 +15,9 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
     //#region [ implements CodeConverterBase ]
     convert(input: RTypeDeclarationInput): RTypeDeclaration {
         var sourceFile = this.ts.project.getSourceFile(input.sourceFile);
+        if (!sourceFile){
+            return undefined;
+        }
 
         var output = input.isInterface
             ? this.convertFromInterface(sourceFile.getInterfaces().find(x => x.getName() == input.name))

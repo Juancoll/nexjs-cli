@@ -48,6 +48,7 @@
         "vuex": "^3.1.2"
     },
     "devDependencies": {
+        "@types/node": "^13.9.2",
         "@types/uuid": "^3.4.6",
         "@types/webpack": "^4.41.2",
         "@vue/cli-plugin-babel": "^4.1.2",

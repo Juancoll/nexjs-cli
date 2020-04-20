@@ -1,8 +1,8 @@
 .color-primary {
-    color: {{style.colors.primary}};
+    color: {{style.primary}};
 }
 .color-secondary {
-    color: {{style.colors.secondary}};
+    color: {{style.secondary}};
 }
 
 html {
@@ -15,9 +15,9 @@ a {
 
 body {
     font-family: 'Lato', sans-serif;
-    color: {{style.colors.fg}};
+    color: {{style.fg}};
     margin: 10px;
-    background-color: {{style.colors.bg}};
+    background-color: {{style.bg}};
 }
 
 #main {
@@ -29,8 +29,8 @@ body {
     background-color: transparent;
     border-radius: 10px;
     border-width: 2px;
-    border-color: {{style.colors.primary}};
-    color: {{style.colors.primary}};
+    border-color: {{style.primary}};
+    color: {{style.primary}};
     padding: 10px 50px;
     font-size: 18px;
 }

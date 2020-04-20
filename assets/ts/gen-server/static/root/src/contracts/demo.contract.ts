@@ -10,7 +10,7 @@ import {
     HubEventCredentials,
     HubEventCredentialsData,
     HubEventData,
-} from '@/lib/ws';
+} from '@nexjs/wsserver';
 
 import { db } from '@/services/db';
 

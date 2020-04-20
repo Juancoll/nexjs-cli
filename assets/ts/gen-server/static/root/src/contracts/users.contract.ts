@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@/models/main';
 import { db } from '@/services/db';
 import { ContractBase } from './base/ContractBase';
-import { Rest } from '@/lib/ws';
+import { Rest } from '@nexjs/wsserver';
 
 @Injectable()
 export class UsersContract extends ContractBase {

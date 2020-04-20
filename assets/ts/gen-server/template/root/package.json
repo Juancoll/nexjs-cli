@@ -29,6 +29,7 @@
 		"@nestjs/serve-static": "^1.0.2",
 		"@nestjs/swagger": "^4.1.7",
 		"@nestjs/websockets": "^6.10.14",
+		"@nexjs/wsserver": "^1.0.1",
 		"@types/mongodb": "^3.3.14",
 		"agenda": "^3.0.0",
 		"agendash": "^1.0.0",

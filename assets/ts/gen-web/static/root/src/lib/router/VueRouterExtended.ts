@@ -47,6 +47,7 @@ export class VueRouterExtended extends Router {
     private _roles: string[] = [];
     private _currentRole: string | undefined;
     private _user: IAuthUser | null | undefined;
+    private _existingPath: string | null;
     //#endregion
 
     //#region [ properties ]
@@ -74,6 +75,10 @@ export class VueRouterExtended extends Router {
     //#region [ constructor ]
     constructor(props: IVueRouterExtendedProps) {
         super(props.options);
+        console.log('router constructor');
+        console.log(location.hash);
+
+        this._existingPath = this.getHash();
 
         this.useAuth = props.auth ? true : false;
         this.useRoles = props.auth ? props.auth.useRoles : false;
@@ -174,6 +179,7 @@ export class VueRouterExtended extends Router {
                         routes: this._branches.default.routes.concat(this._branches.authenticate.auth.routes),
                     };
                 } else {
+                    if (oldBranch != undefined) { this._existingPath = null; }
                     this._currentBranch = this._branches.authenticate.auth;
                 }
             } else {
@@ -198,7 +204,10 @@ export class VueRouterExtended extends Router {
         this._currentRole = role;
         this.replaceRoutes(this._currentBranch.routes);
         this.onBranchChange.dispatch({ from: oldBranch, to: this._currentBranch });
-        this.push({ path: this._currentBranch.startup })
+
+        var useExistingRoute = this._existingPath && this.findRoute(this._currentBranch.routes, this._existingPath) != undefined;
+
+        this.push({ path: useExistingRoute && this._existingPath ? this._existingPath : this._currentBranch.startup })
             .catch(e => { console.log(`[router] try to push existing current path = ${this._currentBranch.startup}`); });
     }
 
@@ -226,6 +235,31 @@ export class VueRouterExtended extends Router {
             return result.matched[0];
         }
         return undefined;
+    }
+
+    private getHash() {
+        // We can't use window.location.hash here because it's not
+        // consistent across browsers - Firefox will pre-decode it!
+        var href = window.location.href;
+        var index = href.indexOf('#');
+        // empty path
+        if (index < 0) { return '' }
+
+        href = href.slice(index + 1);
+        // decode the hash but not the search or hash
+        // as search(query) is already decoded
+        // https://github.com/vuejs/vue-router/issues/2708
+        var searchIndex = href.indexOf('?');
+        if (searchIndex < 0) {
+            var hashIndex = href.indexOf('#');
+            if (hashIndex > -1) {
+                href = decodeURI(href.slice(0, hashIndex)) + href.slice(hashIndex);
+            } else { href = decodeURI(href); }
+        } else {
+            href = decodeURI(href.slice(0, searchIndex)) + href.slice(searchIndex);
+        }
+
+        return href
     }
     //#endregion
 }

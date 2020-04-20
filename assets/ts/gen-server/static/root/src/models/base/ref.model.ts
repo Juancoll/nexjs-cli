@@ -1,4 +1,4 @@
-import { CSProperty } from '@/lib/ws';
+import { CSProperty } from '@nexjs/wsserver';
 
 export class ModelRef {
     info: string;

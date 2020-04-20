@@ -1,5 +1,5 @@
 import { Player } from '@/models/main';
-import { IAuthStrategy, IAuthInfo, ISocketClient } from '@/lib/ws';
+import { IAuthStrategy, IAuthInfo, ISocketClient } from '@nexjs/wsserver';
 import { db } from '@/services/db';
 import { SimpleEventDispatcher } from 'strongly-typed-events';
 import { jwt } from '@/services/jwt';

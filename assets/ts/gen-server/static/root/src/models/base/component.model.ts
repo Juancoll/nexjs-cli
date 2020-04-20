@@ -1,5 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CSProperty } from '@/lib/ws';
+import { CSProperty } from '@nexjs/wsserver';
 
 export abstract class ModelComponent {
     _type: string;

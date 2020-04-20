@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
-import { WSServer, SocketIOServer, IAuthInfo } from '@/lib/ws';
+import { WSServer, SocketIOServer, IAuthInfo } from '@nexjs/wsserver';
 import { User, Player } from '@/models/main';
 
 import { AuthStrategy, IToken, IUser } from './contracts/auth/AuthStrategy';

@@ -1,8 +1,5 @@
-import { WSServiceBase } from '../../lib';
-import { HubNotification } from '../../lib/clients/hub/notifications/HubNotification';
-import { HubNotificationCredentials } from '../../lib/clients/hub/notifications/HubNotificationCredentials';
-import { HubNotificationCredentialsData } from '../../lib/clients/hub/notifications/HubNotificationCredentialsData';
-import { HubNotificationData } from '../../lib/clients/hub/notifications/HubNotificationData';
+import { WSServiceBase, HubNotification, HubNotificationCredentials, HubNotificationCredentialsData, HubNotificationData } from '@nexjs/wsclient';
+
 {{#imports}}
 import { {{&type}} } from '../../models/{{&path}}';
 {{/imports}}

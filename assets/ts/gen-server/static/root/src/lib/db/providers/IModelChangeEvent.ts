@@ -1,17 +1,15 @@
 import { Timestamp, ObjectID } from 'mongodb';
 
 export interface IModelChangeEvent<T> {
-    _id: {
-        _data: string;
-    };
-    operationType: 'string';
+    _id: any;
+    operationType: string;
     clusterTime: Timestamp;
-    fullDocument: T;
-    ns: {
+    fullDocument?: T;
+    ns?: {
         db: string;
         coll: string;
     };
-    documentKey: {
+    documentKey?: {
         _id: ObjectID;
     };
 }

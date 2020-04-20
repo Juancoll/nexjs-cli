@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { jobs } from '@/services/jobs';
-import { Rest } from '@/lib/ws';
+import { Rest } from '@nexjs/wsserver';
 import { ContractBase } from './base/ContractBase';
 
 @Injectable()

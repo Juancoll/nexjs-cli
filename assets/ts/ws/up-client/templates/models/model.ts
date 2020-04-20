@@ -12,7 +12,7 @@ export class {{&declaration}} {
     {{#codeToInclude.length}}
     //#region [ Included Methods ]
     {{#codeToInclude}}
-    {{.}}
+    {{&.}}
     {{/codeToInclude}}
     //#rendregion
     {{/codeToInclude.length}}

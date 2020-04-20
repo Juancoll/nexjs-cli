@@ -1,4 +1,4 @@
-import { IName } from '@/lib/ws';
+import { IName } from '@nexjs/wsserver';
 import { Logger, LoggerService } from '@nestjs/common';
 import { EmptyLogger } from '@/types/EmptyLogger';
 

@@ -1,13 +1,10 @@
-import * as _ from 'lodash';
-import * as moment from 'moment';
 import { ModelComponent } from './component.model';
-import { ApiProperty } from '@nestjs/swagger';
-import { CSProperty } from '@/lib/ws';
+import { CSProperty, IncludeMethod } from '@nexjs/wsserver';
 
 export class Model {
 
     //#region  [ properties ]
-    components: ModelComponent[] | null | undefined;
+
     _type: string;
 
     @CSProperty({ type: 'string' })
@@ -19,6 +16,8 @@ export class Model {
 
     @CSProperty({ type: 'long' })
     updatedAt: number;
+
+    components: ModelComponent[] | null | undefined;
     //#endregion
 
     constructor(init?: Partial<Model>) {
@@ -31,36 +30,40 @@ export class Model {
             }
         } else {
             this.enabled = true;
-            this.createdAt = moment().valueOf();
-            this.updatedAt = moment().valueOf();
+            this.createdAt = new Date().valueOf();
+            this.updatedAt = new Date().valueOf();
         }
     }
 
     //#region  [ public ]
     public update() {
-        this.updatedAt = moment().valueOf();
+        this.updatedAt = new Date().valueOf();
     }
     //#endregion
 
     //#region [ Component methods ]
+    @IncludeMethod()
     public has<T extends ModelComponent>(type: new () => T): boolean {
         if (!this.components || this.components.length == 0) {
             return false;
         }
         return this.components.find(x => x._type == new type()._type) != undefined;
     }
+    @IncludeMethod()
     public get<T extends ModelComponent>(type: new () => T): T[] {
         if (!this.components || this.components.length == 0) {
             return [];
         }
-        return this.components.filter(x => new type()._type) as T[];
+        return this.components.filter(x => x._type == new type()._type) as T[];
     }
+    @IncludeMethod()
     public first<T extends ModelComponent>(type: new () => T): T | undefined {
         if (!this.components || this.components.length == 0) {
             return undefined;
         }
-        return this.components.find(x => new type()._type) as T;
+        return this.components.find(x => x._type == new type()._type) as T;
     }
+    @IncludeMethod()
     public add(component: ModelComponent) {
         if (!this.components) {
             this.components = [];
@@ -68,6 +71,7 @@ export class Model {
 
         this.components.push(component);
     }
+    @IncludeMethod()
     public remove<T extends ModelComponent>(type: new () => T) {
         if (!this.components || this.components.length == 0) {
             throw new Error(`Components is empty`);
@@ -79,23 +83,28 @@ export class Model {
         }
 
         const idx = this.components.indexOf(first);
-        this.components = this.components.splice(idx, 1);
+        this.components.splice(idx, 1);
 
         if (this.components.length == 0) {
             delete this.components;
         }
     }
+    @IncludeMethod()
     public removeAll<T extends ModelComponent>(type: new () => T) {
         if (!this.components || this.components.length == 0) {
             throw new Error(`Components is empty`);
         }
 
         const strType = new type()._type;
-        this.components = _.remove(this.components, x => x._type == strType);
+        this.components = this.components.filter(x => x._type != strType);
 
         if (this.components && this.components.length == 0) {
             delete this.components;
         }
+    }
+    @IncludeMethod()
+    public clear() {
+        this.components = [];
     }
     //#endregion
 }

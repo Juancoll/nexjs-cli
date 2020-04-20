@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { db } from '@/services/db';
 import { User } from '@/models/main';
-import { Rest } from '@/lib/ws';
+import { Rest } from '@nexjs/wsserver';
 import { ContractBase } from './base/ContractBase';
 
 @Injectable()

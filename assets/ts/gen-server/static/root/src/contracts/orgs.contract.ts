@@ -1,6 +1,6 @@
 
 import { IAuthUser } from '@/models';
-import { Rest, Data, Context } from '@/lib/ws';
+import { Rest, Data, Context } from '@nexjs/wsserver';
 import { ContractBase } from './base/ContractBase';
 import { Injectable } from '@nestjs/common';
 
