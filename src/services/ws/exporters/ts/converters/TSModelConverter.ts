@@ -21,6 +21,7 @@ export interface ITSModelView {
     declaration: string;
     properties: ITSModelProperty[];
     codeToInclude: string[] | undefined;
+    tsConstructor: string | undefined;
 }
 
 export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaration, ITSModelView>{
@@ -34,7 +35,8 @@ export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaratio
             constructorSuperCall: this.getConstructorSuperCall(input),
             declaration: this.getDeclaration(input),
             properties: input.properties.map(x => this.getProperty(x)),
-            codeToInclude: input.codeToInclude
+            codeToInclude: input.codeToInclude,
+            tsConstructor: input.tsConstructor
         };
     }
     //#endregion

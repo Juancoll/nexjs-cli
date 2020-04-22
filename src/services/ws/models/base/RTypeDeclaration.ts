@@ -9,6 +9,7 @@ export class RTypeDeclaration {
     baseType: RType | undefined;
     sourceFile: string;
     codeToInclude: string[] | undefined;
+    tsConstructor: string | undefined;
 
     getDependencies(): RType[] {
         var dependencies = new RDependencies();

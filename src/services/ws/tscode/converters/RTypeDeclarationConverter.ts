@@ -27,6 +27,10 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             ? undefined
             : this.getIncludedCode(sourceFile.getClasses().find(x => x.getName() == input.name));
 
+        output.tsConstructor = input.isInterface
+        ? undefined
+        : this.getConstructor(sourceFile.getClasses().find(x => x.getName() == input.name));
+
         return output;
     }
     //#endregion
@@ -57,7 +61,7 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
 
         return output;
     }
-
+    
     convertFromInterface(declaration: InterfaceDeclaration): RTypeDeclaration {
         if (!declaration) {
             throw new Error("Interface Not found");
@@ -76,6 +80,12 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
         return output;
     }
 
+    getConstructor(declaration: ClassDeclaration): string | undefined {
+        if ( declaration.getConstructors().length == 0){
+            return undefined;
+        }
+        return declaration.getConstructors()[0].getText();
+    }
     getIncludedCode(declaration: ClassDeclaration): string[] | undefined {
         const results: string[] = [];
         declaration.getMethods().forEach(method => {
