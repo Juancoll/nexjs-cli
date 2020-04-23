@@ -10,8 +10,7 @@
         "serve:staging": "vue-cli-service serve --mode staging",
         "build:production": "vue-cli-service build --mode production",
         "build:staging": "vue-cli-service build --mode staging",
-        "start": "serve dist",
-        "lint": "tslint -p tsconfig.json -c tslint.json",
+        "start": "serve dist",      
         "authorize": "vsts-npm-auth -config .npmrc",
         "wsclient:install": "npm link ../{{namespace}}.api.wsclient-ts && npm link @{{namespace}}/api.wsclient",
         "wsclient:uninstall": "npm unlink ../{{namespace}}.api.wsclient-ts && npm unlink @{{namespace}}/api.wsclient",
@@ -48,6 +47,7 @@
         "vuex": "^3.1.2"
     },
     "devDependencies": {
+        "@types/node" :"13.9.2",
         "@types/uuid": "^3.4.6",
         "@types/webpack": "^4.41.2",
         "@vue/cli-plugin-babel": "^4.1.2",

@@ -205,7 +205,7 @@ export class VueRouterExtended extends Router {
         this.replaceRoutes(this._currentBranch.routes);
         this.onBranchChange.dispatch({ from: oldBranch, to: this._currentBranch });
 
-        var useExistingRoute = this._existingPath && this.findRoute(this._currentBranch.routes, this._existingPath) != undefined;
+        const useExistingRoute = this._existingPath && this.findRoute(this._currentBranch.routes, this._existingPath) != undefined;
 
         this.push({ path: useExistingRoute && this._existingPath ? this._existingPath : this._currentBranch.startup })
             .catch(e => { console.log(`[router] try to push existing current path = ${this._currentBranch.startup}`); });
@@ -240,18 +240,18 @@ export class VueRouterExtended extends Router {
     private getHash() {
         // We can't use window.location.hash here because it's not
         // consistent across browsers - Firefox will pre-decode it!
-        var href = window.location.href;
-        var index = href.indexOf('#');
+        let href = window.location.href;
+        const index = href.indexOf('#');
         // empty path
-        if (index < 0) { return '' }
+        if (index < 0) { return ''; }
 
         href = href.slice(index + 1);
         // decode the hash but not the search or hash
         // as search(query) is already decoded
         // https://github.com/vuejs/vue-router/issues/2708
-        var searchIndex = href.indexOf('?');
+        const searchIndex = href.indexOf('?');
         if (searchIndex < 0) {
-            var hashIndex = href.indexOf('#');
+            const hashIndex = href.indexOf('#');
             if (hashIndex > -1) {
                 href = decodeURI(href.slice(0, hashIndex)) + href.slice(hashIndex);
             } else { href = decodeURI(href); }
@@ -259,7 +259,7 @@ export class VueRouterExtended extends Router {
             href = decodeURI(href.slice(0, searchIndex)) + href.slice(searchIndex);
         }
 
-        return href
+        return href;
     }
     //#endregion
 }
