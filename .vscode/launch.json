@@ -68,7 +68,7 @@
                 "-s",
                 "C:/workspace2/tradin.api.server",
                 "-o",
-                "C:/workspace2/tradin.web.community",
+                "C:/workspace2/tradin.web.home",
                 "-n",
                 "@tradin/api.wsclient",
             ],
@@ -257,9 +257,9 @@
                 "--namespace",
                 "tradin",
                 "-n",
-                "gateway",
+                "home",
                 "--style",
-                "primary=#4bf9cd;secondary=#29b6f6;accent=#9c6ecc;dark=true;icon=C:/workspace2/icon_green.png",
+                "primary=#29b6f6;secondary=#4bf9cd;accent=#9c6ecc;dark=false;icon=C:/workspace2/icon_blue.png",
                 "-f"
             ]
         },
