@@ -97,9 +97,17 @@
                 "ws",
                 "gen-client",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "c:/workspace2/tradin.api.server",
                 "-o",
-                "c:/wsclient.api.cs",
+                "c:/workspace2/tradin.api.wsclient-cs",
+                "-n",
+                "tradin.api.wsclient",
+                "-v",
+                "0.0.1",
+                "--feed-name",
+                "nodall-dev",
+                "--feed-url",
+                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/nuget/v3/index.json"
             ]
         },
         {
@@ -115,11 +123,13 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "c:/workspace2/tradin.api.server",
                 "-o",
-                "c:/wsclient.api.cs/src",
+                "c:/workspace2/tradin.api.wsclient-cs/src",
                 "-n",
-                "template.api.wsclient"
+                "tradin.api.wsclient",
+                "-v",
+                "0.0.2",
             ]
         },
         {
@@ -143,9 +153,9 @@
                 "ws",
                 "gen-demo",
                 "-s",
-                "C:/git/nodall-training/template.api.server",
+                "c:/workspace2/tradin.api.server",
                 "-o",
-                "c:/wsclient.demo.cs",
+                "c:/workspace2/tradin.api.wsclient-cs.app",
                 "-n",
                 "template.api.wsclient"
             ]
@@ -197,9 +207,9 @@
                 "http",
                 "gen-client",
                 "-s",
-                "C:/git/nodall-training/template.api.server/dist/swagger-spec.json",
+                "C:/workspace2/tradin.api.server/dist/swagger-spec.json",
                 "-o",
-                "c:/httpclient-cs",
+                "c:/workspace2/tradin.api.httpclient-cs",
                 "-n",
                 "template.api.httpclient",
                 "-v",

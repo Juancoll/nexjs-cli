@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/cli.js",
   "bin": {
-    "nex": "dist/cli.js"
+    "nexjs": "dist/cli.js"
   },
   "repository": {
     "url": "https://github.com/Juancoll/nexjs-cli"
@@ -29,6 +29,7 @@
     "isbinaryfile": "^4.0.4",
     "istextorbinary": "^3.3.0",
     "linq": "^3.2.1",
+    "lodash": "^4.17.19",
     "mustache": "^4.0.0",
     "sharp": "^0.25.1",
     "ts-morph": "^6.0.2",
