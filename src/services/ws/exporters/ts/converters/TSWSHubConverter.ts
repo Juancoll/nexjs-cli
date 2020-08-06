@@ -1,6 +1,6 @@
 import { ConverterBase } from '../../base/ConverterBase';
 import { TSConverter } from '../TSConverter';
-import { WSHubEvent } from '../../../models/ws/WSHubEvent';
+import { WSHubEvent, HubEventType } from '../../../models/ws/WSHubEvent';
 
 export interface ITSHubEventView {
     isAuth: boolean;
@@ -33,39 +33,51 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
     //#endregion
 
     //#region [ private ]
-    private getNotificationType(hub: WSHubEvent): string {
-        if (!hub.data) {
-            if (!hub.options.credentials) {
-                return 'HubNotification';
-            } else {
-                return 'HubNotificationCredentials'
-            }
-        } else {
-            if (!hub.options.credentials) {
-                return 'HubNotificationData';
-            } else {
-                return 'HubNotificationCredentialsData'
-            }
+    private getNotificationType(hub: WSHubEvent): string { 
+        // if (!hub.data) {
+        //     if (!hub.options.credentials) {
+        //         return 'HubNotification';
+        //     } else {
+        //         return 'HubNotificationCredentials'
+        //     }
+        // } else {
+        //     if (!hub.options.credentials) {
+        //         return 'HubNotificationData';
+        //     } else {
+        //         return 'HubNotificationCredentialsData'
+        //     }
+        // }
+        switch(hub.eventType){
+            case HubEventType.HubEvent:   return 'HubNotification';
+            case HubEventType.HubEventData:   return 'HubNotificationData';
+            case HubEventType.HubEventCredentials:   return 'HubNotificationCredentials';
+            case HubEventType.HubEventCredentialsData:   return 'HubNotificationCredentialsData';
         }
     }
 
     private getArguments(hub: WSHubEvent): string {
-        if (!hub.data) {
-            if (!hub.options.credentials) {
-                return '';
-            } else {
-                return `<${this.getCredentialType(hub)}>`
-            }
-        } else {
-            if (!hub.options.credentials) {
-                return `<${this.getDataType(hub)}>`
-            } else {
-                return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
-            }
+        // if (!hub.data) {
+        //     if (!hub.options.credentials) {
+        //         return '';
+        //     } else {
+        //         return `<${this.getCredentialType(hub)}>`
+        //     }
+        // } else {
+        //     if (!hub.options.credentials) {
+        //         return `<${this.getDataType(hub)}>`
+        //     } else {
+        //         return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
+        //     }
+        // }
+        switch(hub.eventType){
+            case HubEventType.HubEvent:   return '';
+            case HubEventType.HubEventData:   return `<${this.getDataType(hub)}>`
+            case HubEventType.HubEventCredentials:   return `<${this.getCredentialType(hub)}>`
+            case HubEventType.HubEventCredentialsData:   return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
         }
     }
     private getCredentialType(hub: WSHubEvent): string {
-        return this.parent.getTypeInstanceName(hub.options.credentials)
+        return this.parent.getTypeInstanceName(hub.credentials)
     }
     private getDataType(hub: WSHubEvent): string {
         return this.parent.getTypeInstanceName(hub.data)
