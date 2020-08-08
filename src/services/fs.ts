@@ -60,6 +60,7 @@ export class FS {
             fs.mkdirSync(source, { recursive: true });
         }
     }
+    
     public static removeFolder(source: string) {
         rimraf.sync(source);
     }
