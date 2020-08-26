@@ -47,7 +47,7 @@ class CommandOptions extends Options {
     public output: string;
     @option({
         flag: 'n',
-        required: false,
+        required: true,
         description: 'package name',
     })
     public name: string;
@@ -92,7 +92,7 @@ class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Generate ts vue pug app template',
+    description: 'Generate cs http client full package.',
 })
 export default class extends CommandBase {
 
@@ -134,9 +134,13 @@ export default class extends CommandBase {
             FS.copyFolder(
                 feedSrc,
                 target,
-                (s, t, c) => {
-                    console.log(`  |- [create]  ${t}`);
-                    return mustache.render(c, feedView);
+                {
+                    file: {
+                        transform: (s, t, c) => {
+                            console.log(`  |- [create]  ${t}`);
+                            return mustache.render(c, feedView);
+                        }
+                    }
                 }
             );
         }

@@ -44,7 +44,7 @@ class CommandOptions extends Options {
 
 // tslint:disable-next-line: max-classes-per-file
 @command({
-    description: 'update typescript wsapi client',
+    description: 'Update typescript wsapi client (source files only) from a server source code. !Require @nexjs/wsclient, uuid, socket.io-client, strongly-typed-events as dependencies, and @types/uuid @types/socket.io-client as  devDependencies',
 })
 export default class extends CommandBase {
 

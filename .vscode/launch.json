@@ -4,86 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        // --------------------
-        // TS WS Commands
-        //  -------------------
-        /* 
-         * ws client     
+        /*
+         * [Typescript clients]
          */
         {
             "type": "node",
             "request": "launch",
-            "name": "ts ws gen-package",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "args": [
-                "ts",
-                "ws",                
-                "gen-package",
-                "-s",
-                "C:/workspace2/tradin.api.server",
-                "-o",
-                "C:/workspace2/tradin.api.wsclient-ts",
-                "-n",
-                "@tradin/api.wsclient",
-                "-v",
-                "0.0.2",
-                "-i",
-                "-b"
-            ],
+            "name": "-- [CS clients]"
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts ws up-client",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "args": [
-                "ts",
-                "ws",
-                "up-client",
-                "-s",
-                "C:/workspace2/tradin.api.server",
-                "-o",
-                "C:/workspace2/tradin.api.wsclient-ts/src",
-                "-b"
-            ],
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts ws add-views",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "args": [
-                "ts",
-                "ws",
-                "add-views",
-                "-s",
-                "C:/workspace2/tradin.api.server",
-                "-o",
-                "C:/workspace2/tradin.web.home",
-                "-n",
-                "@tradin/api.wsclient",
-            ],
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "------------------"
-        },       
-        // --------------------
-        // CS WS Commands
-        //  -------------------
-        /* 
-         * ws client     
-         */
+        // [ WS ]
         {
             "type": "node",
             "request": "launch",
@@ -97,18 +26,15 @@
                 "ws",
                 "gen-client",
                 "-s",
-                "c:/workspace2/tradin.api.server",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs",
                 "-o",
-                "c:/workspace2/tradin.api.wsclient-cs",
+                "c:/@nexjs-cli/wsclient-cs",
                 "-n",
-                "tradin.api.wsclient",
+                "demo.wsclient",
                 "-v",
                 "0.0.1",
-                "--feed-name",
-                "nodall-dev",
-                "--feed-url",
-                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/nuget/v3/index.json"
-            ]
+                "-b"
+            ],
         },
         {
             "type": "node",
@@ -123,77 +49,14 @@
                 "ws",
                 "up-client",
                 "-s",
-                "c:/workspace2/tradin.api.server",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs",
                 "-o",
-                "c:/workspace2/tradin.api.wsclient-cs/src",
+                "c:/@nexjs-cli/wsclient-cs-update-only/src/ws",
                 "-n",
-                "tradin.api.wsclient",
-                "-v",
-                "0.0.2",
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "------------------"
-        },
-        /* 
-         * ws demo     
-         */
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "cs ws gen-demo",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
+                "demo.wsclient"
             ],
-            "args": [
-                "cs",
-                "ws",
-                "gen-demo",
-                "-s",
-                "c:/workspace2/tradin.api.server",
-                "-o",
-                "c:/workspace2/tradin.api.wsclient-cs.app",
-                "-n",
-                "template.api.wsclient"
-            ]
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "------------------"
-        },
-        // --------------------
-        // HTTP Commands
-        //  -------------------
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts http gen-client",
-            "program": "${workspaceFolder}/dist/cli.js",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "args": [
-                "ts",
-                "http",
-                "gen-client",
-                "-s",
-                "C:/workspace2/tradin.api.server/dist/swagger-spec.json",
-                "-o",
-                "c:/workspace2/tradin.api.httpclient-ts",
-                "-n",
-                "@tradin/api.httpclient",
-                "-v",
-                "0.0.1",
-                "-f",
-                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/npm/registry/",
-                "-i",
-                "-b"
-            ]
-        },
+        // [ HTTP ]
         {
             "type": "node",
             "request": "launch",
@@ -207,70 +70,127 @@
                 "http",
                 "gen-client",
                 "-s",
-                "C:/workspace2/tradin.api.server/dist/swagger-spec.json",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
                 "-o",
-                "c:/workspace2/tradin.api.httpclient-cs",
+                "c:/@nexjs-cli/httpclient-cs",
                 "-n",
-                "template.api.httpclient",
+                "demo.httpclient",
+                "-v",
+                "0.0.1"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cs http up-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "cs",
+                "http",
+                "up-client",
+                "-s",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
+                "-o",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.client.cs/src/http",
+                "-n",
+                "demo.httpclient",
+                "--clean",
+                "true"
+            ]
+        },
+        /*
+         * [Typescript clients]
+         */
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "-- [TS clients]"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts ws gen-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ts",
+                "ws",
+                "gen-client",
+                "-s",
+                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
+                "-o",
+                "c:/@nexjs-cli/wsclient-ts",
+                "-n",
+                "@nexjs-cli/wsclient",
                 "-v",
                 "0.0.1",
-                "--feed-name",
-                "nodall-dev",
-                "--feed-url",
-                "https://pkgs.dev.azure.com/nodall-dev/_packaging/nodall-dev/nuget/v3/index.json",
+                "-i",
                 "-b"
             ]
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "------------------"
-        },
-        // --------------------
-        // TS Main Commands
-        //  -------------------
-        /* 
-         * ts gen-server     
-         */
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "ts gen-server",
+            "name": "ts ws up-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "args": [
                 "ts",
-                "gen-server",
+                "ws",
+                "up-client",
+                "-s",
+                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
                 "-o",
-                "c:/workspace2",
-                "-n",
-                "tradin",
-                "--style",
-                "primary=#29b6f6;secondary=#4bf9cd;accent=#9c6ecc;dark=false;icon=default",
+                "c:/@nexjs-cli/wsclient-ts-update-only/src/ws",
             ]
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "ts gen-web",
+            "name": "ts http gen-client",
             "program": "${workspaceFolder}/dist/cli.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "args": [
                 "ts",
-                "gen-web",
+                "http",
+                "gen-client",
+                "-s",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
                 "-o",
-                "c:/workspace2",
-                "--namespace",
-                "tradin",
+                "c:/@nexjs-cli/httpclient-ts",
                 "-n",
-                "home",
-                "--style",
-                "primary=#29b6f6;secondary=#4bf9cd;accent=#9c6ecc;dark=false;icon=C:/workspace2/icon_blue.png",
-                "-f"
+                "@nexjs-cli/httpclient",
+                "-v",
+                "0.0.1"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts http up-client",
+            "program": "${workspaceFolder}/dist/cli.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "ts",
+                "http",
+                "up-client",
+                "-s",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
+                "-o",
+                "c:/@nexjs-cli/httpclient-ts-update-only",
+                "--clean",
+                "true"
             ]
         },
     ]

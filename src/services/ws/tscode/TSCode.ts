@@ -57,6 +57,8 @@ export class TSCode {
             file.getClasses().forEach(classDec => {
                 const decorator = classDec.getDecorators().find(d => d.getName() == "IncludeModel");
                 if (decorator) {
+                    console.log(classDec.getName());
+                    console.log(decorator.getName())
                     dependencies.addType(this.RType.convert(classDec.getType()));
                 }
             });

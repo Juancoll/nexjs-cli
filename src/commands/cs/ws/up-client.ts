@@ -42,7 +42,7 @@ export class CommandOptions extends Options {
 
 // tslint:disable-next-line: max-classes-per-file
 @command({
-    description: 'Update wsapi client for c# context - only ws files',
+    description: 'Update wsapi client for c# context - only code source files.',
 })
 export default class extends CommandBase {
     constructor() {

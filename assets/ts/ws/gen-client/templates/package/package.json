@@ -19,15 +19,12 @@
   },
   "dependencies": {
     "@nexjs/wsclient": "^1.0.6",
-    "uuid":"^7.0.1",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "uuid": "^7.0.1",
     "socket.io-client": "^2.3.0",
     "strongly-typed-events": "^1.6.8"
   },
   "devDependencies": {
     "@types/uuid": "^7.0.0",
-    "@types/lodash": "^4.14.149",
     "@types/socket.io-client": "^1.4.32",
     "@types/node": "^12.11.5",
     "rimraf": "^3.0.1",

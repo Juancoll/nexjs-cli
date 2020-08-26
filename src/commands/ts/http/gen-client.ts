@@ -79,7 +79,7 @@ class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Generate ts vue pug app template',
+    description: 'Generate typescript http api client (full package) from swagger description file.',
 })
 export default class extends CommandBase {
 
@@ -100,8 +100,8 @@ export default class extends CommandBase {
 
         //#region [1] openapi:generator command
         const tool = resolve('./node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator');
-        generatorConfig.npmName = config.name;
-        generatorConfig.npmVersion = config.version;
+        generatorConfig.npmName = config.name || 'none';
+        generatorConfig.npmVersion = config.version || 'none';
 
         const additionalProperties = this.toCSV(generatorConfig);
         const inputFile = resolve(cwd, options.source);

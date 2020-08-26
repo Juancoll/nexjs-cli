@@ -33,25 +33,12 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
     //#endregion
 
     //#region [ private ]
-    private getNotificationType(hub: WSHubEvent): string { 
-        // if (!hub.data) {
-        //     if (!hub.options.credentials) {
-        //         return 'HubNotification';
-        //     } else {
-        //         return 'HubNotificationCredentials'
-        //     }
-        // } else {
-        //     if (!hub.options.credentials) {
-        //         return 'HubNotificationData';
-        //     } else {
-        //         return 'HubNotificationCredentialsData'
-        //     }
-        // }
-        switch(hub.eventType){
-            case HubEventType.HubEvent:   return 'HubNotification';
-            case HubEventType.HubEventData:   return 'HubNotificationData';
-            case HubEventType.HubEventCredentials:   return 'HubNotificationCredentials';
-            case HubEventType.HubEventCredentialsData:   return 'HubNotificationCredentialsData';
+    private getNotificationType(hub: WSHubEvent): string {
+        switch (hub.eventType) {
+            case HubEventType.HubEvent: return 'HubNotification';
+            case HubEventType.HubEventData: return 'HubNotificationData';
+            case HubEventType.HubEventCredentials: return 'HubNotificationCredentials';
+            case HubEventType.HubEventCredentialsData: return 'HubNotificationCredentialsData';
         }
     }
 
@@ -69,11 +56,11 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
         //         return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
         //     }
         // }
-        switch(hub.eventType){
-            case HubEventType.HubEvent:   return '';
-            case HubEventType.HubEventData:   return `<${this.getDataType(hub)}>`
-            case HubEventType.HubEventCredentials:   return `<${this.getCredentialType(hub)}>`
-            case HubEventType.HubEventCredentialsData:   return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
+        switch (hub.eventType) {
+            case HubEventType.HubEvent: return '';
+            case HubEventType.HubEventData: return `<${this.getDataType(hub)}>`
+            case HubEventType.HubEventCredentials: return `<${this.getCredentialType(hub)}>`
+            case HubEventType.HubEventCredentialsData: return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
         }
     }
     private getCredentialType(hub: WSHubEvent): string {

@@ -8,6 +8,7 @@ import { FS } from '../../../services/fs';
 import { TSCode } from '../../../services/ws/tscode/TSCode';
 import { TSConverter } from '../../../services/ws/exporters/ts/TSConverter';
 import { Shell } from '../../../services/shell';
+import { transform } from 'typescript';
 
 class CommandOptions extends Options {
     @option({
@@ -75,7 +76,7 @@ class CommandOptions extends Options {
 
 // tslint:disable-next-line: max-classes-per-file
 @command({
-    description: 'Generate wsapi client for typescript context',
+    description: 'Generate typescript wsapi client (Full package) from a server source code',
 })
 export default class extends CommandBase {
 
@@ -115,10 +116,10 @@ export default class extends CommandBase {
         const target = resolve(cwd, options.output)
         const targetSrc = join(target, 'src');
         //#region [1] up-client command
-        await Shell.exec(`nex ts ws up-client -s ${config.source} -o ${targetSrc} -x ${config.suffix}`, { rejectOnError: true, stdout: true }); 
+        await Shell.exec(`nex ts ws up-client -s ${config.source} -o ${targetSrc} -x ${config.suffix}`, { rejectOnError: true, stdout: true });
 
-        //#region [5] PACKAGE FOLDER
-        console.log('[5] copy and parse package folder');
+        //#region [2] PACKAGE FOLDER
+        console.log('[2] copy and parse package folder');
         const pkgSource = assets.getPath('templates/package');
         const pkgView = {
             name: config.name,
@@ -127,14 +128,18 @@ export default class extends CommandBase {
         FS.copyFolder(
             pkgSource,
             target,
-            (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, pkgView);
+            {
+                file: {
+                    transform: (s, t, c) => {
+                        console.log(`  |- [create]  ${t}`);
+                        return mustache.render(c, pkgView);
+                    }
+                }
             }
         );
         //#endregion  
 
-        //#region [6] copy .npmrc
+        //#region [3] copy .npmrc
         if (config.feed) {
             console.log('[6] PRIVATE FEED - copy and parse .npmrc file');
             if (!config.name.startsWith('@')) {
@@ -158,8 +163,8 @@ export default class extends CommandBase {
         }
         //#endregion  
 
-        //#region [6] post commands
-        console.log('[6] post commands');
+        //#region [4] post commands
+        console.log('[5] post commands');
         if (options.install) {
             try {
                 await Shell.exec(`cd ${target} && npm install`, { stdout: true, rejectOnError: true });

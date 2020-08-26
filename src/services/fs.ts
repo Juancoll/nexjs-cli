@@ -4,13 +4,24 @@ import * as rimraf from 'rimraf';
 
 const { isBinary } = require('istextorbinary')
 
+export interface CopyFolderOptions {
+    file?: {
+        rename?: (folderName: string, fileName: string) => string,
+        transform?: (sourceFile: string, targetFile: string, content: string) => string,
+        include?: RegExp
+    }
+    folder?: {
+        rename?: (folderName: string, fileName: string) => string,
+        include?: RegExp
+    }
+}
+
 export class FS {
 
     public static copyFolder(
         source: string,
         target: string,
-        transform?: (sourceFile: string, targetFile: string, content: string) => string,
-        rename?: (fileName: string) => string,
+        options?: CopyFolderOptions
     ) {
         let entries = [];
 
@@ -22,15 +33,41 @@ export class FS {
         // copy
         if (fs.lstatSync(source).isDirectory()) {
             entries = fs.readdirSync(source);
-            entries.forEach((file) => {
-                const curSource = path.join(source, file);
-                const curTarget = rename
-                    ? path.join(target, rename(file))
-                    : path.join(target, file);
+            entries.forEach((name: string) => {
+                const curSource = path.join(source, name);
+
                 if (fs.lstatSync(curSource).isDirectory()) {
-                    FS.copyFolder(curSource, curTarget, transform, rename);
+                    if (options && options.folder && options.folder.include) {
+                        if (name.match(options.folder.include)) {
+                            const curTarget = options && options.folder && options.folder.rename
+                                ? path.join(target, options.folder.rename(source, name))
+                                : path.join(target, name);
+                            FS.copyFolder(curSource, curTarget, options);
+                        }
+                    } else {
+                        const curTarget = options && options.folder && options.folder.rename
+                            ? path.join(target, options.folder.rename(source, name))
+                            : path.join(target, name);
+                        FS.copyFolder(curSource, curTarget, options);
+                    }
                 } else {
-                    FS.copyFile(curSource, curTarget, transform);
+                    const transform = options && options.file && options.file.transform
+                        ? options.file.transform
+                        : undefined;
+                    if (options && options.file && options.file.include) {
+                        if (name.match(options.file.include)) {
+                            const curTarget = options && options.file && options.file.rename
+                                ? path.join(target, options.file.rename(source, name))
+                                : path.join(target, name);
+                            FS.copyFile(curSource, curTarget, transform);
+                        }
+                    }
+                    else {
+                        const curTarget = options && options.file && options.file.rename
+                            ? path.join(target, options.file.rename(source, name))
+                            : path.join(target, name);
+                        FS.copyFile(curSource, curTarget, transform);
+                    }
                 }
             });
         }
@@ -60,7 +97,7 @@ export class FS {
             fs.mkdirSync(source, { recursive: true });
         }
     }
-    
+
     public static removeFolder(source: string) {
         rimraf.sync(source);
     }

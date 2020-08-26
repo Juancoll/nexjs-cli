@@ -196,11 +196,15 @@ export default class extends CommandBase {
         FS.copyFolder(
             source,
             target,
-            (s, t, c) => {
-                console.log(`  |- [create]  ${t}`);
-                return mustache.render(c, apiView);
-            },
-            (filename) => mustache.render(filename, apiView),
+            {
+                file: {
+                    transform: (s, t, c) => {
+                        console.log(`  |- [create]  ${t}`);
+                        return mustache.render(c, apiView);
+                    },
+                    rename: (folder, file) => mustache.render(file, apiView),
+                }
+            }
         );
         //#endregion
 
@@ -216,9 +220,13 @@ export default class extends CommandBase {
             FS.copyFolder(
                 feedSrc,
                 target,
-                (s, t, c) => {
-                    console.log(`  |- [create]  ${t}`);
-                    return mustache.render(c, feedView);
+                {
+                    file: {
+                        transform: (s, t, c) => {
+                            console.log(`  |- [create]  ${t}`);
+                            return mustache.render(c, feedView);
+                        }
+                    }
                 }
             );
         }
