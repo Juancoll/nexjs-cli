@@ -116,7 +116,7 @@ export default class extends CommandBase {
         const target = resolve(cwd, options.output)
         const targetSrc = join(target, 'src');
         //#region [1] up-client command
-        await Shell.exec(`nex ts ws up-client -s ${config.source} -o ${targetSrc} -x ${config.suffix}`, { rejectOnError: true, stdout: true });
+        await Shell.exec(`nexjs ts ws up-client -s ${config.source} -o ${targetSrc} -x ${config.suffix}`, { rejectOnError: true, stdout: true });
 
         //#region [2] PACKAGE FOLDER
         console.log('[2] copy and parse package folder');

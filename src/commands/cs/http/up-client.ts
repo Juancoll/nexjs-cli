@@ -67,7 +67,7 @@ export default class extends CommandBase {
 
         // [2] execute gen-client command
         console.log('[2] execute gen-client command');
-        await Shell.exec(`nex cs http gen-client -s ${config.source} -o ${temp} -n ${config.name}`, { rejectOnError: true, stdout: true });
+        await Shell.exec(`nexjs cs http gen-client -s ${config.source} -o ${temp} -n ${config.name}`, { rejectOnError: true, stdout: true });
 
         // [3] copy api source code files 
         console.log('[3] copy api source code files ');
