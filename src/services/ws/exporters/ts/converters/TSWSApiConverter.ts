@@ -1,7 +1,7 @@
-import { WSService } from '../../../models/ws/WSService';
-import { ConverterBase } from '../../base/ConverterBase';
-import { TSConverter } from '../TSConverter';
-import { ITSWSServiceView } from './TSWSServiceConterter';
+import { WSService } from '../../../models/ws/WSService'
+import { ConverterBase } from '../../base/ConverterBase'
+import { TSConverter } from '../TSConverter'
+import { ITSWSServiceView } from './TSWSServiceConterter'
 
 export interface ITSWSApiInput {
     packageName: string;
@@ -18,18 +18,18 @@ export interface ITSWSApiView {
 export class TSWSApiConverter extends ConverterBase<TSConverter, ITSWSApiInput, ITSWSApiView>{
 
     //#region  [ implement ConverterBase ]
-    convert(input: ITSWSApiInput): ITSWSApiView {
+    convert ( input: ITSWSApiInput ): ITSWSApiView {
         return {
             name: input.packageName,
             version: input.packageVersion,
-            services: input.services.map(x => this.parent.WSService.convert(x)),
-        };
+            services: input.services.map( x => this.parent.WSService.convert( x ) ),
+        }
     }
     //#endregion
 
     //#region [ constructor ]
-    constructor(parent: TSConverter) {
-        super(parent);
+    constructor ( parent: TSConverter ) {
+        super( parent )
     }
     //#endregion
 }

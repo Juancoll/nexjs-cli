@@ -1,3 +1,3 @@
 {{#files}}
-export * from '{{&path}}';
+export * from '{{&path}}'
 {{/files}}

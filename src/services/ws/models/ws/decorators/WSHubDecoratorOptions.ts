@@ -1,4 +1,4 @@
-import { RType } from '../../base/RType';
+import { RType } from '../../base/RType'
 
 export class WSHubDecoratorOptions {
     service: string;

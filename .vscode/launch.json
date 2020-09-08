@@ -122,9 +122,9 @@
                 "ws",
                 "gen-client",
                 "-s",
-                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
+                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs",
                 "-o",
-                "c:/@nexjs-cli/wsclient-ts",
+                "c:/@nexjs-cli/gen-wsclient-ts",
                 "-n",
                 "@nexjs-cli/wsclient",
                 "-v",
@@ -148,7 +148,7 @@
                 "-s",
                 "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
                 "-o",
-                "c:/@nexjs-cli/wsclient-ts-update-only/src/ws",
+                "c:/@nexjs-cli/up-wsclient-ts/src/ws",
             ]
         },
         {
@@ -166,7 +166,7 @@
                 "-s",
                 "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
                 "-o",
-                "c:/@nexjs-cli/httpclient-ts",
+                "c:/@nexjs-cli/gen-httpclient-ts",
                 "-n",
                 "@nexjs-cli/httpclient",
                 "-v",
@@ -188,7 +188,7 @@
                 "-s",
                 "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
                 "-o",
-                "c:/@nexjs-cli/httpclient-ts-update-only",
+                "c:/@nexjs-cli/up-httpclient-ts",
                 "--clean",
                 "true"
             ]

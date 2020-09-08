@@ -1,14 +1,14 @@
-import { resolve, join } from 'upath';
-import { Project, SourceFile, Type } from 'ts-morph';
+import { resolve, join } from 'upath'
+import { Project, SourceFile } from 'ts-morph'
 
-import { RTypeConverter } from './converters/RTypeConverter';
-import { WSHubEventConverter } from './converters/WSHubConverter';
-import { RTypeDeclarationConverter } from './converters/RTypeDeclarationConverter';
-import { WSHRestEventConverter } from './converters/WSRestMethodConverter';
-import { WSServicesConverter } from './converters/WSServicesConverter';
-import { WSService } from '../models/ws/WSService';
-import { RType } from '../models/base/RType';
-import { RDependencies } from '../models/base/RDependencies';
+import { RTypeConverter } from './converters/RTypeConverter'
+import { WSHubEventConverter } from './converters/WSHubConverter'
+import { RTypeDeclarationConverter } from './converters/RTypeDeclarationConverter'
+import { WSHRestEventConverter } from './converters/WSRestMethodConverter'
+import { WSServicesConverter } from './converters/WSServicesConverter'
+import { WSService } from '../models/ws/WSService'
+import { RType } from '../models/base/RType'
+import { RDependencies } from '../models/base/RDependencies'
 
 export class TSCode {
 
@@ -19,50 +19,50 @@ export class TSCode {
     //#endregion
 
     //#region  [ converters ]
-    public readonly RType = new RTypeConverter(this);
-    public readonly RTypeDeclaration = new RTypeDeclarationConverter(this);
-    public readonly WSHubEvent = new WSHubEventConverter(this);
-    public readonly WSRestMethod = new WSHRestEventConverter(this);
-    public readonly WSService = new WSServicesConverter(this);
+    public readonly RType = new RTypeConverter( this );
+    public readonly RTypeDeclaration = new RTypeDeclarationConverter( this );
+    public readonly WSHubEvent = new WSHubEventConverter( this );
+    public readonly WSRestMethod = new WSHRestEventConverter( this );
+    public readonly WSService = new WSServicesConverter( this );
     //#endregion
 
-    constructor(sourceDir: string, suffix: string) {
-        this.sourceDir = sourceDir;
+    constructor ( sourceDir: string, suffix: string ) {
+        this.sourceDir = sourceDir
 
-        const tsconfig = resolve(join(sourceDir, '/tsconfig.json'));
-        this.project = new Project({
+        const tsconfig = resolve( join( sourceDir, '/tsconfig.json' ) )
+        this.project = new Project( {
             tsConfigFilePath: tsconfig,
-        });
+        } )
         this.contractFiles = this.project
             .getSourceFiles()
-            .filter(x => x.getFilePath().endsWith(suffix));
+            .filter( x => x.getFilePath().endsWith( suffix ) )
     }
 
-    getDependencies(services: WSService[]): RType[] {
-        var dependencies = new RDependencies();
+    getDependencies ( services: WSService[] ): RType[] {
+        const dependencies = new RDependencies()
 
-        services.forEach(x => {
-            dependencies.addTypes(x.getDependencies())
-        });
+        services.forEach( x => {
+            dependencies.addTypes( x.getDependencies() )
+        } )
 
-        this.getIncludedModels().forEach(x => {
-            dependencies.addType(x);
-        });
-        return dependencies.get();
+        this.getIncludedModels().forEach( x => {
+            dependencies.addType( x )
+        } )
+        return dependencies.get()
     }
-    getIncludedModels(): RType[] {
-        var dependencies = new RDependencies();
+    getIncludedModels (): RType[] {
+        const dependencies = new RDependencies()
 
-        this.project.getSourceFiles().forEach(file => {
-            file.getClasses().forEach(classDec => {
-                const decorator = classDec.getDecorators().find(d => d.getName() == "IncludeModel");
-                if (decorator) {
-                    console.log(classDec.getName());
-                    console.log(decorator.getName())
-                    dependencies.addType(this.RType.convert(classDec.getType()));
+        this.project.getSourceFiles().forEach( file => {
+            file.getClasses().forEach( classDec => {
+                const decorator = classDec.getDecorators().find( d => d.getName() == 'IncludeModel' )
+                if ( decorator ) {
+                    console.log( classDec.getName() )
+                    console.log( decorator.getName() )
+                    dependencies.addType( this.RType.convert( classDec.getType() ) )
                 }
-            });
-        });
-        return dependencies.get();
+            } )
+        } )
+        return dependencies.get()
     }
 }

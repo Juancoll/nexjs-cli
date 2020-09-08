@@ -1,6 +1,6 @@
 export abstract class ConverterBase<TParent, TInput, TOutput> {
     //#region [ abstract ]
-    abstract convert(input: TInput): TOutput;
+    abstract convert( input: TInput ): TOutput;
     //#endregion
 
     //#region [ properties ]
@@ -8,8 +8,8 @@ export abstract class ConverterBase<TParent, TInput, TOutput> {
     //#endregion
 
     //#region [ constructor ]
-    constructor(parent: TParent) {
-        this.parent = parent;
+    constructor ( parent: TParent ) {
+        this.parent = parent
     }
     //#endregion
 }

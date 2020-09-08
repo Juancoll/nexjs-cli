@@ -1,34 +1,37 @@
 {
-  "name": "{{&name}}",
-  "version": "{{&version}}",
-  "description": "wsapi client for {{&name}}",
-  "author": "nexjs-cli",
-  "keywords": [
-    "socket.io-client",
-    "typescript",
-    "{{&name}}"
-  ],
-  "license": "Unlicense",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "tsc",
-    "prepublishOnly": "npm run build",
-    "authenticate": "vsts-npm-auth -config .npmrc"
-  },
-  "dependencies": {
-    "@nexjs/wsclient": "^1.0.6",
-    "uuid": "^7.0.1",
-    "socket.io-client": "^2.3.0",
-    "strongly-typed-events": "^1.6.8"
-  },
-  "devDependencies": {
-    "@types/uuid": "^7.0.0",
-    "@types/socket.io-client": "^1.4.32",
-    "@types/node": "^12.11.5",
-    "rimraf": "^3.0.1",
-    "typescript": "^3.7.5",
-    "vsts-npm-auth": "^0.37.0"
-  }
+    "name": "{{&name}}",
+    "version": "{{&version}}",
+    "description": "wsapi client for {{&name}}",
+    "author": "nexjs-cli",
+    "keywords": [
+        "socket.io-client",
+        "typescript",
+        "{{&name}}"
+    ],
+    "license": "Unlicense",
+    "main": "./dist/index.js",
+    "typings": "./dist/index.d.ts",
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "tsc",
+        "prepublishOnly": "npm run build",
+        "authenticate": "vsts-npm-auth -config .npmrc"
+    },
+    "dependencies": {
+        "@nexjs/wsclient": "^1.0.6",
+        "uuid": "^7.0.1",
+        "socket.io-client": "^2.3.0",
+        "strongly-typed-events": "^1.6.8"
+    },
+    "devDependencies": {
+        "@types/uuid": "^7.0.0",
+        "@types/socket.io-client": "^1.4.32",
+        "@types/node": "^12.11.5",
+        "@typescript-eslint/eslint-plugin": "^2.19.2",
+        "@typescript-eslint/parser": "^2.19.2",
+        "eslint": "^6.8.0",
+        "rimraf": "^3.0.1",
+        "typescript": "^3.7.5",
+        "vsts-npm-auth": "^0.37.0"
+    }
 }

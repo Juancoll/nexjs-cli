@@ -1,4 +1,4 @@
-import { TSCode } from '../TSCode';
+import { TSCode } from '../TSCode'
 
 export abstract class CodeConverterBase<TInput, TOutput> {
     //#region  [ properties ]
@@ -6,12 +6,12 @@ export abstract class CodeConverterBase<TInput, TOutput> {
     //#endregion
 
     //#region [ constructor ]
-    constructor(ts: TSCode) {
-        this.ts = ts;
+    constructor ( ts: TSCode ) {
+        this.ts = ts
     }
     //#endregion
 
     //#region [ abstract ]
-    public abstract convert(input: TInput): TOutput;
+    public abstract convert( input: TInput ): TOutput;
     //#endregion
 }

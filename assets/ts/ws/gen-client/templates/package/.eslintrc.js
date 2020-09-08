@@ -16,8 +16,8 @@ module.exports = {
         indent: [ 'error', 4 ],
         quotes: [ 'error', 'single' ],
         'semi': [ 'error', 'never' ],
-        'no-trailing-spaces': 'error',
-        'no-multiple-empty-lines': [ 'error', { max: 1, maxEOF: 0, maxBOF: 0 } ],
+        'no-trailing-spaces': 'warn',
+        'no-multiple-empty-lines': [ 'error', { max: 1, maxEOF: 1, maxBOF: 1 } ],
         'no-unexpected-multiline':   'error',
         'no-multi-spaces': 'error',
         'no-useless-escape': 'off',
@@ -33,5 +33,7 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
+        "no-unused-vars": 'off',
+        "@typescript-eslint/no-unused-vars": 'warn',
     },
 }

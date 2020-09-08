@@ -1,6 +1,6 @@
-import { ConverterBase } from '../../base/ConverterBase';
-import { RTypeDeclaration } from '../../../models/base/RTypeDeclaration';
-import { TSConverter } from '../TSConverter';
+import { ConverterBase } from '../../base/ConverterBase'
+import { RTypeDeclaration } from '../../../models/base/RTypeDeclaration'
+import { TSConverter } from '../TSConverter'
 
 export interface ITSImport {
     type: string;
@@ -16,16 +16,16 @@ export interface ITSModelIndexView {
 export class TSModelIndexConverter extends ConverterBase<TSConverter, RTypeDeclaration[], ITSModelIndexView>{
 
     //#region [ implement IConverter ]
-    convert(input: RTypeDeclaration[]): ITSModelIndexView {
+    convert ( input: RTypeDeclaration[] ): ITSModelIndexView {
         return {
-            files: input.map(x => ({ path: `./${x.name}`})),
+            files: input.map( x => ( { path: `./${x.name}` } ) ),
         }
     }
     //#endregion
 
     //#region [ constructor ]
-    constructor(parent: TSConverter) {
-        super(parent);
+    constructor ( parent: TSConverter ) {
+        super( parent )
     }
     //#endregion
 }

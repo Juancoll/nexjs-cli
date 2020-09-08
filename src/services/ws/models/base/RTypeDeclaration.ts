@@ -1,6 +1,6 @@
-import { RParam } from './RParam';
-import { RType } from './RType';
-import { RDependencies } from './RDependencies';
+import { RParam } from './RParam'
+import { RType } from './RType'
+import { RDependencies } from './RDependencies'
 
 export class RTypeDeclaration {
     name: string;
@@ -11,13 +11,13 @@ export class RTypeDeclaration {
     codeToInclude: string[] | undefined;
     tsConstructor: string | undefined;
 
-    getDependencies(): RType[] {
-        var dependencies = new RDependencies();
+    getDependencies (): RType[] {
+        const dependencies = new RDependencies()
 
-        dependencies.addType(this.baseType);
-        dependencies.addTypes(this.properties.map(x => x.type));
-        dependencies.addTypes(this.arguments);
+        dependencies.addType( this.baseType )
+        dependencies.addTypes( this.properties.map( x => x.type ) )
+        dependencies.addTypes( this.arguments )
 
-        return dependencies.get();
+        return dependencies.get()
     }
 }
