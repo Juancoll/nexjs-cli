@@ -77,7 +77,9 @@ export default class extends CommandBase {
         }
         //#endregion
 
-        const target = resolve( cwd, config.output )
+        const target = options.output
+            ? resolve( context.cwd, options.output )
+            : resolve( context.cwd, config.output )
 
         //#region [1] Code analysis
         console.log( '[1] code analisis' )

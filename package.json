@@ -1,6 +1,6 @@
 {
   "name": "@nexjs/cli",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "",
   "main": "dist/cli.js",
   "bin": {
@@ -34,7 +34,8 @@
     "sharp": "^0.25.1",
     "ts-morph": "^6.0.2",
     "upath": "^1.2.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "rimraf": "^3.0.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
@@ -46,7 +47,6 @@
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.8.0",
-    "rimraf": "^3.0.1",
     "socket.io-client": "^2.3.0",
     "strongly-typed-events": "^1.6.8",
     "typescript": "^3.7.5"
