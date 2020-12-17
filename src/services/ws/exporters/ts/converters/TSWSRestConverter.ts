@@ -10,7 +10,6 @@ export interface ITSRestMethodView {
     requestParams: string;
     returnType: string;
     defaults: {
-        credentials: string;
         data: string;
     };
 }
@@ -27,7 +26,6 @@ export class TSRestConverter extends ConverterBase<TSConverter, WSRestMethod, IT
                 methodParams: this.getRestMethodParams( input ),
                 requestParams: this.getRestResquestParams( input ),
                 defaults: {
-                    credentials: this.parent.TypeDefaultValue.convert( input.options.credentials ),
                     data: input.params.length == 0
                         ? '{}'
                         : `{ ${input.params.map( x => `${x.name}: ${this.parent.TypeDefaultValue.convert( x.type )}` ).join( ', ' )} }`,
@@ -59,24 +57,17 @@ export class TSRestConverter extends ConverterBase<TSConverter, WSRestMethod, IT
     }
     private getRestMethodParams ( rest: WSRestMethod ): string {
         const allParams = rest.params.concat()
-        let result = allParams.map( x => `${x.name}: ${this.parent.getTypeInstanceName( x.type )}` ).join( ', ' )
-        if ( rest.options.credentials ) {
-            result += `${allParams.length == 0 ? '' : ', '}credentials: ${this.parent.getTypeInstanceName( rest.options.credentials )}`
-        }
+        const result = allParams.map( x => `${x.name}: ${this.parent.getTypeInstanceName( x.type )}` ).join( ', ' )
         return result
     }
-    private getRestResquestParams ( hub: WSRestMethod ): string {
+    private getRestResquestParams ( rest: WSRestMethod ): string {
         let result = ''
 
-        result += hub.params.length > 0
-            ? this.isRootParam( hub.params[0] )
-                ? hub.params[0].name
-                : `{ ${hub.params.map( x => x.name ).join( ', ' )} }`
+        result += rest.params.length > 0
+            ? this.isRootParam( rest.params[0] )
+                ? rest.params[0].name
+                : `{ ${rest.params.map( x => x.name ).join( ', ' )} }`
             : 'null'
-
-        result += hub.options.credentials
-            ? ', credentials '
-            : ', null '
 
         return result
     }

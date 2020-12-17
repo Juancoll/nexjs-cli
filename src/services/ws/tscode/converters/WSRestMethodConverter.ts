@@ -1,12 +1,10 @@
 import {
     ClassDeclaration,
     ObjectLiteralExpression,
-    SignaturedDeclaration,
     ObjectLiteralElement,
     StringLiteral,
     BooleanLiteral,
     ArrayLiteralExpression,
-    Decorator,
     MethodDeclaration,
 } from 'ts-morph'
 import { TSCode } from '../TSCode'
@@ -14,10 +12,9 @@ import { CodeConverterBase } from '../base/CodeConverterBase'
 import { WSRestMethod } from '../../models/ws/WSRestMethod'
 import { WSRestDecoratorOptions } from '../../models/ws/decorators/WSRestDecoratorOptions'
 import { RDecorator } from '../../models/base/RDecorator'
-import { RType } from '../../models/base/RType'
 import { RParam } from '../../models/base/RParam'
 
-export class WSHRestEventConverter extends CodeConverterBase<MethodDeclaration, WSRestMethod> {
+export class WSHRestMethodConverter extends CodeConverterBase<MethodDeclaration, WSRestMethod> {
 
     //#region [ implements CodeConverterBase ]
     public convert ( input: MethodDeclaration ): WSRestMethod {
@@ -70,23 +67,6 @@ export class WSHRestEventConverter extends CodeConverterBase<MethodDeclaration, 
             roles: rolesProp
                 ? this.getStringArrayLiteral( rolesProp )
                 : [],
-            credentials: this.extractValidationCredentialsType( decorator ),
-        }
-    }
-    private extractValidationCredentialsType ( decorator: Decorator ): RType | undefined {
-        const options = decorator.getArguments()[0] as ObjectLiteralExpression
-        const validation = options ? options.getProperty( 'validation' ) : undefined
-        if ( !validation ) {
-            return undefined
-        } else {
-            const credentialsParamIdx = 2
-            const functionType = ( validation.getType().getCallSignatures()[0].getDeclaration() as SignaturedDeclaration )
-            if ( functionType.getParameters().length < credentialsParamIdx + 1 ) {
-                return undefined
-            } else {
-                const type = functionType.getParameters()[credentialsParamIdx].getType()
-                return this.ts.RType.convert( type )
-            }
         }
     }
     private extractDecorators ( method: MethodDeclaration ): RDecorator[] {

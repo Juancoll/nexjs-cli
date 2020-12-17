@@ -148,7 +148,7 @@
                 "-s",
                 "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
                 "-o",
-                "c:/@nexjs-cli/up-wsclient-ts/src/ws",
+                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.client/src/lib/wsclient",
             ]
         },
         {

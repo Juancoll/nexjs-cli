@@ -16,19 +16,12 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
 
     //#region  [ implement ConverterBase ]
     convert ( input: WSHubEvent ): ICSHubEventView {
-        if ( input.options.service == 'authContract' ) {
-            console.log( 'inside' )
-        }
-        try {
-            return {
-                isAuth: input.options.isAuth,
-                name: input.name,
-                notification: this.getNotificationType( input ),
-                arguments: this.getArguments( input ),
-                defaults: { credentials: this.parent.TypeDefaultValue.convert( input.options.credentials ) },
-            }
-        } catch ( err ) {
-            console.log( 'aaa' )
+        return {
+            isAuth: input.options.isAuth,
+            name: input.name,
+            notification: this.getNotificationType( input ),
+            arguments: this.getArguments( input ),
+            defaults: { credentials: this.parent.TypeDefaultValue.convert( input.valiationType ) },
         }
     }
     //#endregion
@@ -42,35 +35,22 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
     //#region [ private ]
     private getNotificationType ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return 'HubNotification'
-        case HubEventType.HubEventData: return 'HubNotificationData'
-        case HubEventType.HubEventCredentials: return 'HubNotificationCredentials'
-        case HubEventType.HubEventCredentialsData: return 'HubNotificationCredentialsData'
+        case HubEventType.HubEvent: return 'HubEvent'
+        case HubEventType.HubEventData: return 'HubEventData'
+        case HubEventType.HubEventSelector: return 'HubEventValidator'
+        case HubEventType.HubEventSelectorData: return 'HubEventValidatorData'
         }
     }
 
     private getArguments ( hub: WSHubEvent ): string {
-        // if (!hub.data) {
-        //     if (!hub.options.credentials) {
-        //         return '<TUser, TToken>';
-        //     } else {
-        //         return `<TUser, TToken, ${this.getCredentialType(hub)}>`
-        //     }
-        // } else {
-        //     if (!hub.options.credentials) {
-        //         return `<TUser, TToken, ${this.getDataType(hub)}>`
-        //     } else {
-        //         return `<TUser, TToken, ${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
-        //     }
-        // }
         switch ( hub.eventType ) {
         case HubEventType.HubEvent: return '<TUser, TToken>'
         case HubEventType.HubEventData: return `<TUser, TToken, ${this.getDataType( hub )}>`
-        case HubEventType.HubEventCredentials: return `<TUser, TToken, ${this.getCredentialType( hub )}>`
-        case HubEventType.HubEventCredentialsData: return `<TUser, TToken, ${this.getCredentialType( hub )}, ${this.getDataType( hub )}>`
+        case HubEventType.HubEventSelector: return `<TUser, TToken, ${this.getValidationType( hub )}>`
+        case HubEventType.HubEventSelectorData: return `<TUser, TToken, ${this.getValidationType( hub )}, ${this.getDataType( hub )}>`
         }
     }
-    private getCredentialType ( hub: WSHubEvent ): string {
+    private getValidationType ( hub: WSHubEvent ): string {
         const decorator = hub.decorators.find( x => x.name == 'CSHub' )
         if ( decorator && decorator.options ) {
             const credentialType = decorator.options.credentials
@@ -79,7 +59,7 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
             }
         }
 
-        return this.parent.getTypeInstanceName( hub.credentials )
+        return this.parent.getTypeInstanceName( hub.valiationType )
     }
     private getDataType ( hub: WSHubEvent ): string {
         const decorator = hub.decorators.find( x => x.name == 'CSHub' )
@@ -90,7 +70,7 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
             }
         }
 
-        return this.parent.getTypeInstanceName( hub.data )
+        return this.parent.getTypeInstanceName( hub.dataType )
     }
     //#endregion
 }

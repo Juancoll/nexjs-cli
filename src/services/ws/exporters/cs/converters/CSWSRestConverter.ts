@@ -10,7 +10,6 @@ export interface ICSRestMethodView {
     requestParams: string;
     returnType: string;
     defaults: {
-        credentials: string;
         data: string;
     };
 }
@@ -26,7 +25,6 @@ export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, IC
             methodParams: this.getRestMethodParams( input ),
             requestParams: this.getRestResquestParams( input ),
             defaults: {
-                credentials: this.parent.TypeDefaultValue.convert( input.options.credentials ),
                 data: input.params.length == 0
                     ? '{}'
                     : `{ ${input.params.map( x => `${x.name}: ${this.parent.TypeDefaultValue.convert( x.type )}` ).join( ', ' )} }`,
@@ -42,17 +40,6 @@ export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, IC
     //#endregion
 
     //#region  [ private ]
-    private getRestCredentialType ( rest: WSRestMethod ): string {
-        const decorator = rest.decorators.find( x => x.name == 'CSRest' )
-        if ( decorator && decorator.options ) {
-            const credentialType = decorator.options.credentials
-            if ( credentialType ) {
-                return credentialType
-            }
-        }
-
-        return this.parent.getTypeInstanceName( rest.options.credentials )
-    }
     private getRestReturnType ( rest: WSRestMethod ): string {
         if ( !rest.returnType || rest.returnType.name == 'void' ) {
             return undefined
@@ -73,10 +60,7 @@ export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, IC
     }
     private getRestMethodParams ( rest: WSRestMethod ): string {
         const allParams = rest.params.concat()
-        let result = allParams.map( x => `${this.getDataParamType( rest, x )} ${x.name}` ).join( ', ' )
-        if ( rest.options.credentials ) {
-            result += `${allParams.length == 0 ? '' : ', '}${this.getRestCredentialType( rest )} credentials`
-        }
+        const result = allParams.map( x => `${this.getDataParamType( rest, x )} ${x.name}` ).join( ', ' )
         return result
     }
     private getRestResquestParams ( hub: WSRestMethod ): string {
@@ -87,10 +71,6 @@ export class CSRestConverter extends ConverterBase<CSConverter, WSRestMethod, IC
                 ? hub.params[0].name
                 : `new { ${hub.params.map( x => x.name ).join( ', ' )} }`
             : 'null'
-
-        result += hub.options.credentials
-            ? ', credentials '
-            : ', null '
 
         return result
     }

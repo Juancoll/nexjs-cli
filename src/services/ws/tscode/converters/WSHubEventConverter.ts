@@ -23,8 +23,9 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
         const output: WSHubEvent = new WSHubEvent( {
             eventType: this.getEventType( input ),
             name: input.getName(),
-            data: this.getData( input ),
-            credentials: this.getCredentials( input ),
+            dataType: this.getDataType( input ),
+            selectionType: this.getSelectionType( input ),
+            valiationType: this.getValidationType( input ),
             options: this.extractHubDecoratorOptions( input ),
             decorators: this.extractDecorators( input ),
         } )
@@ -83,24 +84,32 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
             roles: rolesProp
                 ? this.getStringArrayLiteral( rolesProp )
                 : [],
-            credentials: this.extractValidationCredentialsType( decorator ),
         }
     }
-    private getData ( property: PropertyDeclaration ): RType | undefined {
+    private getDataType ( property: PropertyDeclaration ): RType | undefined {
         const type = this.ts.RType.convert( property.getType() )
         switch ( type.name ) {
         case HubEventType.HubEvent: return undefined
-        case HubEventType.HubEventCredentials: return undefined
-        case HubEventType.HubEventCredentialsData: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
+        case HubEventType.HubEventSelector: return undefined
+        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[2] )
         case HubEventType.HubEventData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
         }
     }
-    private getCredentials ( property: PropertyDeclaration ): RType | undefined {
+    private getValidationType ( property: PropertyDeclaration ): RType | undefined {
         const type = this.ts.RType.convert( property.getType() )
         switch ( type.name ) {
         case HubEventType.HubEvent: return undefined
-        case HubEventType.HubEventCredentials: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
-        case HubEventType.HubEventCredentialsData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+        case HubEventType.HubEventSelector: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+        case HubEventType.HubEventData: undefined
+        }
+    }
+    private getSelectionType ( property: PropertyDeclaration ): RType | undefined {
+        const type = this.ts.RType.convert( property.getType() )
+        switch ( type.name ) {
+        case HubEventType.HubEvent: return undefined
+        case HubEventType.HubEventSelector: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
+        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
         case HubEventType.HubEventData: undefined
         }
     }

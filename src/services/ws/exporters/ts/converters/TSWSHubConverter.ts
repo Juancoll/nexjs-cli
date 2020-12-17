@@ -21,7 +21,7 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
             name: input.name,
             notification: this.getNotificationType( input ),
             arguments: this.getArguments( input ),
-            defaults: { credentials: this.parent.TypeDefaultValue.convert( input.options.credentials ) },
+            defaults: { credentials: this.parent.TypeDefaultValue.convert( input.valiationType ) },
         }
     }
     //#endregion
@@ -35,39 +35,26 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
     //#region [ private ]
     private getNotificationType ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return 'HubNotification'
-        case HubEventType.HubEventData: return 'HubNotificationData'
-        case HubEventType.HubEventCredentials: return 'HubNotificationCredentials'
-        case HubEventType.HubEventCredentialsData: return 'HubNotificationCredentialsData'
+        case HubEventType.HubEvent: return 'lib.HubEvent'
+        case HubEventType.HubEventData: return 'lib.HubEventData'
+        case HubEventType.HubEventSelector: return 'lib.HubEventSelector'
+        case HubEventType.HubEventSelectorData: return 'lib.HubEventSelectorData'
         }
     }
 
     private getArguments ( hub: WSHubEvent ): string {
-        // if (!hub.data) {
-        //     if (!hub.options.credentials) {
-        //         return '';
-        //     } else {
-        //         return `<${this.getCredentialType(hub)}>`
-        //     }
-        // } else {
-        //     if (!hub.options.credentials) {
-        //         return `<${this.getDataType(hub)}>`
-        //     } else {
-        //         return `<${this.getCredentialType(hub)}, ${this.getDataType(hub)}>`
-        //     }
-        // }
         switch ( hub.eventType ) {
         case HubEventType.HubEvent: return ''
         case HubEventType.HubEventData: return `<${this.getDataType( hub )}>`
-        case HubEventType.HubEventCredentials: return `<${this.getCredentialType( hub )}>`
-        case HubEventType.HubEventCredentialsData: return `<${this.getCredentialType( hub )}, ${this.getDataType( hub )}>`
+        case HubEventType.HubEventSelector: return `<${this.getValidationType( hub )}>`
+        case HubEventType.HubEventSelectorData: return `<${this.getValidationType( hub )}, ${this.getDataType( hub )}>`
         }
     }
-    private getCredentialType ( hub: WSHubEvent ): string {
-        return this.parent.getTypeInstanceName( hub.credentials )
+    private getValidationType ( hub: WSHubEvent ): string {
+        return this.parent.getTypeInstanceName( hub.valiationType )
     }
     private getDataType ( hub: WSHubEvent ): string {
-        return this.parent.getTypeInstanceName( hub.data )
+        return this.parent.getTypeInstanceName( hub.dataType )
     }
     //#endregion
 }

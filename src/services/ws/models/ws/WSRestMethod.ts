@@ -18,7 +18,6 @@ export class WSRestMethod {
 
         dependencies.addTypes( this.params.map( x => x.type ) )
         dependencies.addType( this.returnType )
-        dependencies.addType( this.options.credentials )
 
         return dependencies.get()
     }

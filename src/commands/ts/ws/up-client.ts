@@ -133,8 +133,8 @@ export default class extends CommandBase {
         FS.removeFolder( apiServicesTarget )
 
         console.log( '[3.2] create wsapi file' )
-        const wsapiSource = assets.getPath( 'templates/services/wsapi.ts' )
-        const wsapiTarget = join( target, 'api', 'wsapi.ts' )
+        const wsapiSource = assets.getPath( 'templates/services/WSApi.ts' )
+        const wsapiTarget = join( target, 'api', 'WSApi.ts' )
         const wsapiView = {
             services: serviceViews,
         }

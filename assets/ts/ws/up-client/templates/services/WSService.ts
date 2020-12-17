@@ -1,10 +1,10 @@
-import { WSServiceBase, HubNotification, HubNotificationCredentials, HubNotificationCredentialsData, HubNotificationData } from '@nexjs/wsclient'
+import { lib } from '../..'
 
 {{#imports}}
 import { {{&type}} } from '../../models/{{&path}}'
 {{/imports}}
 
-export class {{serviceUpperName}}WSService extends WSServiceBase {
+export class {{serviceUpperName}}WSService extends lib.WSServiceBase {
     //#region [ implement WSServiceBase ]
     public readonly name = '{{serviceName}}'
     //#endregion
