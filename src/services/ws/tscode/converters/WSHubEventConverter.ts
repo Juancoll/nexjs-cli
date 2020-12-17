@@ -60,10 +60,10 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
         return HubEventType[type.name]
     }
     private extractServiceName ( property: PropertyDeclaration, options: ObjectLiteralExpression ): string {
-        const serviceProp = options ? options.getProperty( 'name' ) : undefined
+        const serviceProp = options ? options.getProperty( 'service' ) : undefined
         return serviceProp
             ? this.getStringLiteral( serviceProp )
-            : property.getParent().getProperty( 'name' ).getType().getText().replace( /^"(.*)"$/, '$1' )
+            : property.getParent().getProperty( 'service' ).getType().getText().replace( /^"(.*)"$/, '$1' )
     }
     private extractHubDecoratorOptions ( property: PropertyDeclaration ): WSHubDecoratorOptions {
         const decorator = property.getDecorators().find( x => x.getName() == 'Hub' )
@@ -111,22 +111,6 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
         case HubEventType.HubEventSelector: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
         case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
         case HubEventType.HubEventData: undefined
-        }
-    }
-    private extractValidationCredentialsType ( decorator: Decorator ): RType | undefined {
-        const options = decorator.getArguments()[0] as ObjectLiteralExpression
-        const validation = options ? options.getProperty( 'validation' ) : undefined
-        if ( !validation ) {
-            return undefined
-        } else {
-            const credentialsParamIdx = 2
-            const functionType = ( validation.getType().getCallSignatures()[0].getDeclaration() as SignaturedDeclaration )
-            if ( functionType.getParameters().length < credentialsParamIdx + 1 ) {
-                return undefined
-            } else {
-                const type = functionType.getParameters()[credentialsParamIdx].getType()
-                return this.ts.RType.convert( type )
-            }
         }
     }
     private extractDecorators ( property: PropertyDeclaration ): RDecorator[] {

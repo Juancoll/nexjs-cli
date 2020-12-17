@@ -146,9 +146,9 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
+                "C:/git/dspace/dspace.api",
                 "-o",
-                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.client/src/lib/wsclient",
+                "C:/git/dspace/dspace.web/src/lib/clients/ws",
             ]
         },
         {
