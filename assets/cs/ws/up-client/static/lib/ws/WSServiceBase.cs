@@ -22,24 +22,22 @@ namespace nex.ws
         #endregion
 
         #region [ protected ]
-        protected Task<T> Request<T>(string method, object data, object credentials, int timeout = 0)
+        protected Task<T> Request<T>(string method, object data, int timeout = 0)
         {
             return _rest.RequestAsync<T>(new RestRequest
             {
                 service = Name,
                 method = method,
                 data = data,
-                credentials = credentials
             }, timeout);
         }
-        protected Task Request(string method, object data, object credentials, int timeout = 0)
+        protected Task Request(string method, object data,  int timeout = 0)
         {
             return _rest.RequestAsync(new RestRequest
             {
                 service = Name,
                 method = method,
                 data = data,
-                credentials = credentials
             }, timeout);
         }
         #endregion

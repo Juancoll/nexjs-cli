@@ -37,8 +37,8 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
         switch ( hub.eventType ) {
         case HubEventType.HubEvent: return 'HubEvent'
         case HubEventType.HubEventData: return 'HubEventData'
-        case HubEventType.HubEventSelector: return 'HubEventValidator'
-        case HubEventType.HubEventSelectorData: return 'HubEventValidatorData'
+        case HubEventType.HubEventSelector: return 'HubEventSelector'
+        case HubEventType.HubEventSelectorData: return 'HubEventSelectorData'
         }
     }
 
