@@ -1,6 +1,6 @@
 {
   "name": "@nexjs/cli",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "",
   "main": "dist/cli.js",
   "bin": {
