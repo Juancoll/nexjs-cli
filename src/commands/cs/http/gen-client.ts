@@ -112,14 +112,14 @@ export default class extends CommandBase {
         const target = resolve( cwd, options.output )
 
         //#region [1] openapi:generator command
-        const tool = resolve( './node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator' )
-        generatorConfig.packageName = config.name
-        generatorConfig.packageVersion = config.version
+        const tool = resolve( './node_modules/.bin/openapi-generator-cli' )
+        generatorConfig.packageName = config.name || 'none'
+        generatorConfig.packageVersion = config.version || 'none'
 
         const additionalProperties = this.toCSV( generatorConfig )
         const inputFile = resolve( cwd, options.source )
 
-        await Shell.exec( `node ${tool} generate -g csharp -i ${inputFile} --skip-validate-spec --enable-post-process-file -o ${target} --additional-properties=${additionalProperties}`, { rejectOnError: true, stdout: true } )
+        await Shell.exec( `${tool} generate -g csharp -i ${inputFile} --skip-validate-spec --enable-post-process-file -o ${target} --additional-properties=${additionalProperties}`, { rejectOnError: true, stdout: true } )
         //#endregion
 
         //#region [2] private feed

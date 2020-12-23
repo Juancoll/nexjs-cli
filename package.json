@@ -1,6 +1,6 @@
 {
   "name": "@nexjs/cli",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "",
   "main": "dist/cli.js",
   "bin": {
@@ -21,20 +21,22 @@
   "author": "juancoll",
   "license": "ISC",
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "^2.1.13",
+    "-": "0.0.1",
+    "@openapitools/openapi-generator-cli": "^2.1.14",
     "@types/rimraf": "^3.0.0",
     "ansicolor": "^1.1.93",
     "clime": "^0.5.14",
     "fs-extra": "^9.0.1",
+    "g": "^2.0.1",
     "isbinaryfile": "^4.0.6",
     "istextorbinary": "^5.12.0",
     "linq": "^3.2.3",
     "lodash": "^4.17.20",
     "mustache": "^4.1.0",
+    "rimraf": "^3.0.2",
     "ts-morph": "^9.1.0",
     "upath": "^2.0.1",
-    "uuid": "^8.3.2",
-    "rimraf": "^3.0.2"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.5",

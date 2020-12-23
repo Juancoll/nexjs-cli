@@ -186,7 +186,7 @@
                 "http",
                 "up-client",
                 "-s",
-                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
+                "C:/git/rev-u/rev-u.api/dist/swagger-spec.json",
                 "-o",
                 "c:/@nexjs-cli/up-httpclient-ts",
                 "--clean",
