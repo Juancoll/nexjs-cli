@@ -19,7 +19,7 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
         return {
             isAuth: input.options.isAuth,
             name: input.name,
-            notification: this.getNotificationType( input ),
+            notification: this.getHubEventType( input ),
             arguments: this.getArguments( input ),
             defaults: { credentials: this.parent.TypeDefaultValue.convert( input.valiationType ) },
         }
@@ -33,24 +33,38 @@ export class TSHubConverter extends ConverterBase<TSConverter, WSHubEvent, ITSHu
     //#endregion
 
     //#region [ private ]
-    private getNotificationType ( hub: WSHubEvent ): string {
+    private getHubEventType ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return 'lib.HubEvent'
-        case HubEventType.HubEventData: return 'lib.HubEventData'
-        case HubEventType.HubEventSelector: return 'lib.HubEventSelector'
-        case HubEventType.HubEventSelectorData: return 'lib.HubEventSelectorData'
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventSelection: return 'lib.HubEvent'
+
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventSelectionData: return 'lib.HubEventData'
+
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationSelection: return 'lib.HubEventValidation'
+
+        case HubEventType.HubEventValidationData:
+        case HubEventType.HubEventValidationSelectionData: return 'lib.HubEventValidationData'
         }
     }
 
     private getArguments ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return ''
-        case HubEventType.HubEventData: return `<${this.getDataType( hub )}>`
-        case HubEventType.HubEventSelector: return `<${this.getValidationType( hub )}>`
-        case HubEventType.HubEventSelectorData: return `<${this.getValidationType( hub )}, ${this.getDataType( hub )}>`
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventSelection: return ''
+
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventSelectionData: return `<${this.getDataType( hub )}>`
+
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationSelection: return `<${this.getValidatorType( hub )}>`
+
+        case HubEventType.HubEventValidationData:
+        case HubEventType.HubEventValidationSelectionData: return `<${this.getValidatorType( hub )}, ${this.getDataType( hub )}>`
         }
     }
-    private getValidationType ( hub: WSHubEvent ): string {
+    private getValidatorType ( hub: WSHubEvent ): string {
         return this.parent.getTypeInstanceName( hub.valiationType )
     }
     private getDataType ( hub: WSHubEvent ): string {

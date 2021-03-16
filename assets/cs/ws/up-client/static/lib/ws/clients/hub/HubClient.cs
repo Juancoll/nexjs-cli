@@ -60,7 +60,7 @@ namespace nex.ws
             {
                 service = service,
                 eventName = eventName,
-                credentials = credentials,
+                validator = credentials,
                 method = "subscribe"
             };
 
@@ -98,7 +98,7 @@ namespace nex.ws
             {
                 try
                 {
-                    await Subscribe(req.service, req.eventName, req.credentials);
+                    await Subscribe(req.service, req.eventName, req.validator);
                 }
                 catch (Exception ex)
                 {

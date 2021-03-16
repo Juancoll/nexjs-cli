@@ -119,6 +119,14 @@ namespace nex.ws
         {
             return _hub.Unsubscribe(Service, Event);
         }
+        public Task Sub()
+        {
+            return _hub.Subscribe(Service, Event, null);
+        }
+        public Task Unsub()
+        {
+            return _hub.Unsubscribe(Service, Event);
+        }
         #endregion
     }
 }

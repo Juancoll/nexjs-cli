@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace nex.ws
 {
-    public class HubNotificationCredentials<TUser, TToken, TCredentials>
+    public class HubEventValidationData<TUser, TToken, TValidator, TData>
     {
         #region [ fields ]   
+   
         HubClient<TUser, TToken> _hub;
-        List<Action> _actions = new List<Action>();
-        Dictionary<object, List<Action>> _groups = new Dictionary<object, List<Action>>();
+        List<Action<TData>> _actions = new List<Action<TData>>();
+        Dictionary<object, List<Action<TData>>> _groups = new Dictionary<object, List<Action<TData>>>();
         #endregion
 
         #region [ properties ]
@@ -24,7 +25,7 @@ namespace nex.ws
         #endregion
 
         #region [ constructor ]
-        public HubNotificationCredentials(HubClient<TUser, TToken> hub, string service, string eventName)
+        public HubEventValidationData(HubClient<TUser, TToken> hub, string service, string eventName)
         {
             _hub = hub;
             _service = service;
@@ -37,8 +38,14 @@ namespace nex.ws
                 foreach (var action in _actions)
                 {
                     try
-                    {                        
-                        action();
+                    {
+                        TData data = (e.Value.data == null)
+                            ? default(TData)
+                            : (e.Value.data is JToken)
+                                ? (e.Value.data as JToken).ToObject<TData>()
+                                : (TData)e.Value.data;
+
+                        action(data);
                     }
                     catch (Exception ex)
                     {
@@ -50,46 +57,46 @@ namespace nex.ws
         #endregion
 
         #region [ methods ]
-        public HubNotificationCredentials<TUser, TToken, TCredentials> On(Action action)
+        public HubEventValidationData<TUser, TToken, TValidator, TData> On(Action<TData> action)
         {
             _actions.Add(action);
             return this;
         }
-        public HubNotificationCredentials<TUser, TToken, TCredentials> On(object group, Action action)
+        public HubEventValidationData<TUser, TToken, TValidator, TData> On(object group, Action<TData> action)
         {
             _actions.Add(action);
-
+            
             if (!_groups.ContainsKey(group))
-                _groups.Add(group, new List<Action>());
+                _groups.Add(group, new List<Action<TData>>());
 
             _groups[group].Add(action);
-
+            
             return this;
         }
 
-        public HubNotificationCredentials<TUser, TToken, TCredentials> off()
+        public HubEventValidationData<TUser, TToken, TValidator, TData> off()
         {
             _actions.Clear();
             _groups.Clear();
             return this;
         }
-        public HubNotificationCredentials<TUser, TToken, TCredentials> off(object group)
+        public HubEventValidationData<TUser, TToken, TValidator, TData> off(object group)
         {
             if (_groups.ContainsKey(group))
             {
-                foreach (var action in _groups[group].ToArray())
+                foreach(var action in _groups[group].ToArray())                
                     _actions.Remove(action);
-
+                
                 _groups.Remove(group);
-            }
+            }       
             return this;
         }
-        public HubNotificationCredentials<TUser, TToken, TCredentials> off(Action action)
+        public HubEventValidationData<TUser, TToken, TValidator, TData> off(Action<TData> action)
         {
             if (_actions.Contains(action))
                 _actions.Remove(action);
 
-            foreach (var keyValue in _groups)
+            foreach(var keyValue in _groups)
             {
                 var key = keyValue.Key;
                 var value = keyValue.Value;
@@ -105,7 +112,7 @@ namespace nex.ws
             return this;
         }
 
-        public Task Subscribe(TCredentials credentials = default(TCredentials))
+        public Task Subscribe(TValidator credentials)
         {
             return _hub.Subscribe(Service, Event, credentials);
         }
@@ -113,6 +120,15 @@ namespace nex.ws
         {
             return _hub.Unsubscribe(Service, Event);
         }
+
+        public Task Sub(TValidator credentials)
+        {
+            return _hub.Subscribe(Service, Event, credentials);
+        }
+        public Task Unsub()
+        {
+            return _hub.Unsubscribe(Service, Event);
+        }
         #endregion
-    }   
+    }    
 }

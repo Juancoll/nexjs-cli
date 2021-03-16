@@ -13,7 +13,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "dev:start": "npm run prebuild && tsc --watch",
-    "dev:install": "npm run build && npm link",
+    "dev:install": "npm run build && npm link --force",
     "dev:uninstall": "npm unlink",
     "lint": "eslint -c .eslintrc.js --ext .ts src",
     "publish:npm": "npm run build && npm publish --access public"
@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "-": "0.0.1",
-    "@openapitools/openapi-generator-cli": "^2.1.14",
+    "@openapitools/openapi-generator-cli": "^2.2.2",
     "@types/rimraf": "^3.0.0",
     "ansicolor": "^1.1.93",
     "clime": "^0.5.14",

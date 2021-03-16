@@ -32,7 +32,7 @@ namespace nex.ws
             if (!Contains(req))
                 throw new Exception("[HubSubscriptionCollection] not found");
 
-            this[req].credentials = req.credentials;
+            this[req].validator = req.validator;
         }
         public IEnumerable<HubRequest> List()
         {

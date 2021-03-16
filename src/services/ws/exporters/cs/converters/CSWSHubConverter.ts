@@ -35,19 +35,33 @@ export class CSHubConverter extends ConverterBase<CSConverter, WSHubEvent, ICSHu
     //#region [ private ]
     private getNotificationType ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return 'HubEvent'
-        case HubEventType.HubEventData: return 'HubEventData'
-        case HubEventType.HubEventSelector: return 'HubEventSelector'
-        case HubEventType.HubEventSelectorData: return 'HubEventSelectorData'
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventSelection: return 'HubEvent'
+
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventSelectionData: return 'HubEventData'
+
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationSelection: return 'HubEventValidation'
+
+        case HubEventType.HubEventValidationData:
+        case HubEventType.HubEventValidationSelectionData: return 'HubEventValidationData'
         }
     }
 
     private getArguments ( hub: WSHubEvent ): string {
         switch ( hub.eventType ) {
-        case HubEventType.HubEvent: return '<TUser, TToken>'
-        case HubEventType.HubEventData: return `<TUser, TToken, ${this.getDataType( hub )}>`
-        case HubEventType.HubEventSelector: return `<TUser, TToken, ${this.getValidationType( hub )}>`
-        case HubEventType.HubEventSelectorData: return `<TUser, TToken, ${this.getValidationType( hub )}, ${this.getDataType( hub )}>`
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventSelection: return '<TUser, TToken>'
+
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventSelectionData: return `<TUser, TToken, ${this.getDataType( hub )}>`
+
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationSelection: return `<TUser, TToken, ${this.getValidationType( hub )}>`
+
+        case HubEventType.HubEventValidationData:
+        case HubEventType.HubEventValidationSelectionData: return `<TUser, TToken, ${this.getValidationType( hub )}, ${this.getDataType( hub )}>`
         }
     }
     private getValidationType ( hub: WSHubEvent ): string {

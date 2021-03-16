@@ -49,11 +49,11 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/juancoll/nexjs-ws.dev/nexjs-ws.dev.server",
+                "C:/git/nexjs/dev/nexjs-ws.dev.server",
                 "-o",
-                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.client.cs/src/ws",
+                "C:/git/nexjs/demo/nexjs-ws.demo.client.cs/src/ws-cli",
                 "-n",
-                "demo.wsclient"
+                "dev.wsclient"
             ],
         },
         // [ HTTP ]
@@ -146,9 +146,9 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/dspace/dspace.api",
+                "C:/git/nexjs/dev/nexjs-ws.dev.server",
                 "-o",
-                "C:/git/dspace/dspace.web/src/lib/clients/ws",
+                "C:/git/nexjs/dev/nexjs-ws.dev.client/src/lib/wsclient-cli",
             ]
         },
         {

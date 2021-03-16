@@ -1,12 +1,10 @@
 import {
     PropertyDeclaration,
     ObjectLiteralExpression,
-    SignaturedDeclaration,
     ObjectLiteralElement,
     StringLiteral,
     BooleanLiteral,
     ArrayLiteralExpression,
-    Decorator,
 } from 'ts-morph'
 import { WSHubEvent, HubEventType } from '../../models/ws/WSHubEvent'
 import { RType } from '../../models/base/RType'
@@ -17,6 +15,7 @@ import { RDecorator } from '../../models/base/RDecorator'
 
 export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, WSHubEvent> {
 
+    private _decoratorNames = ['Hub', 'HubSelector', 'HubValidator', 'HubValidatorSelector']
     //#region [ implements CodeConverterBase ]
     public convert ( input: PropertyDeclaration ): WSHubEvent {
         this.check( input )
@@ -41,13 +40,13 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
 
     //#region [ public ]
     public isHub ( property: PropertyDeclaration ): boolean {
-        return property.getDecorators().find( x => x.getName() == 'Hub' ) != undefined
+        return property.getDecorators().find( x => this._decoratorNames.indexOf( x.getName() ) > -1 ) != undefined
     }
     //#endregion
 
     //#region [ private ]
     private check ( property: PropertyDeclaration ): void {
-        const decorator = property.getDecorators().find( x => x.getName() == 'Hub' )
+        const decorator = property.getDecorators().find( x => this._decoratorNames.indexOf( x.getName() ) > -1 )
         const type = this.ts.RType.convert( property.getType() )
         if ( !HubEventType[type.name] && decorator ) {
             const m = property.getParent().getName()
@@ -66,7 +65,7 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
             : property.getParent().getProperty( 'service' ).getType().getText().replace( /^"(.*)"$/, '$1' )
     }
     private extractHubDecoratorOptions ( property: PropertyDeclaration ): WSHubDecoratorOptions {
-        const decorator = property.getDecorators().find( x => x.getName() == 'Hub' )
+        const decorator = property.getDecorators().find( x => this._decoratorNames.indexOf( x.getName() ) > -1 )
         if ( !decorator ) {
             throw new Error( 'property is not decorated with hub' )
         }
@@ -89,28 +88,48 @@ export class WSHubEventConverter extends CodeConverterBase<PropertyDeclaration, 
     private getDataType ( property: PropertyDeclaration ): RType | undefined {
         const type = this.ts.RType.convert( property.getType() )
         switch ( type.name ) {
-        case HubEventType.HubEvent: return undefined
-        case HubEventType.HubEventSelector: return undefined
-        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[2] )
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventSelection:
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationSelection: return undefined
+
         case HubEventType.HubEventData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+
+        case HubEventType.HubEventSelectionData:
+        case HubEventType.HubEventValidationData: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
+
+        case HubEventType.HubEventValidationSelectionData: return this.ts.RType.convert( property.getType().getTypeArguments()[2] )
+
         }
     }
     private getValidationType ( property: PropertyDeclaration ): RType | undefined {
         const type = this.ts.RType.convert( property.getType() )
         switch ( type.name ) {
-        case HubEventType.HubEvent: return undefined
-        case HubEventType.HubEventSelector: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
-        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
-        case HubEventType.HubEventData: undefined
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventSelection:
+        case HubEventType.HubEventSelectionData: return undefined
+
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationData:
+        case HubEventType.HubEventValidationSelection:
+        case HubEventType.HubEventValidationSelectionData:return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+
         }
     }
     private getSelectionType ( property: PropertyDeclaration ): RType | undefined {
         const type = this.ts.RType.convert( property.getType() )
         switch ( type.name ) {
-        case HubEventType.HubEvent: return undefined
-        case HubEventType.HubEventSelector: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
-        case HubEventType.HubEventSelectorData: return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
-        case HubEventType.HubEventData: undefined
+        case HubEventType.HubEvent:
+        case HubEventType.HubEventData:
+        case HubEventType.HubEventValidation:
+        case HubEventType.HubEventValidationData: return undefined
+
+        case HubEventType.HubEventSelection:
+        case HubEventType.HubEventSelectionData: return this.ts.RType.convert( property.getType().getTypeArguments()[0] )
+
+        case HubEventType.HubEventValidationSelection:
+        case HubEventType.HubEventValidationSelectionData:return this.ts.RType.convert( property.getType().getTypeArguments()[1] )
         }
     }
     private extractDecorators ( property: PropertyDeclaration ): RDecorator[] {
