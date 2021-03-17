@@ -111,7 +111,7 @@ namespace nex.ws
         #endregion
 
         #region [ IWSBase ]
-        public void Connect(string url, string nsp = "/")
+        public void Connect(string url, string path = "/socket.io", string nsp = "/")
         {
             if (_socket != null)
                 _socket.disconnect();
@@ -120,7 +120,7 @@ namespace nex.ws
             Nsp = nsp;
 
             var options = new EngineIO.Options();
-            _socket = new SocketIO(new WebSocketSharpImpl(), url, nsp, options);
+            _socket = new SocketIO(new WebSocketSharpImpl(), url, path, nsp, options);
 
             _socket
                 .on("connect", data =>

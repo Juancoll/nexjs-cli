@@ -28,7 +28,7 @@ namespace nex.ws
         #endregion
 
         #region [ methods ]
-        void Connect(string url, string nsp);
+        void Connect(string url, string path, string nsp);
         Task ConnectAsync(string url, string nsp);
         void Disconnect();
 

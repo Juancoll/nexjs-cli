@@ -33,12 +33,12 @@ namespace nex.engineio
 
         #region [ fields ]
         private IWebsocket _websocket;
-        private Timer _pingTimer;
         #endregion
 
         #region [ properties ]   
         public string id { get { return session == null ? null : session.sid; } }
         public string url { get; private set; }
+        public string path { get; private set; }
         public Options options { get; private set; }
         public EngineIOSession session { get; private set; }
         public ReadyState readyState { get { return _websocket.readyState; } }
@@ -57,19 +57,14 @@ namespace nex.engineio
         #endregion
 
         #region [ constructor ]
-        public EngineIO(IWebsocket websocket, string url, Options options = null)
+        public EngineIO(IWebsocket websocket, string url, string path = "/socket.io",  Options options = null)
         {            
             this.options = options == null
                 ? new Options()
                 : options;
 
             this.url = url;
-            
-            _pingTimer = new Timer();
-            _pingTimer.Elapsed += (s, e) =>
-            {
-                Ping();
-            };
+            this.path = path;
             
             _websocket = websocket;
             _websocket.onmessage += (s, e) =>
@@ -82,7 +77,6 @@ namespace nex.engineio
             _websocket.onclose += (s, e) =>
             {
                 emit("close", e.Value.reason);
-                _pingTimer.Stop();
             };
             _websocket.onerror += (s, e) =>
             {
@@ -104,10 +98,11 @@ namespace nex.engineio
             {
                 throw new Exception("Only socket transport is implemented");
             }
-            uriBuilder.Path += "/socket.io";
-            uriBuilder.Query = "EIO=2&transport=websocket" + "&" + options.query.Serialise();
-            
-            var connectionUrl = uriBuilder.ToString();
+            if (!path.StartsWith("/")) throw new Exception("Path must start with '/");
+            if (path.EndsWith("/")) throw new Exception("Path can't end with '/");
+           
+            var connectionUrl = url + path + "/?EIO=4&transport=websocket&" + options.query.Serialise();
+            //_websocket.connect("ws://localhost:3000/wsapi/?EIO=4&transport=websocket&");
             _websocket.connect(connectionUrl);
         }
         public void disconnect()
@@ -125,7 +120,8 @@ namespace nex.engineio
         private void Send(EngineIOPacket packet)
         {
             Logger.Log(string.Format("send packet type = '{0}', rawData = {1}", packet.Type, packet.Serialize()));
-            _websocket.Send(packet.Serialize());
+            var str = packet.Serialize();
+            _websocket.Send(str);
         }
         private void Receive(string input)
         {
@@ -146,14 +142,12 @@ namespace nex.engineio
                         case EngineIOPacketType.open:
                             emit("open", packet.Data);
                             session = packet.GetSession();
-                            _pingTimer.Interval = session.pingInterval / 2.0d;
-                            _pingTimer.Start();
+                            Send(new EngineIOPacket(EngineIOPacketType.message, "0"));
                             break;
 
                         case EngineIOPacketType.close:
                             emit("close", packet.Data);
                             session = null;
-                            _pingTimer.Stop();
                             break;
 
                         case EngineIOPacketType.message:
@@ -161,8 +155,8 @@ namespace nex.engineio
                             break;
 
                         case EngineIOPacketType.ping:
-                        case EngineIOPacketType.pong:
                             emit(packet.Type.ToString(), packet.Data);
+                            Send(new EngineIOPacket(EngineIOPacketType.pong, ""));
                             break;
 
                         default:
@@ -179,8 +173,8 @@ namespace nex.engineio
         private void Ping()
         {
 
-            Send(new EngineIOPacket(EngineIOPacketType.ping, "probe"));
-            emit("ping", "probe");
+            Send(new EngineIOPacket(EngineIOPacketType.pong, "probe"));
+            emit("pong", "probe");
 
         }
         #endregion

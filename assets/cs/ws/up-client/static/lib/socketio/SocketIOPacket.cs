@@ -33,17 +33,46 @@ namespace nex.socketio
     public class SocketIOPacket
     {
         SocketIOPacketType _type;
+        string _nsp = "/";
         string _data;
+        int _id;
 
         public SocketIOPacketType Type { get { return _type; } }
         public string Data { get { return _data; } }
+        public string nsp { get { return _nsp; } }
+        public int id { get { return _id; } }
 
         public SocketIOPacket(string input)
         {
             _type = (SocketIOPacketType)int.Parse(new string(input[0], 1));
-            _data = input.Substring(1);
+            var str = input.Substring(1);
+            
+            if (str.StartsWith("/"))
+            {
+                // is NameSapce
+                _nsp = str.Split(',')[0];
+                str = str.Split(',')[1];
+            }
+            if (str[0] != '[' && str[0] != '{')
+            {
+                var strId = "";
+                for(var i = 0; i < str.Length; i++)
+                {
+                    if (char.IsNumber(str[i]))
+                    {
+                        strId += str[i];
+                    }
+                    else
+                    {
+                        _id = int.Parse(strId);
+                        str = str.Substring(i);
+                        break;
+                    }
+                }                
+            }
+            _data = str;           
         }
-        public SocketIOPacket(SocketIOPacketType type, string data)
+        public SocketIOPacket(SocketIOPacketType type,  string data)
         {
             _type = type;
             _data = data;
@@ -55,30 +84,7 @@ namespace nex.socketio
     }
     public static class SocketIOPacketEx
     {
-        public static string GetNamespace(this SocketIOPacket packet)
-        {
-            switch (packet.Type)
-            {
-                case SocketIOPacketType.connect:
-                    if (string.IsNullOrEmpty(packet.Data)) return "/";
-
-                    return packet.Data.EndsWith(",")
-                        ? packet.Data.Remove(packet.Data.Length - 1)
-                        : packet.Data;                    
-
-                case SocketIOPacketType.eventMessage: 
-                    if (packet.Data.StartsWith("[")) return "/";
-
-                    var idx = packet.Data.IndexOf("[");
-                    var nsp = packet.Data.Remove(idx);
-                    return nsp.EndsWith(",")
-                        ? nsp.Remove(packet.Data.Length - 1)
-                        : nsp;
-                    
-                default: throw new Exception("invalid packet type");
-            }
-        }
-        public static SocketIOEvent GetEvent(this SocketIOPacket packet)
+        public static SocketIOEvent ExtractEvent(this SocketIOPacket packet)
         {
             if (packet.Type != SocketIOPacketType.eventMessage)
                 throw new Exception("invalid packet type");
@@ -94,7 +100,7 @@ namespace nex.socketio
                     : null
             );
         }
-        public static SocketIOPacket CreateEventPacket(this string nsp, string eventName, object data = null)
+        public static SocketIOPacket CreateEvent(this string nsp, string eventName, object data = null)
         {
             if (string.IsNullOrEmpty(nsp)) 
                 throw new Exception("namespace can't be null or empty");
@@ -111,7 +117,7 @@ namespace nex.socketio
 
             return new SocketIOPacket(SocketIOPacketType.eventMessage, strData);
         }
-        public static SocketIOPacket CreateNamespaceConnectionPacket(this string nsp)
+        public static SocketIOPacket CreateNspConnection(this string nsp)
         {
             if (string.IsNullOrEmpty(nsp))
                 throw new Exception("namespace can't be null or empty");
@@ -119,6 +125,11 @@ namespace nex.socketio
                 throw new Exception("namespace is default");
 
             return new SocketIOPacket(SocketIOPacketType.connect, nsp);
+        }
+
+        public static string ExtractSid(this string str)
+        {
+            return JToken.Parse(str)["sid"].Value<string>();
         }
     }
 }

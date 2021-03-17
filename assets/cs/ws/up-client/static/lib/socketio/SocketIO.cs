@@ -15,10 +15,12 @@ namespace nex.socketio
         private bool _isReconnecting;
         private bool _disconnectRequest = false;
         private bool _nspConnectionRequest = false;
+        private string _id;
         #endregion
 
         #region [ properties ]
-        public string id { get { return _engineio.id; } }
+        public string engineId { get { return _engineio.id; } }
+        public string id { get { return _id; } }
         public string nsp { get; private set; }
         public bool connected { get; private set; }
         public bool disconnected { get { return !connected; } }
@@ -28,13 +30,13 @@ namespace nex.socketio
         public event EventHandler<EventArgs<SocketIOEvent>> EventReceive;
         #endregion
 
-        public SocketIO(IWebsocket websocket, string url, string nsp = "/", EngineIO.Options options = null)
+        public SocketIO(IWebsocket websocket, string url, string path = "/socket.io", string nsp = "/", EngineIO.Options options = null)
         {
             if (!nsp.StartsWith("/"))
                 throw new Exception("nsp must begin with '/'");
 
             this.nsp = nsp;
-            _engineio = new EngineIO(websocket, url, options);
+            _engineio = new EngineIO(websocket, url, path, options);
             _engineio.debug = false;
             _engineio
                 .on("ping", data =>
@@ -44,7 +46,7 @@ namespace nex.socketio
                 .on("pong", data =>
                 {
                     this.emit("pong");
-                })
+                })                
                 .on("message", (data) =>
                 {               
                     if (data is string)
@@ -54,13 +56,14 @@ namespace nex.socketio
                         switch (packet.Type)
                         {
                             case SocketIOPacketType.connect:
-                                if (nsp != packet.GetNamespace())
+                                if (nsp != packet.nsp)
                                 {
                                     _nspConnectionRequest = true;
-                                    _engineio.send(nsp.CreateNamespaceConnectionPacket().Serialize());
+                                    _engineio.send(nsp.CreateNspConnection().Serialize());
                                 }
                                 else
                                 {
+                                    _id = packet.Data.ExtractSid();
                                     connected = true;
                                     if (_isReconnecting)
                                     {
@@ -76,7 +79,7 @@ namespace nex.socketio
                                 break;
 
                             case SocketIOPacketType.eventMessage:
-                                var e = packet.GetEvent();                                
+                                var e = packet.ExtractEvent();                                
                                 emit(e.Name, e.Data);
                                 if (EventReceive != null) EventReceive(this, new EventArgs<SocketIOEvent>(new SocketIOEvent(e.Name, e.Data)));
                                 break;
@@ -171,7 +174,7 @@ namespace nex.socketio
         }
         public void send(string eventName, object data = null)
         {
-            _engineio.send(nsp.CreateEventPacket(eventName, data).Serialize());
+            _engineio.send(nsp.CreateEvent(eventName, data).Serialize());
         }
     }
 }
