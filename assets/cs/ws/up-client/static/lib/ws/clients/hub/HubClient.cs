@@ -14,6 +14,7 @@ namespace nex.ws
         #region [ fields ] 
         private RestProtocolClient<HubRequest, HubResponse> _restProtocol;
         private HubSubscriptionCollection _subscriptions = new HubSubscriptionCollection();
+        private bool _firstTimeConnection = true;
         #endregion
 
         #region [ properties ]
@@ -47,9 +48,16 @@ namespace nex.ws
                 var msg = data.ToObject<HubEventMessage>();
                 if (EventReceive != null) EventReceive(this, new EventArgs<HubEventMessage>(msg));
             });
-            Ws.EventReconnected += (s, e) =>
+            Ws.EventConnectionChange += (s, e) =>
             {
-                Api.Auth.EventAuthenticateChange += Auth_EventAuthenticateChange;                
+                if (_firstTimeConnection)
+                {
+                    _firstTimeConnection = false;
+                }
+                if (e.Value && !_firstTimeConnection)
+                {
+                    Api.Auth.EventAuthenticateChange += Auth_EventAuthenticateChange;
+                }
             };
         }       
         public async Task Subscribe(string service, string eventName, object credentials = null)

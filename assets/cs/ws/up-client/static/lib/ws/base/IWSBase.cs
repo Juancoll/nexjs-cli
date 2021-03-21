@@ -19,12 +19,9 @@ namespace nex.ws
         event EventHandler<EventArgs<EventData>> EventSend;
         event EventHandler<EventArgs<EventData>> EventReceive;
         event EventHandler<EventArgs<bool>> EventConnectionChange;
-        event EventHandler<EventArgs<int>> EventReconnecting;
-        event EventHandler<EventArgs<int>> EventReconnected;
         event EventHandler<EventArgs> EventDisconnect;
         event EventHandler<EventArgs> EventNewSocketInstance;
         event EventHandler<EventArgs<EventError>> EventSubscriptionError;
-        event EventHandler<EventArgs<NestJSWSException>> EventNestJSException;
         #endregion
 
         #region [ methods ]

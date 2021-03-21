@@ -95,12 +95,9 @@ namespace nex.ws
         public event EventHandler<EventArgs<EventData>> EventSend;
         public event EventHandler<EventArgs<EventData>> EventReceive;
         public event EventHandler<EventArgs<bool>> EventConnectionChange;
-        public event EventHandler<EventArgs<int>> EventReconnecting;
-        public event EventHandler<EventArgs<int>> EventReconnected;
         public event EventHandler<EventArgs> EventDisconnect;
         public event EventHandler<EventArgs> EventNewSocketInstance;
         public event EventHandler<EventArgs<EventError>> EventSubscriptionError;
-        public event EventHandler<EventArgs<NestJSWSException>> EventNestJSException;
         #endregion
 
         #region [ constructor ]
@@ -136,23 +133,9 @@ namespace nex.ws
                     {
                         _requestDisconnect = false;
                         if (EventDisconnect != null) EventDisconnect(this, new EventArgs());
-                        
+
                     }
-                })
-                .on("reconnecting", data =>
-                {
-                    if (EventReconnecting != null) EventReconnecting(this, new EventArgs<int>((int)data));
-                })
-                .on("reconnect", data =>
-                {
-                    this._isConnected = false;
-                    if (EventReconnected != null) EventReconnected(this, new EventArgs<int>((int)data));
-                })
-                .on("exception", data =>
-                {
-                    var error = (data as JToken).ToObject<NestJSWSException>();
-                    if (EventNestJSException != null) EventNestJSException(this, new EventArgs<NestJSWSException>(error));
-                });
+                });                
 
             _socket.EventReceive += (s, e) =>
             {

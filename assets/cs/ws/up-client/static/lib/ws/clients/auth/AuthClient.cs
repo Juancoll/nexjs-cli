@@ -31,9 +31,9 @@ namespace nex.ws
             _restProtocol = new RestProtocolClient<AuthRequest, AuthResponse<TUser,TToken>>(ws, "auth");
             _restProtocol.EventWSError += (s, e) => { if (EventWSError != null) EventWSError(this, e); };
             _restProtocol.EventResponseError += (s, e) => { if (EventResponseError != null) EventResponseError(this, e); };
-            ws.EventReconnected += async (s, e) =>
+            ws.EventConnectionChange += async (s, e) =>
             {
-                if (this.AuthInfo != null)
+                if (this.AuthInfo != null && e.Value)
                 {
                     try
                     {
