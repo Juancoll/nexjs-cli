@@ -146,9 +146,9 @@
                 "ws",
                 "up-client",
                 "-s",
-                "C:/git/nexjs/dev/nexjs-ws.dev.server",
+                "C:/git/etheroom/etheroom.api",
                 "-o",
-                "C:/git/nexjs/dev/nexjs-ws.dev.client/src/lib/wsclient-cli",
+                "C:/git/etheroom/etheroom.web/src/lib/api/ws",
             ]
         },
         {
@@ -164,7 +164,7 @@
                 "http",
                 "gen-client",
                 "-s",
-                "C:/git/juancoll/nexjs-ws.demo/nexjs-ws.demo.server.nestjs/dist/swagger-spec.json",
+                "C:/git/etheroom/etheroom.api/dist/swagger-spec.json",
                 "-o",
                 "c:/@nexjs-cli/gen-httpclient-ts",
                 "-n",
@@ -186,9 +186,9 @@
                 "http",
                 "up-client",
                 "-s",
-                "C:/git/rev-u/rev-u.api/dist/swagger-spec.json",
+                "C:/git/etheroom/etheroom.api/dist/swagger-spec.json",
                 "-o",
-                "c:/@nexjs-cli/up-httpclient-ts",
+                "c:/git/etheroom/etheroom.web/src/lib/api/http",
                 "--clean",
                 "true"
             ]

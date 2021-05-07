@@ -4,7 +4,7 @@ import { {{&type}} } from './{{&type}}'
 
 export class {{&declaration}} {
     {{#properties}}
-    public {{&name}}: {{&type}}
+    public {{&name}}{{&token}}: {{&type}}
     {{/properties}}
 
     {{#tsConstructor}}

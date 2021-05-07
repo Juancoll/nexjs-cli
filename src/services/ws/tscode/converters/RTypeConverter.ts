@@ -16,13 +16,23 @@ export class RTypeConverter extends CodeConverterBase<Type, RType> {
             : this.getTextType( input )
         output.arguments = input.getTypeArguments().map( x => this.convert( x ) )
 
-        if ( !output.isPrimitive && !output.isArray ) {
+        if ( !output.isPrimitive ) {
 
             output.sourceFile = this.getImportFile( input )
             if ( output.sourceFile ) {
+                if ( input.getText() == 'import("C:/git/etheroom/etheroom.api/src/lib/db/models/ModelComponent").ModelComponent[] | null | undefined' ){
+                    const a = 10
+                }
+                if ( input.isUnion() ){
+                    input = input.getUnionTypes().find( x => !x.isNull() && !x.isUndefined() )
+
+                }
+
                 output.declaration = this.ts.RTypeDeclaration.convert( {
                     isInterface: input.isInterface(),
-                    name: output.name,
+                    name: input.isArray()
+                        ? this.getTextType( input.getArrayElementType() )
+                        : this.getTextType( input ),
                     sourceFile: output.sourceFile,
                 } )
             }

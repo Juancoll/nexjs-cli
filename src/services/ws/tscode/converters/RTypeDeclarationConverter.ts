@@ -57,6 +57,9 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             name: x.getName(),
             type: this.ts.RType.convert( x.getType() ),
             decorators: this.getPropertyDecorators( x ),
+            token: x.hasExclamationToken()
+                ? '!'
+                : undefined,
         } ) )
 
         return output
@@ -76,6 +79,9 @@ export class RTypeDeclarationConverter extends CodeConverterBase<RTypeDeclaratio
             name: x.getName(),
             type: this.ts.RType.convert( x.getType() ),
             decorators: new Array<RDecorator>(),
+            token: x.hasQuestionToken()
+                ? '?'
+                : undefined,
         } ) )
         return output
     }

@@ -11,6 +11,7 @@ export interface ITSImport {
 export interface ITSModelProperty {
     name: string;
     type: string;
+    token?: string;
 }
 
 export interface ITSModelView {
@@ -83,6 +84,7 @@ export class TSModelConverter extends ConverterBase<TSConverter, RTypeDeclaratio
         return {
             name: p.name,
             type: this.getPropertyType( p ),
+            token: p.token,
         }
     }
     private getPropertyType ( p: RParam ): string {

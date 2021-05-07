@@ -5,6 +5,7 @@ export class RParam {
     name: string;
     type: RType;
     decorators: RDecorator[];
+    token?: string;
 
     constructor ( init?: Partial<RParam> ) { Object.assign( this, init ) }
 }
