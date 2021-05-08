@@ -20,9 +20,6 @@ export class RTypeConverter extends CodeConverterBase<Type, RType> {
 
             output.sourceFile = this.getImportFile( input )
             if ( output.sourceFile ) {
-                if ( input.getText() == 'import("C:/git/etheroom/etheroom.api/src/lib/db/models/ModelComponent").ModelComponent[] | null | undefined' ){
-                    const a = 10
-                }
                 if ( input.isUnion() ){
                     input = input.getUnionTypes().find( x => !x.isNull() && !x.isUndefined() )
 

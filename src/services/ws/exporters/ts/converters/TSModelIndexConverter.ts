@@ -17,8 +17,11 @@ export class TSModelIndexConverter extends ConverterBase<TSConverter, RTypeDecla
 
     //#region [ implement IConverter ]
     convert ( input: RTypeDeclaration[] ): ITSModelIndexView {
+
         return {
-            files: input.map( x => ( { path: `./${x.name}` } ) ),
+            files: input.map( x => {
+                return { path: `./${x.name}` }
+            } ),
         }
     }
     //#endregion
